@@ -10,5 +10,5 @@
 
 ### Table Diagram
 
-![](assets/er\ chart.png)
+![](assets/er_chart.png)
 
