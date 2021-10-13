@@ -2,18 +2,6 @@
 
 A simple, cozy booking system for the browser made in Python 🐍
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+Currently, this app is in very early development. For instructors, please refer to the PDF folder located at the `documents` folder
 
-## Commands
-
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+For viewers, see the mkdocs page
