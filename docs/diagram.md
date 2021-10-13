@@ -6,4 +6,3 @@
 
 ![](assets/er_final.png)
 
-
