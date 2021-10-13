@@ -9,9 +9,9 @@ site_description: >-
 
 nav:
     - Home: index.md
-    - About: about.md
+    - Diagram: diagram.md
 theme: 
-  name: readthedocs
+  name: material
   features:
     - navigation.top
   font:
