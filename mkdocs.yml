@@ -16,3 +16,7 @@ theme:
   font:
     text: IBM Plex Sans
   logo: assets/calendar.svg
+
+extra:
+  version:
+    default: stable
