@@ -1,4 +1,6 @@
-# Welcome to MkDocs
+# Pika Booking
+
+A simple, cozy booking system for the browser made in Python 🐍
 
 For full documentation visit [mkdocs.org](https://www.mkdocs.org).
 
