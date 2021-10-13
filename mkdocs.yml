@@ -17,7 +17,3 @@ theme:
   font:
     text: IBM Plex Sans
   logo: assets/calendar.svg
-
-plugins:
-    - search
-    - mermaid2
