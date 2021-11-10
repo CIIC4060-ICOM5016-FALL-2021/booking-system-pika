@@ -1,9 +1,9 @@
 from flask import jsonify
-from models.Person import BasePerson
+from models.Person import PersonDAO
 class Person:
     def build_map_dict(self, row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'p_role': row[3],
-                  'p_email': row[4],'p_phone': row[5] ,'p_gender': row[6]}
+                  'p_email': row[4],'p_phone': row[5],'p_gender': row[6]}
         return result
 
     def build_user_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
@@ -41,22 +41,21 @@ class Person:
         p_phone = json['p_phone']
         p_gender = json['p_gender']
         p_id = json['p_id']
-        method =BasePerson()
+        method =PersonDAO()
         updatedinfo = method.updatePerson(self,p_id,p_fname, p_lname, p_role, p_email, p_phone, p_gender)
         if updatedinfo:
          result = self.build_user_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
-
-         return jsonify(result)
+        return jsonify(result)
         else:
-            return jsonify('Not found person')
+        return jsonify('Not found person')
 
     def deletePerson(self, p_id):
-        method = BasePerson()
+        method = PersonDAO()
         result = method.deletePerson(p_id)
-        if  result:
-           return jsonify("DELETED")
+        if result:
+            return jsonify("DELETED")
         else:
-             return jsonify("NOT FOUND"), 404
+            return jsonify("NOT FOUND"), 404
 
     def get_all_persons(self):
         return "All Persons are returned"
