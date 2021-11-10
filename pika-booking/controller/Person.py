@@ -6,6 +6,16 @@ class Person:
                   'p_email': row[4],'p_phone': row[5] ,'p_gender': row[6]}
         return result
 
+    def build_user_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
+        result = {}
+        result['p_id'] = p_id
+        result['p_fname'] = p_fname
+        result['p_lname'] = p_lname
+        result['p_role'] = p_role
+        result['p_email'] = p_email
+        result['p_phone'] = p_phone
+        result['p_gender'] = p_gender
+        return result
 
     def createNewPerson(self,json):
         p_fname = json['p_fname']
@@ -22,17 +32,6 @@ class Person:
         self.conn.commit()
         result = self.build_user_attr_dict(self, p_id, p_fname, p_lname, p_role , p_email,p_phone, p_gender)
         return jsonify(result)
-
-    def build_user_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
-        result = {}
-        result['p_id'] = p_id
-        result['p_fname'] = p_fname
-        result['p_lname'] = p_lname
-        result['p_role'] = p_role
-        result['p_email'] = p_email
-        result['p_phone'] = p_phone
-        result['p_gender'] = p_gender
-        return result
 
     def updatePerson(self, json):
         p_fname = json['p_fname']
