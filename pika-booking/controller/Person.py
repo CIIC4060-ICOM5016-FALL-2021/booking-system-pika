@@ -34,5 +34,16 @@ class Person:
         result['p_gender'] = p_gender
         return result
 
+    def deletePerson(self, p_id):
+        cursor = self.conn.cursor()
+        query = 'delete from "Person" where p_id = %s;'
+        cursor.execute(query, (p_id,))
+        deleted_rows = cursor.rowcount
+        self.conn.commit()
+        if  deleted_rows  != 0:
+           return jsonify("DELETED"), 200
+         else:
+             return jsonify("NOT FOUND"), 404
+
     def get_all_persons(self):
         return "All Persons are returned"
