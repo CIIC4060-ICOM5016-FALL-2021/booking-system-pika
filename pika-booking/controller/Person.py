@@ -1,5 +1,5 @@
 from flask import jsonify
-from config.dbconfig import db_root_config
+
 class Person:
     def build_map_dict(self, row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'p_role': row[3],
