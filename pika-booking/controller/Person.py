@@ -54,8 +54,8 @@ class Person:
         method = BasePerson()
         result = method.deletePerson(p_id)
         if  result:
-           return jsonify("DELETED"), 200
-         else:
+           return jsonify("DELETED")
+        else:
              return jsonify("NOT FOUND"), 404
 
     def get_all_persons(self):
