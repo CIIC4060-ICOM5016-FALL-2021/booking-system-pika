@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, jsonify
 import os
+from flask_cors import CORS
 from controller.Person import Person
 
 app = Flask(__name__, instance_relative_config=True)
+CORS(app)
 
 # ensure the instance folder exists
 try:
