@@ -1,5 +1,5 @@
 from flask import jsonify
-
+from models.Person import BasePerson
 class Person:
     def build_map_dict(self, row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'p_role': row[3],
@@ -53,12 +53,9 @@ class Person:
         return jsonify(result), 200
 
     def deletePerson(self, p_id):
-        cursor = self.conn.cursor()
-        query = 'delete from "Person" where p_id = %s;'
-        cursor.execute(query, (p_id,))
-        deleted_rows = cursor.rowcount
-        self.conn.commit()
-        if  deleted_rows  != 0:
+        method = BasePerson()
+        result = method.deletePerson(p_id)
+        if  result:
            return jsonify("DELETED"), 200
          else:
              return jsonify("NOT FOUND"), 404
