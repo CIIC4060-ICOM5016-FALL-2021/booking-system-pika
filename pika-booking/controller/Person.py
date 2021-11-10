@@ -41,16 +41,14 @@ class Person:
         p_phone = json['p_phone']
         p_gender = json['p_gender']
         p_id = json['p_id']
-        cursor = self.conn.cursor()
-        query = 'update "Person" ' \
-                'set p_fname = %s, p_lname= %s, p_role = %s, p_email= %s , p_phone = %s ,p_gender= %s ' \
-                'where p_id = %s '
-        cursor.execute(query, (p_fname, p_lname, p_role,p_email, p_phone,p_gender,p_id))
-        self.conn.commit()
+        method =BasePerson()
+        updatedinfo = method.updatePerson(self,p_id,p_fname, p_lname, p_role, p_email, p_phone, p_gender)
+        if updatedinfo:
+         result = self.build_user_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
 
-        result = self.build_user_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
-
-        return jsonify(result), 200
+         return jsonify(result)
+        else:
+            return jsonify('Not found person')
 
     def deletePerson(self, p_id):
         method = BasePerson()
