@@ -12,6 +12,7 @@ class PersonDAO:
         )
         self.conn = psycopg2.connect(connection_url)
 
+
     def createNewPerson(self, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
         cursor = self.conn.cursor()
         query = 'insert into "person" (p_fname, p_lname, p_role, p_email, p_phone,p_gender) values (%s,%s,%s,%s,%s,%s) returning p_id;'
@@ -23,6 +24,13 @@ class PersonDAO:
     def update_person(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
         cursor = self.conn.cursor()
         query = 'update "person" ' \
+
+    def create_new_user(self, p_email, p_phone, p_gender, p_name):
+        return
+
+    def update_person(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
+        cursor = self.conn.cursor()
+        query = 'update "Person" ' \
                 'set p_fname = %s, p_lname= %s, p_role = %s, p_email= %s , p_phone = %s ,p_gender= %s ' \
                 'where p_id = %s '
         cursor.execute(query, (p_fname, p_lname, p_role, p_email, p_phone, p_gender, p_id))
@@ -63,3 +71,4 @@ class PersonDAO:
         for row in cursor:
             result.append(row)
         return result
+
