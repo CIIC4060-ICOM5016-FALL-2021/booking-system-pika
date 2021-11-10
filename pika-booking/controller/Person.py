@@ -7,7 +7,7 @@ class Person:
         return result
 
 
-    def create_new_person(self,json):
+    def createNewPerson(self,json):
         p_fname = json['p_fname']
         p_lname = json['p_lname']
         p_role = json['p_role']
@@ -17,7 +17,7 @@ class Person:
 
         cursor = self.conn.cursor()
         query = 'insert into "Person" (p_fname, p_lname, p_role, p_email, p_phone,p_gender) values (%s,%s,%s,%s,%s,%s) returning p_id;'
-        cursor.execute(query, (p_fname, p_lname, p_role,p_email, p_phone,p_gender))
+        cursor.execute(query, (p_fname, p_lname, p_role,p_email, p_phone,p_gender,))
         p_id = cursor.fetchone()[0]
         self.conn.commit()
         result = self.build_user_attr_dict(self, p_id, p_fname, p_lname, p_role , p_email,p_phone, p_gender)
@@ -33,6 +33,25 @@ class Person:
         result['p_phone'] = p_phone
         result['p_gender'] = p_gender
         return result
+
+    def updatePerson(self, json):
+        p_fname = json['p_fname']
+        p_lname = json['p_lname']
+        p_role = json['p_role']
+        p_email = json['p_email']
+        p_phone = json['p_phone']
+        p_gender = json['p_gender']
+        p_id = json['p_id']
+        cursor = self.conn.cursor()
+        query = 'update "Person" ' \
+                'set p_fname = %s, p_lname= %s, p_role = %s, p_email= %s , p_phone = %s ,p_gender= %s ' \
+                'where p_id = %s '
+        cursor.execute(query, (p_fname, p_lname, p_role,p_email, p_phone,p_gender,p_id))
+        self.conn.commit()
+
+        result = self.build_user_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
+
+        return jsonify(result), 200
 
     def deletePerson(self, p_id):
         cursor = self.conn.cursor()
