@@ -1,6 +1,6 @@
 from flask import jsonify
 from models.Person import PersonDAO
-class Person:
+class person:
     def build_map_dict(self, row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'p_role': row[3],
                   'p_email': row[4],'p_phone': row[5],'p_gender': row[6]}
