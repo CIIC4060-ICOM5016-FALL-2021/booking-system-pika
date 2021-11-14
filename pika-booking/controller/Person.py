@@ -16,7 +16,7 @@ class Person:
         result['p_phone'] = p_phone
         result['p_gender'] = p_gender
         return result
-
+#ok
     def createnewperson(self,json):
         p_fname = json['p_fname']
         p_lname = json['p_lname']
