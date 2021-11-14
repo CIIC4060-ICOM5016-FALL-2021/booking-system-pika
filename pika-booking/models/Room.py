@@ -16,7 +16,8 @@ class RoomDAO:
     # GET All
     def get_all_rooms(self):
         cursor = self.conn.cursor()
-        query = 'select r_id, r_building, r_type r_dept from room;'
+        query = 'select r_id, r_building, r_type, r_dept ' \
+                'from room;'
         cursor.execute(query)
         result = []
         for row in cursor:
