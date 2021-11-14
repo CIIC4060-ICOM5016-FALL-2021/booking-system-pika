@@ -18,7 +18,18 @@ class Person:
         result['p_phone'] = p_phone
         result['p_gender'] = p_gender
         return result
+    def build_role_map_dict(self, p_role):
+        result = {'p_role': p_role}
+        return result
 
+    def build_available_time_user_map_dict(self, row):
+        result = {'pa_id': row[0], 'st_dt': row[1],
+                  'et_dt': row[2],'person_id': row[3]}
+        return result
+
+    def build_time_slot_attr_dict(self, st_dt, et_dt):
+        result = {'start_time': st_dt, 'finish_time': et_dt}
+        return result
     # ok
     def create_new_person(self, json):
         p_fname = json['p_fname']
@@ -50,9 +61,6 @@ class Person:
             result = self.build_user_map_dict(person_tuple)
             return jsonify(result), 200
 
-    #TODO
-    # Frank, Fix this, build_available_time_person_dict
-    # method doesn't exists
     def get_all_available_persons(self):
         method = PersonDAO()
         available_users_list = method.get_all_available_person()
@@ -71,15 +79,13 @@ class Person:
             result = self.build_role_map_dict(user_role[0])
             return jsonify(result), 200
 
-    #TODO
-    # Frank, also fix this
     def get_most_booked_persons(self):
         method = PersonDAO()
         bookedperson_tuple = method.get_most_booked_persons()
         if not bookedperson_tuple:
             return jsonify("Not Found"), 404
         else:
-            result = self.build_booking_map_dict(bookedperson_tuple)
+            result = self.build_user_map_dict(bookedperson_tuple)
             return jsonify(result), 200
 
     def update_person(self, json):
