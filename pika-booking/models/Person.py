@@ -47,6 +47,7 @@ class PersonDAO:
             result.append(row)
         return result
 
+
     def getPersonById(self, p_id):
         cursor = self.conn.cursor()
         query = 'select p_fname = %s, p_lname= %s, p_role = %s, p_email= %s , p_phone = %s ,p_gender= %s ' \
