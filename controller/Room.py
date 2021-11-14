@@ -44,10 +44,10 @@ class Room:
         # Room with such name dos not exist
         if not existing_room:
             room_id = dao.create_new_room(r_building, r_dept, r_type)
-            result = self.build_room_attr_dict(r_id, r_building, r_dept, r_type)
+            result = self.build_room_attr_dict(room_id, r_building, r_dept, r_type)
             return jsonify(result), 201
         else:
-            return jsonify("A room with that name already exists"), 409
+            return jsonify("A room with that ID already exists"), 409
 
     # Delete
     def delete_room(self, r_id):
