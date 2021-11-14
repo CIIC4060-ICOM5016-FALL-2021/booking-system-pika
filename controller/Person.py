@@ -18,18 +18,20 @@ class Person:
         result['p_phone'] = p_phone
         result['p_gender'] = p_gender
         return result
+
     def build_role_map_dict(self, p_role):
         result = {'p_role': p_role}
         return result
 
     def build_available_time_user_map_dict(self, row):
         result = {'pa_id': row[0], 'st_dt': row[1],
-                  'et_dt': row[2],'person_id': row[3]}
+                  'et_dt': row[2], 'person_id': row[3]}
         return result
 
     def build_time_slot_attr_dict(self, st_dt, et_dt):
         result = {'start_time': st_dt, 'finish_time': et_dt}
         return result
+
     # ok
     def create_new_person(self, json):
         p_fname = json['p_fname']
