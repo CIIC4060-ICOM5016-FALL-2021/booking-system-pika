@@ -67,6 +67,14 @@ class PersonDAO:
             result.append(row)
         return result
 
+    def getpersonrolebyid(self, p_id):
+        cursor = self.conn.cursor()
+        query = 'select p_role ' \
+                'from "person" where p_id = %s;'
+        cursor.execute(query, (p_id,))
+        result = cursor.fetchone()
+        return result
+
     def getmostbookedpersons(self):
         cursor = self.conn.cursor()
         query = 'select p_id, p_fname , p_lname,  count(booking.host_id) as bookings ' \
