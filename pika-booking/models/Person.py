@@ -13,7 +13,7 @@ class PersonDAO:
         self.conn = psycopg2.connect(connection_url)
 
 
-    def createNewPerson(self, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
+    def createnewperson(self, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
         cursor = self.conn.cursor()
         query = 'insert into "person" (p_fname, p_lname, p_role, p_email, p_phone,p_gender) values (%s,%s,%s,%s,%s,%s) returning p_id;'
         cursor.execute(query, (p_fname, p_lname, p_role, p_email, p_phone, p_gender,))
@@ -23,7 +23,7 @@ class PersonDAO:
 
     def update_person(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
         cursor = self.conn.cursor()
-        query = 'update "Person" ' \
+        query = 'update "person" ' \
                 'set p_fname = %s, p_lname= %s, p_role = %s, p_email= %s , p_phone = %s ,p_gender= %s ' \
                 'where p_id = %s '
         cursor.execute(query, (p_fname, p_lname, p_role, p_email, p_phone, p_gender, p_id))
@@ -38,7 +38,7 @@ class PersonDAO:
         self.conn.commit()
         return deleted_rows != 0
 
-    def getAllPerson(self):
+    def getallperson(self):
         cursor = self.conn.cursor()
         query = 'select p_fname = %s, p_lname= %s, p_role = %s, p_email= %s , p_phone = %s ,p_gender= %s from "person";'
         cursor.execute(query)
@@ -47,7 +47,8 @@ class PersonDAO:
             result.append(row)
         return result
 
-    def getPersonById(self, p_id):
+
+    def getpersonbyid(self, p_id):
         cursor = self.conn.cursor()
         query = 'select p_fname = %s, p_lname= %s, p_role = %s, p_email= %s , p_phone = %s ,p_gender= %s ' \
                 'from "person" where p_id = %s;'
@@ -55,13 +56,46 @@ class PersonDAO:
         result = cursor.fetchone()
         return result
 
-    def getAllUnavailablePerson(self):
+    def getallavailableperson(self):
         cursor = self.conn.cursor()
-        query = 'select room_id, st_dt, et_dt, host_id ' \
-                'from "booking";'
+        query = 'select  st_dt, et_dt, person_id ' \
+                'from "availableperson";'
+        cursor.execute(query)
+        result = []
+        #ok
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getmostbookedpersons(self):
+        cursor = self.conn.cursor()
+        query = 'select p_id, p_fname , p_lname,  count(booking.host_id) as bookings ' \
+                'from booking inner join person on person.p_id = booking.host_id ' \
+                'GROUP BY p_id , order by bookings desc limit 10; '
         cursor.execute(query)
         result = []
         for row in cursor:
             result.append(row)
         return result
 
+    def getmostusedroom(self,p_id):
+        cursor = self.conn.cursor()
+        query = 'select r_id,r_dept,r_building, count(booking.room_id) as uses' \
+                'from booking inner join person inner join room on person.p_id = booking.invite_id ' \
+                ' order by uses desc limit 1; '
+        cursor.execute(query, (p_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getpersonthatmostsharewithperson(self, p_id):
+        cursor = self.conn.cursor()
+        query = 'select p_id, p_fname , p_lname, count(booking.invite_id) as shared' \
+                'from booking inner join person on person.p_id = booking.invite_id ' \
+                ' order by shared desc limit 1; '
+        cursor.execute(query, (p_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
