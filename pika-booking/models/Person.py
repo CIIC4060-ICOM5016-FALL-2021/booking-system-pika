@@ -61,6 +61,7 @@ class PersonDAO:
                 'from "availableperson";'
         cursor.execute(query)
         result = []
+        #ok
         for row in cursor:
             result.append(row)
         return result
