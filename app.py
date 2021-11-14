@@ -18,7 +18,7 @@ except OSError:
 @app.route('/index')
 @app.route('/home')
 def main():
-    return render_template('index.html')
+    return "Hey!"
 
 
 # ################################################
@@ -59,4 +59,4 @@ def handle_bookings_by_id(b_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
