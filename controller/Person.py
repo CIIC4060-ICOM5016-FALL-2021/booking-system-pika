@@ -46,7 +46,10 @@ class Person:
     def get_all_persons(self):
         method = PersonDAO()
         person_list = method.get_all_person()
-        result_list = []
+        if not person_list:
+            return jsonify("Nobody is on the list! It feels, lonely.."), 404
+        else:
+            result_list = []
         for row in person_list:
             obj = self.build_user_map_dict(row)
             result_list.append(obj)
