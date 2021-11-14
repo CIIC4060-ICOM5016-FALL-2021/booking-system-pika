@@ -40,7 +40,7 @@ class BookingDAO:
 
     def getAllBookings(self):
         cursor = self.conn.cursor()
-        query = 'select st_dt = %s, et_dt= %s, invited_id = %s, host_id= %s , room_id = %s from "booking";'
+        query = 'select st_dt, et_dt, invited_id, host_id, room_id from "booking";'
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -49,12 +49,39 @@ class BookingDAO:
 
     def getBookingById(self, b_id):
         cursor = self.conn.cursor()
-        query = 'select st_dt = %s, et_dt= %s, invited_id = %s, host_id= %s , room_id = %s ' \
+        query = 'select st_dt, et_dt, invited_id, host_id, room_id ' \
                 'from "booking" where b_id = %s;'
         cursor.execute(query, (b_id,))
         result = cursor.fetchone()
         return result
 
+
+    def getHostAtDt(self,st_dt,et_dt,room_id):
+        cursor = self.conn.cursor()
+        query = 'select distinct host_id ' \
+                'from "booking" where st_dt = %s AND et_dt=%s AND room_id=%s ;'
+        cursor.execute(query, (st_dt,et_dt,room_id,))
+        result = cursor.fetchone()
+        return result
+
+    def getHostAtDt(self,st_dt,et_dt,room_id):
+        cursor = self.conn.cursor()
+        query = 'select distinct host_id ' \
+                'from "booking" where st_dt = %s AND et_dt=%s AND room_id=%s ;'
+        cursor.execute(query, (st_dt,et_dt,room_id,))
+        result = cursor.fetchone()
+        return result
+
+    def getMostBookedRooms(self):
+        cursor = self.conn.cursor()
+        query = 'select r_id ,r_dept,r_building, count(booking.room_id) as bookings ' \
+                'from booking inner join room on room.r_id = booking.room_id ' \
+                'GROUP BY r_id ,r_dept,r_building order by bookings desc limit 10; '
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
     # def getAllUnavailablePerson(self):
     #     cursor = self.conn.cursor()
     #     query = 'select room_id, st_dt, et_dt, invited_id ' \
