@@ -18,31 +18,7 @@ except OSError:
 @app.route('/index')
 @app.route('/home')
 def main():
-    return render_template('billie.html')
-
-
-# About
-@app.route('/about')
-def about():
-    return "This is an app"
-
-
-# Contact
-@app.route('/contact/')
-def contacts():
-    return "Contacts"
-
-
-# Sign in
-@app.route('/account/signup')
-def signup():
-    return "Signup"
-
-
-# Login
-@app.route('/account/login')
-def login():
-    return "Login"
+    return render_template('index.html')
 
 
 # ################################################
@@ -83,4 +59,4 @@ def handle_bookings_by_id(b_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 4444)))
+    app.run(debug=True)

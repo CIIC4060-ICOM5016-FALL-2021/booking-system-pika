@@ -70,7 +70,8 @@ class Person:
             result_list.append(obj)
         return jsonify(result_list)
 
-    def getpersonrolebyid(self, user_id):
+    def get_user_role_by_id(self, user_id):
+
         dao = PersonDAO()
         user_role = dao.getpersonrolebyid(user_id)
         if not user_role:  # User Not Found
