@@ -23,7 +23,7 @@ class PersonDAO:
 
     def update_person(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
         cursor = self.conn.cursor()
-        query = 'update "Person" ' \
+        query = 'update "person" ' \
                 'set p_fname = %s, p_lname= %s, p_role = %s, p_email= %s , p_phone = %s ,p_gender= %s ' \
                 'where p_id = %s '
         cursor.execute(query, (p_fname, p_lname, p_role, p_email, p_phone, p_gender, p_id))
@@ -57,7 +57,7 @@ class PersonDAO:
 
     def getAllUnavailablePerson(self):
         cursor = self.conn.cursor()
-        query = 'select room_id, st_dt, et_dt, host_id ' \
+        query = 'select room_id, st_dt, et_dt, invited_id ' \
                 'from "booking";'
         cursor.execute(query)
         result = []
