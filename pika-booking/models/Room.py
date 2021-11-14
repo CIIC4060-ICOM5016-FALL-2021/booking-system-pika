@@ -47,7 +47,10 @@ class RoomDAO:
         query = "select %s, %s, %s from room;"
         # Execute commands n close
         cursor.execute(query, (r_building, r_dept, r_type ))
-        return
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
 
     # Create
     def create_new_room(self, r_building, r_dept, r_type):
@@ -76,3 +79,14 @@ class RoomDAO:
         # if affected rows == 0, the part was not found and hence not deleted
         # otherwise, it was deleted, so check if affected_rows != 0
         return affected_rows != 0
+
+    #TODO Fix
+    def get_all_day_schedule_of_room(self):
+        cursor = self.conn.cursor()
+        # TODO Test this
+        query = "select r_id from room;"
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
