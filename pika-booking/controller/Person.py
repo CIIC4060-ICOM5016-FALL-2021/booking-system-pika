@@ -60,7 +60,7 @@ class Person:
         dao = PersonDAO()
         user_role = dao.getpersonrolebyid(user_id)
         if not user_role:  # User Not Found
-            return jsonify("User Not Found"), 404
+            return jsonify("Person Not Found"), 404
         else:
             result = self.build_role_map_dict(user_role[0])
             return jsonify(result), 200
