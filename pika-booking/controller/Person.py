@@ -26,7 +26,7 @@ class Person:
         p_gender = json['p_gender']
         method = PersonDAO()
         p_id = method.createnewperson(p_fname, p_lname, p_role, p_email, p_phone, p_gender)
-        result = self.build_user_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
+        result = self.build_user_attr_dict(p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
         return jsonify(result)
 
     def getallpersons(self):
@@ -65,9 +65,9 @@ class Person:
         p_gender = json['p_gender']
         p_id = json['p_id']
         method =PersonDAO()
-        updatedinfo = method.updateperson(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
+        updatedinfo = method.updateperson(p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
         if updatedinfo:
-         result = self.build_user_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
+         result = self.build_user_attr_dict(p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
          return jsonify(result)
         else:
              return jsonify('Not found person')
