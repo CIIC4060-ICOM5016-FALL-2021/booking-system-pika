@@ -77,3 +77,25 @@ class PersonDAO:
         for row in cursor:
             result.append(row)
         return result
+
+    def getmostusedroom(self,p_id):
+        cursor = self.conn.cursor()
+        query = 'select r_id,r_dept,r_building, count(booking.room_id) as uses' \
+                'from booking inner join person inner join room on person.p_id = booking.invite_id ' \
+                ' order by uses desc limit 1; '
+        cursor.execute(query, (p_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getpersonthatmostsharewithperson(self, p_id):
+        cursor = self.conn.cursor()
+        query = 'select p_id, p_fname , p_lname, count(booking.invite_id) as shared' \
+                'from booking inner join person on person.p_id = booking.invite_id ' \
+                ' order by shared desc limit 1; '
+        cursor.execute(query, (p_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
