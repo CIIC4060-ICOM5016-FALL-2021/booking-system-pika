@@ -6,7 +6,7 @@ class person:
                   'p_email': row[4],'p_phone': row[5],'p_gender': row[6]}
         return result
 
-    def build_Person_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
+    def build_person_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
         result = {}
         result['p_id'] = p_id
         result['p_fname'] = p_fname
@@ -17,7 +17,7 @@ class person:
         result['p_gender'] = p_gender
         return result
 
-    def createNewPerson(self,json):
+    def createnewperson(self,json):
         p_fname = json['p_fname']
         p_lname = json['p_lname']
         p_role = json['p_role']
@@ -25,38 +25,38 @@ class person:
         p_phone = json['p_phone']
         p_gender = json['p_gender']
         method = PersonDAO()
-        p_id = method.createNewPerson(p_fname, p_lname, p_role, p_email, p_phone, p_gender)
+        p_id = method.createnewperson(p_fname, p_lname, p_role, p_email, p_phone, p_gender)
         result = self.build_user_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
         return jsonify(result)
 
-    def getAllUsers(self):
+    def getallpersons(self):
         method = PersonDAO()
-        person_list = method.getAllUsers()
+        person_list = method.getallperson()
         result_list = []
         for row in person_list:
             obj = self.build_user_map_dict(row)
             result_list.append(obj)
         return jsonify(result_list)
 
-    def getUserById(self, user_id):
+    def getpersonsbyid(self, p_id):
         method = PersonDAO()
-        person_tuple = method.getUserById(user_id)
+        person_tuple = method.getpersonbyid(p_id)
         if not person_tuple:
             return jsonify("Not Found"), 404
         else:
             result = self.build_user_map_dict(person_tuple)
             return jsonify(result), 200
 
-    def getAllUnavailableUsers(self):
+    def getallavailablepersons(self):
         method = PersonDAO()
-        unavailable_users_list = method.getAllUnavailableUsers()
+        available_users_list = method.getallavailableperson()
         result_list = []
-        for row in unavailable_users_list:
-            obj = self.build_unavailable_time_user_dict(row)
+        for row in available_users_list:
+            obj = self.build_available_time_user_dict(row)
             result_list.append(obj)
         return jsonify(result_list)
 
-    def updatePerson(self, json):
+    def updateperson(self, json):
         p_fname = json['p_fname']
         p_lname = json['p_lname']
         p_role = json['p_role']
@@ -65,16 +65,16 @@ class person:
         p_gender = json['p_gender']
         p_id = json['p_id']
         method =PersonDAO()
-        updatedinfo = method.updatePerson(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
+        updatedinfo = method.updateperson(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
         if updatedinfo:
          result = self.build_user_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
          return jsonify(result)
         else:
              return jsonify('Not found person')
 
-    def deletePerson(self, p_id):
+    def deleteperson(self, p_id):
         method = PersonDAO()
-        result = method.deletePerson(p_id)
+        result = method.deleteperson(p_id)
         if result:
             return jsonify("DELETED")
         else:
