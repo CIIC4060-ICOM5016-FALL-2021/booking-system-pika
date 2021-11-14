@@ -13,7 +13,7 @@ class PersonDAO:
         self.conn = psycopg2.connect(connection_url)
 
 
-    def createnewperson(self, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
+    def createNewPerson(self, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
         cursor = self.conn.cursor()
         query = 'insert into "person" (p_fname, p_lname, p_role, p_email, p_phone,p_gender) values (%s,%s,%s,%s,%s,%s) returning p_id;'
         cursor.execute(query, (p_fname, p_lname, p_role, p_email, p_phone, p_gender,))
@@ -23,7 +23,7 @@ class PersonDAO:
 
     def update_person(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
         cursor = self.conn.cursor()
-        query = 'update "Person" ' \
+        query = 'update "person" ' \
                 'set p_fname = %s, p_lname= %s, p_role = %s, p_email= %s , p_phone = %s ,p_gender= %s ' \
                 'where p_id = %s '
         cursor.execute(query, (p_fname, p_lname, p_role, p_email, p_phone, p_gender, p_id))
@@ -38,7 +38,7 @@ class PersonDAO:
         self.conn.commit()
         return deleted_rows != 0
 
-    def getallperson(self):
+    def getAllPerson(self):
         cursor = self.conn.cursor()
         query = 'select p_fname = %s, p_lname= %s, p_role = %s, p_email= %s , p_phone = %s ,p_gender= %s from "person";'
         cursor.execute(query)
@@ -47,7 +47,8 @@ class PersonDAO:
             result.append(row)
         return result
 
-    def getpersonbyid(self, p_id):
+
+    def getPersonById(self, p_id):
         cursor = self.conn.cursor()
         query = 'select p_fname = %s, p_lname= %s, p_role = %s, p_email= %s , p_phone = %s ,p_gender= %s ' \
                 'from "person" where p_id = %s;'
@@ -55,10 +56,10 @@ class PersonDAO:
         result = cursor.fetchone()
         return result
 
-    def getallavailableperson(self):
+    def getAllUnavailablePerson(self):
         cursor = self.conn.cursor()
-        query = 'select st_dt, et_dt, person_id ' \
-                'from "availableperson";'
+        query = 'select room_id, st_dt, et_dt, invited_id ' \
+                'from "booking";'
         cursor.execute(query)
         result = []
         #ok
