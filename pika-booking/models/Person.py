@@ -67,3 +67,13 @@ class PersonDAO:
             result.append(row)
         return result
 
+    def getmostbookedpersons(self):
+        cursor = self.conn.cursor()
+        query = 'select p_id, p_fname , p_lname,  count(booking.host_id) as bookings ' \
+                'from booking inner join person on person.p_id = booking.host_id ' \
+                'GROUP BY p_id , order by bookings desc limit 10; '
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result

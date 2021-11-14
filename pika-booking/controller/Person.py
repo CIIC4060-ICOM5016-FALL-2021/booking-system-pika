@@ -56,6 +56,15 @@ class Person:
             result_list.append(obj)
         return jsonify(result_list)
 
+    def getmostbookedpersons(self):
+        method = PersonDAO()
+        bookedperson_tuple = method.getmostbookedpersons()
+        if not bookedperson_tuple:
+            return jsonify("Not Found"), 404
+        else:
+            result = self.build_booking_map_dict(bookedperson_tuple)
+            return jsonify(result), 200
+
     def updateperson(self, json):
         p_fname = json['p_fname']
         p_lname = json['p_lname']
