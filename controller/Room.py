@@ -33,7 +33,7 @@ class Room:
     # Creates a new Room]
     # It first checks if exists using id
     #
-    def create_room(self, json):
+    def create_new_room(self, json):
         r_id = json['r_id']
         r_building = json['r_building']
         r_dept = json['r_dept']
