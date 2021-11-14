@@ -99,8 +99,10 @@ class PersonDAO:
     def get_person_that_most_share_with_person(self, p_id):
         cursor = self.conn.cursor()
         query = 'select p_id, p_fname , p_lname, count(booking.invite_id) as shared' \
-                'from booking inner join person on person.p_id = booking.invite_id ' \
-                ' order by shared desc limit 1; '
+                'from booking b inner join person ' \
+                'on %s = b.invited_id'\
+                'group by b.invite_id'\
+                'order by shared desc limit 1; '
         cursor.execute(query, (p_id,))
         result = []
         for row in cursor:

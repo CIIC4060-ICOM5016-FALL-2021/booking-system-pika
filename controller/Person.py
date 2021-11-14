@@ -89,6 +89,33 @@ class Person:
             result = self.build_user_map_dict(bookedperson_tuple)
             return jsonify(result), 200
 
+    # def get_all_day_schedule_of_person(self,p_id):
+    #       method = PersonDAO()
+    #       date = json['date']
+    #       user = method.getUserById(p_id)
+    #       user_unavailable_time_slots = method.getUnavailableTimeOfUserById(p_id)
+    #       if not user:  # User Not Found
+    #           return jsonify("User Not Found"), 404
+    #
+    #       result_list = []
+    #       start_date = date + " 0:00"
+    #       start_time = dt.datetime.strptime(start_date, '%Y-%m-%d %H:%M')
+    #       finish_date = date + " 23:59"
+    #       finish_date = dt.datetime.strptime(finish_date, '%Y-%m-%d %H:%M')
+    #       for row in user_unavailable_time_slots:
+    #           if row[1] > start_time and row[2] < finish_date:
+    #               finish_time = row[1]
+    #               obj = self.build_time_slot_attr_dict(start_time, finish_time)
+    #               result_list.append(obj)
+    #               start_time = row[2]
+    #       finish_time = finish_date
+    #       result_list.append(self.build_time_slot_attr_dict(start_time, finish_time))
+    #       print(result_list)
+    #       if len(result_list) != 1:
+    #           return jsonify("Person is available at the following time frames", result_list), 200
+    #       else:
+    #           return jsonify("Person is available all day"), 200
+
     def update_person(self, json):
         p_fname = json['p_fname']
         p_lname = json['p_lname']
