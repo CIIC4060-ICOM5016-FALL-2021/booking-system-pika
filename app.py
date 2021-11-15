@@ -57,4 +57,5 @@ def handle_bookings_by_id(b_id):
 
 
 if __name__ == "__main__":
+    app.debug = True
     app.run()
