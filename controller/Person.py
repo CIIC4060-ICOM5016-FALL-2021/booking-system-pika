@@ -24,7 +24,7 @@ class Person:
         result = {'p_role': p_role}
         return result
 
-    def build_unavailable_time_person_map(self, row):
+    def build_available_time_person_map(self, row):
         result = {'pa_id': row[0], 'st_dt': row[1],
                   'et_dt': row[2], 'person_id': row[3]}
         return result
