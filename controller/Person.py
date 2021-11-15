@@ -103,7 +103,7 @@ class Person:
             return jsonify("Not Found"), 404
         else:
             room = Room()
-            mostusedroom = room.ge
+            mostusedroom = room.get_room_by_id(mostused[0][0][0])
             result = build_room_attr_dict(mostusedroom)
             return jsonify(result), 200
 
