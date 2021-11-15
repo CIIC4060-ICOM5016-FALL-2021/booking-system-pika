@@ -77,7 +77,8 @@ class PersonDAO:
     def getUnavailableTimeOfPersonById(self, p_id):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt ' \
-                'from "booking" where invited_id = %s;'
+                'from "booking" ' \
+                'where invited_id = %s or host_id = %s;'
         cursor.execute(query, (p_id,))
         result = cursor.fetchone()
         return result
