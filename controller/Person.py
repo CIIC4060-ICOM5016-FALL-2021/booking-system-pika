@@ -137,15 +137,34 @@ class Person:
             return jsonify(result)
         else:
             return jsonify('Not found person')
+    def addAvailabletimeschedule(self, p_id, json):
+        method = PersonDAO()
+        starttime= json['st_dt']
+        endtime=json['et_dt']
+        exist= self.get_persons_by_id(p_id)
+        if not exist:
+            return jsonify("Person doesn't exist")
+
+        Avialableschedule = method.createAvailablePersonTime(p_id, starttime, endtime)
+        if Avialableschedule:
+            result = self.build_person_attr_dict(p_id, )
+            return jsonify(result)
 
     def delete_person(self, p_id):
         method = PersonDAO()
         result = method.delete_person(p_id)
         if result:
+            method.delete_Availableperson(p_id)
             return jsonify("DELETED")
         else:
             return jsonify("NOT FOUND"), 404
-
+   def delete_availableSchedule(self, p_id, st_dt,et_dt):
+       method = PersonDAO()
+       result = method.delete_AvailablepersonSchedule(p_id,st_dt,et_dt)
+       if result:
+           return jsonify("DELETED")
+       else:
+           return jsonify("NOT FOUND"), 404
     def roletogetaccesstoroom(self, p_id):
         method = PersonDAO()
         role = method.getpersonrolebyid(p_id)
@@ -159,3 +178,4 @@ class Person:
         elif role== "professor":
             result = method.getinfoforstaff()
             return jsonify(result)
+

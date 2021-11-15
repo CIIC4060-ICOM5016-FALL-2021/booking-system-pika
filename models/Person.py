@@ -20,7 +20,13 @@ class PersonDAO:
         p_id = cursor.fetchone()[0]
         self.conn.commit()
         return p_id
-
+    def createAvailablePersonTime(self, p_id,st_dt, et_dt):
+        cursor = self.conn.cursor()
+        query = 'insert into "availableperson" ' \
+                '(st_dt, et_dt, user_id) values (%s, %s, %s);'
+        cursor.execute(query, (st_dt, et_dt, p_id,))
+        self.conn.commit()
+        return True
     def update_person(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
         cursor = self.conn.cursor()
         query = 'update "person" ' \
@@ -34,6 +40,22 @@ class PersonDAO:
         cursor = self.conn.cursor()
         query = 'delete from "person" where p_id = %s;'
         cursor.execute(query, (p_id,))
+        deleted_rows = cursor.rowcount
+        self.conn.commit()
+        return deleted_rows != 0
+
+    def delete_Availableperson(self, p_id):
+        cursor = self.conn.cursor()
+        query = 'delete from "availableperson" where p_id = %s;'
+        cursor.execute(query, (p_id,))
+        deleted_rows = cursor.rowcount
+        self.conn.commit()
+        return deleted_rows != 0
+
+    def delete_AvailablepersonSchedule(self, p_id,st_dt,et_dt):
+        cursor = self.conn.cursor()
+        query = 'delete from "availableperson" where p_id = %s, st_dt= %s, et_dt= %s;'
+        cursor.execute(query, (p_id,st_dt,et_dt))
         deleted_rows = cursor.rowcount
         self.conn.commit()
         return deleted_rows != 0
@@ -78,7 +100,8 @@ class PersonDAO:
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt ' \
                 'from "booking" ' \
-                'where invited_id = %s or host_id = %s;'
+                'where invited_id = %s ' \
+                'or host_id = %s;'
         cursor.execute(query, (p_id,))
         result = cursor.fetchone()
         return result
