@@ -34,20 +34,20 @@ class Room:
     # It first checks if exists using id
     #
     def create_new_room(self, json):
-        r_id = json['r_id']
+        # r_id = json['r_id']
         r_building = json['r_building']
         r_dept = json['r_dept']
         r_type = json['r_type']
         dao = RoomDAO()
-        existing_room = dao.get_room(r_id)
+        # existing_room = dao.get_room(r_id)
 
         # Room with such name dos not exist
-        if not existing_room:
-            room_id = dao.create_new_room(r_building, r_dept, r_type)
-            result = self.build_room_attr_dict(room_id, r_building, r_dept, r_type)
-            return jsonify(result), 201
-        else:
-            return jsonify("There's a room with that ID already exists!"), 409
+        # if not existing_room:
+        room_id = dao.create_new_room(r_building, r_dept, r_type)
+        result = self.build_room_attr_dict(room_id, r_building, r_dept, r_type)
+        return jsonify(result), 201
+        # else:
+        #     return jsonify("A room with that ID already exists"), 409
 
     # Delete
     def delete_room(self, r_id):
