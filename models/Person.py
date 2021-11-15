@@ -74,6 +74,14 @@ class PersonDAO:
         result = cursor.fetchone()
         return result
 
+    def getUnavailableTimeOfPersonById(self, p_id):
+        cursor = self.conn.cursor()
+        query = 'select st_dt, et_dt ' \
+                'from "booking" where invited_id = %s;'
+        cursor.execute(query, (p_id,))
+        result = cursor.fetchone()
+        return result
+
     def get_most_booked_persons(self):
         cursor = self.conn.cursor()
         query = 'select p_id, p_fname , p_lname,  count(booking.host_id) as bookings ' \
