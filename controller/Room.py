@@ -43,7 +43,7 @@ class Room:
         r_building = json['r_building']
         r_dept = json['r_dept']
         r_type = json['r_type']
-        dao = RoomDAO()
+        # dao = RoomDAO()
 
         return "this is a mess: %s %s %s", (r_building, r_dept, r_type)
 
