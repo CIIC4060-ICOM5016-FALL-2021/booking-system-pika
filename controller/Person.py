@@ -103,8 +103,8 @@ class Person:
             return jsonify("Not Found"), 404
         else:
             room = Room()
-            mostusedroom = room.get_room_by_id(mostused[0][0][0])
-            result = build_room_attr_dict(mostusedroom)
+            mostusedroom = room.get_room_by_id(mostused[0])
+            result = room.build_room_attr_dict(mostusedroom)
             return jsonify(result), 200
 
     def get_all_day_schedule_of_person(self, p_id, json):
