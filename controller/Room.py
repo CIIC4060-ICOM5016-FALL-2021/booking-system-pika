@@ -76,3 +76,6 @@ class Room:
             dao.update_room(r_id, r_building, r_dept, r_type)
             result = self.build_room_attr_dict(r_id, r_building, r_dept, r_type)
             return jsonify(result), 200
+
+    def get_room_by_id(self, r_id):
+        pass
