@@ -30,11 +30,8 @@ def main():
 def handle_rooms():
     if request.method == 'POST':
         return Room().create_new_room(request.json)
-
     elif request.method == 'GET':
         return Room().get_all_rooms()
-    else:
-        return jsonify("Method Not Allowed"), 405
 
 
 # ======================= #

@@ -56,7 +56,7 @@ class RoomDAO:
     # Create
     def create_new_room(self, r_building, r_dept, r_type):
         cursor = self.conn.cursor()
-        query = "insert into room (r_building, r_dept, r_type)  values (%s, %s, %s) returning r_id;"
+        query = "insert into room (r_building, r_dept, r_type)  values (%s, %s, %s) returning r_id; "
         cursor.execute(query, (r_building, r_dept, r_type,))
         r_id = cursor.fetchone()[0]
         self.conn.commit()
