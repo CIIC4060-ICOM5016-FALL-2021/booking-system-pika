@@ -29,8 +29,8 @@ def main():
 @app.route('/pika-booking/rooms', methods=['GET', 'POST'])
 def handle_rooms():
     if request.method == 'POST':
-        # return Room().create_new_room(request.json)
-        return "ITS POSTING SOMETHING"
+        return Room().create_new_room(request.json)
+
     elif request.method == 'GET':
         return Room().get_all_rooms()
     else:
