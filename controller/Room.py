@@ -7,7 +7,12 @@ class Room:
 
     # Generate the Rows
     def build_room(self, row):
-        result = {"r_id": row[0], "r_building": row[1], "r_dept": row[2], "r_type": row[3]}
+        result = {
+            "r_id": row[0],
+            "r_building": row[1],
+            "r_dept": row[2],
+            "r_type": row[3]
+        }
         return result
 
     # Overloading
