@@ -18,7 +18,7 @@ except OSError:
 @app.route('/index')
 @app.route('/home')
 def main():
-    return "Hey!"
+    return "Hey! Welcome to Pika Booking, a cute lil booking App! ❤"
 
 
 # ################################################
@@ -34,10 +34,40 @@ def handle_rooms():
         return Room().get_all_rooms()
 
 
+@app.route('/pika-booking/rooms/all', methods=['GET'])
+def get_all_rooms():
+    if request.method == 'GET':
+        return Room().get_all_rooms()
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/rooms/<int:r_id>', methods=['GET', 'PUT', 'DELETE'])
+def handle_rooms_by_id(r_id):
+    if request.method == 'GET':
+        return Room().get_room_by_id(r_id)
+    elif request.method == 'PUT':
+        return Room().update_room(r_id, request.json)
+    elif request.method == 'DELETE':
+        return Room().delete_room(r_id)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/rooms/most_used', methods=['GET'])
+def get_most_used_room():
+    pass
+
+
+@app.route('/pika-booking/persons/<int:p_id>/rooms', methods=['GET'])
+def get_room_by_person_id(p_id):
+    pass
+
+
 # ======================= #
 # ===-| P E R S O N |-=== #
 # ======================= #
-@app.route('/pika-booking/users', methods=['GET', 'POST'])
+@app.route('/pika-booking/persons', methods=['GET', 'POST'])
 def handle_users(username):
     if request.method == 'POST':
         return Person().create_new_person(request.json)
