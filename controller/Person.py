@@ -1,8 +1,8 @@
 import datetime as dt
 from flask import jsonify
 from models.Person import PersonDAO
-
-
+from controller.Room import Room
+from model.room import RoomDAO
 class Person:
     def build_person_map(self, row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'p_role': row[3],
@@ -93,6 +93,18 @@ class Person:
             return jsonify("Not Found"), 404
         else:
             result = self.build_person_map(bookedperson_tuple)
+            return jsonify(result), 200
+
+    def getmostusedroom(self, p_id):
+        method = PersonDAO()
+        mostused = method.get_most_used_room(p_id,)
+        method2 =RoomDAO()
+        if not mostusedroom :
+            return jsonify("Not Found"), 404
+        else:
+            room = Room()
+            mostusedroom = room.ge
+            result = build_room_attr_dict(mostusedroom)
             return jsonify(result), 200
 
     def get_all_day_schedule_of_person(self, p_id, json):

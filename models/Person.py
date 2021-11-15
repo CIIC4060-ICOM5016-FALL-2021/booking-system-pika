@@ -119,7 +119,7 @@ class PersonDAO:
 
     def get_most_used_room(self,p_id):
         cursor = self.conn.cursor()
-        query = 'select r_id,r_dept,r_building, count(booking.room_id) as uses' \
+        query = 'select r_id,r_dept,r_building, r_type, count(booking.room_id) as uses' \
                 'from booking inner join person inner join room on person.p_id = booking.invite_id ' \
                 ' order by uses desc limit 1; '
         cursor.execute(query, (p_id,))
