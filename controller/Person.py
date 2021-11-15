@@ -4,7 +4,7 @@ from models.Person import PersonDAO
 
 
 class Person:
-    def build_user_map_dict(self, row):
+    def build_person_map(self, row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'p_role': row[3],
                   'p_email': row[4], 'p_phone': row[5], 'p_gender': row[6]}
         return result
@@ -24,12 +24,12 @@ class Person:
         result = {'p_role': p_role}
         return result
 
-    def build_available_time_user_map_dict(self, row):
+    def build_unavailable_time_person_map(self, row):
         result = {'pa_id': row[0], 'st_dt': row[1],
                   'et_dt': row[2], 'person_id': row[3]}
         return result
 
-    def build_time_slot_attr_dict(self, st_dt, et_dt):
+    def build_timeslot_attrdict(self, st_dt, et_dt):
         result = {'start_time': st_dt, 'finish_time': et_dt}
         return result
 
@@ -54,7 +54,7 @@ class Person:
         else:
             result_list = []
         for row in person_list:
-            obj = self.build_user_map_dict(row)
+            obj = self.build_person_map(row)
             result_list.append(obj)
         return jsonify(result_list)
 
@@ -64,7 +64,7 @@ class Person:
         if not person_tuple:
             return jsonify("Not Found"), 404
         else:
-            result = self.build_user_map_dict(person_tuple)
+            result = self.build_person_map(person_tuple)
             return jsonify(result), 200
 
     def get_all_available_persons(self):
@@ -79,11 +79,11 @@ class Person:
     def get_user_role_by_id(self, user_id):
 
         dao = PersonDAO()
-        user_role = dao.getpersonrolebyid(user_id)
-        if not user_role:  # User Not Found
+        personrole = dao.getpersonrolebyid(user_id)
+        if not personrole:  #
             return jsonify("Person Not Found"), 404
         else:
-            result = self.build_role_map_dict(user_role[0])
+            result = self.build_role_map_dict(personrole[0])
             return jsonify(result), 200
 
     def get_most_booked_persons(self):
@@ -92,7 +92,7 @@ class Person:
         if not bookedperson_tuple:
             return jsonify("Not Found"), 404
         else:
-            result = self.build_user_map_dict(bookedperson_tuple)
+            result = self.build_person_map(bookedperson_tuple)
             return jsonify(result), 200
 
     def get_all_day_schedule_of_person(self, p_id, json):
@@ -100,8 +100,8 @@ class Person:
           date = json['date']
           person = method.getUserById(p_id)
           person_unavailable_time_slots = method.getUnavailableTimeOfPersonById(p_id)
-          if not person:  # User Not Found
-              return jsonify("User Not Found"), 404
+          if not person:
+              return jsonify("Person Not Found"), 404
 
           result_list = []
           start_date = date + " 0:00"
@@ -111,11 +111,11 @@ class Person:
           for row in person_unavailable_time_slots:
               if row[1] > start_time and row[2] < finish_date:
                   finish_time = row[1]
-                  obj = self.build_time_slot_attr_dict(start_time, finish_time)
+                  obj = self.build_timeslot_attrdict(start_time, finish_time)
                   result_list.append(obj)
                   start_time = row[2]
           finish_time = finish_date
-          result_list.append(self.build_time_slot_attr_dict(start_time, finish_time))
+          result_list.append(self.build_timeslot_attrdict(start_time, finish_time))
           print(result_list)
           if len(result_list) != 1:
               return jsonify("Person is available at the following time frames", result_list), 200
@@ -157,14 +157,16 @@ class Person:
             method.delete_Availableperson(p_id)
             return jsonify("DELETED")
         else:
-            return jsonify("NOT FOUND"), 404
+           return jsonify("NOT FOUND"), 404
+
    def delete_availableSchedule(self, p_id, st_dt,et_dt):
        method = PersonDAO()
        result = method.delete_AvailablepersonSchedule(p_id,st_dt,et_dt)
        if result:
            return jsonify("DELETED")
        else:
-           return jsonify("NOT FOUND"), 404
+           return jsonify("NOT FOUND")
+
     def roletogetaccesstoroom(self, p_id):
         method = PersonDAO()
         role = method.getpersonrolebyid(p_id)
