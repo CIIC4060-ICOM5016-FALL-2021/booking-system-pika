@@ -27,7 +27,7 @@ class AvailablePersonDao:
         result = cursor.fetchone()
         return result
 
-   def  verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
+    def  verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
        cursor = self.conn.cursor()
        query = "select r_id " \
                "from person as p, booking as b, availableperson as a" \
@@ -35,6 +35,7 @@ class AvailablePersonDao:
        cursor.execute(query, (p_id,st_dt, et_dt, ))
        result = cursor.fetchone()
        return result
+
 
     def get_all_unavailable_person(self):
         cursor = self.conn.cursor()

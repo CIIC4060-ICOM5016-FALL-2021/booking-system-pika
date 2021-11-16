@@ -89,6 +89,15 @@ class BookingDAO:
             second) + tz
         return result
 
+    def get_users_booked_room_at_time_slot(self, room_id, st_dt, et_dt):
+        cursor = self.conn.cursor()
+        query = 'select invited_id from booking '\
+                'where room_id = %s and st_dt = %s and et_dt = %s '
+        cursor.execute(query, (room_id, st_dt, et_dt))
+        result = cursor.fetchone()
+        return result
+
+
     def get_most_booked_rooms(self):
         cursor = self.conn.cursor()
         query = 'select r_id ,r_dept,r_building, count(booking.room_id) as bookings ' \
