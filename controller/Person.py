@@ -140,9 +140,9 @@ class Person:
         result_list.append(self.build_timeslot_attrdict(start_time, finish_time))
         print(result_list)
         if len(result_list) != 1:
-            return jsonify("Person is available at the following time frames", result_list), 200
+            return jsonify("Person is unavailable at the following time frames", result_list), 200
         else:
-            return jsonify("Person is available all day"), 200
+            return jsonify("Person has no schedule "), 200
 
     def update_person(self, p_id, json):
         p_fname = json['p_fname']
