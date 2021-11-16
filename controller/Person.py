@@ -218,4 +218,10 @@ class Person:
             return jsonify("You don't have access to make room unavailable")
 
     def get_person_by_id(self, p_id):
-        pass
+        method = PersonDAO()
+        person_tuple = method.get_person_by_id(p_id)
+        if not person_tuple:
+            return jsonify("Not Found"), 404
+        else:
+            result = self.build_person_map(person_tuple)
+            return jsonify(result), 200
