@@ -10,11 +10,12 @@ PROFESSOR = 1
 STAFF = 2
 VISITOR = 3
 
-Laboratory =1
-Classroom= 2
-Conference_Room=3
-Study_room=4
-Office= 5
+
+LABORATORY = 1
+CLASSROOM = 2
+CONFERENCE_ROOM = 3
+STUDY_ROOM = 4
+OFFICE = 5
 
 
 class Booking:
@@ -37,7 +38,7 @@ class Booking:
         return result
 
 
-    def create_new_booking(self,p_id, json):
+    def create_new_booking(self, p_id, json):
         st_dt = json['st_dt']
         et_dt = json['et_dt']
         invited_id = json['invited_id']
@@ -82,7 +83,7 @@ class Booking:
 
         meeting_invited = bookingmethod.get_invited_list_by_meeting(b_id)
         meeting_invited.append(selectedbooking[3])
-        result =
+        result = {}
         person_dao = PersonDAO()
         return jsonify(result)
     def update_booking(self, json):
