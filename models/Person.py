@@ -140,3 +140,14 @@ class PersonDAO:
         for row in cursor:
             result.append(row)
         return result
+    def getbusiesthours(self):
+        cursor = self.conn.cursor()
+        query = 'select st_dt, et_dt, count(*) as activeintheroom' \
+                'from booking  ' \
+                ' group by st_dt '\
+                 'ordered by activeinthehour desc limit 5'
+        cursor.execute(query, )
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
