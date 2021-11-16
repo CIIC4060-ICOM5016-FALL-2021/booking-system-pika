@@ -179,17 +179,33 @@ class Person:
        else:
            return jsonify("NOT FOUND")
 
-    def roletogetaccesstoroom(self, p_id):
+    def roletogetaccesstoroominfo(self, p_id):
         method = PersonDAO()
         role = method.getpersonrolebyid(p_id)
 
-        if role== "student" :
+        if role== "0" :
           result = method.getinfoforstudent()
           return jsonify(result)
-        elif role== "professor":
+        elif role== "1":
             result = method.getinfoforprofessor()
             return jsonify(result)
-        elif role== "professor":
+        elif role== "2":
             result = method.getinfoforstaff()
             return jsonify(result)
 
+ def makeroomavailable(self, p_id, st_dt, et_st):
+        role = self.getpersonrolebyid(p_id)
+        room = RoomDAO()
+        if role=="2":
+
+        else:
+            return jsonify("You don't have access to make room available")
+
+
+def makeroomunavailable(self, p_id, st_dt, et_st):
+    role = self.getpersonrolebyid(p_id)
+    room = RoomDAO()
+    if role == "2":
+
+    else:
+        return jsonify("You don't have access to make room unavailable")
