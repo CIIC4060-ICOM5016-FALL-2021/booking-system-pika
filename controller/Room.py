@@ -4,6 +4,12 @@ from models.Room import RoomDAO
 
 
 class Room:
+    # CONSTANTS N STUFF
+    TYPE_LAB = 1
+    TYPE_CLASSROOM = 2
+    TYPE_CONFERENCE = 3
+    TYPE_OFFICE = 4
+    TYPE_STUDY_SPACE = 5
 
     # Generate the Rows
     def build_room(self, row: tuple):

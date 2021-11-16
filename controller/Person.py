@@ -6,6 +6,12 @@ from models.Room import RoomDAO
 
 
 class Person:
+
+    ROLE_STUDENT = 1
+    ROLE_PROF = 2
+    ROLE_STAFF = 3
+    ROLE_VISITOR = 4
+
     def build_person_map(self, row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'p_role': row[3],
                   'p_email': row[4], 'p_phone': row[5], 'p_gender': row[6]}

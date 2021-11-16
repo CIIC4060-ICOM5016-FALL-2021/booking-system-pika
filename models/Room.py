@@ -53,6 +53,17 @@ class RoomDAO:
             result.append(row)
         return result
 
+    def get_room_by_type(self, r_type):
+        # Open Cursor for operations
+        cursor = self.conn.cursor()
+        query = "select r_building, r_dept, %s from room;"
+        # Execute commands n close
+        cursor.execute(query, r_type)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
     # Create
     def create_new_room(self, r_building, r_dept, r_type):
         cursor = self.conn.cursor()
