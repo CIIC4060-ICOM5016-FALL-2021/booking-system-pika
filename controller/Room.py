@@ -9,10 +9,9 @@ class Room:
     def build_room(self, row: tuple):
         print(row, "ROW")
         result = {
-            "r_id": row[0],
-            "r_building": row[1],
-            "r_dept": row[2],
-            "r_type": row[3]
+            "r_building": row[0],
+            "r_dept": row[1],
+            "r_type": row[2]
         }
         return result
 
@@ -94,7 +93,7 @@ class Room:
             return jsonify(result), 200
 
     # test this
-    def get_available_roomintimeslot(self, st_dt, et_dt):
+    def get_available_room_in_timeslot(self, st_dt, et_dt):
         dao = RoomDAO()
         available_rooms = dao.get_room(st_dt, et_dt)
         if not available_rooms:

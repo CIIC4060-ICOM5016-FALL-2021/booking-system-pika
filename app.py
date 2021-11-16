@@ -76,7 +76,7 @@ def get_verify_time_frame():
 # ===-| P E R S O N |-=== #
 # ======================= #
 @app.route('/pika-booking/persons', methods=['GET', 'POST'])
-def handle_users(username):
+def handle_users(p_id):
     if request.method == 'POST':
         return Person().create_new_person(request.json)
     else:
