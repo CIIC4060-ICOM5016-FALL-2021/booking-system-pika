@@ -185,33 +185,33 @@ class Person:
             return jsonify("DELETED")
         else:
             return jsonify("NOT FOUND")
+    #
+    # def role_to_get_access_to_room_info(self, p_id):
+    #     method = PersonDAO()
+    #     role = method.get_person_role_by_id(p_id)
+    #
+    #     if role == "0":
+    #         result = method.get_info_for_student()
+    #         return jsonify(result)
+    #     elif role == "1":
+    #         result = method.get_info_for_professor()
+    #         return jsonify(result)
+    #     elif role == "2":
+    #         result = method.get_info_for_staff()
+    #         return jsonify(result)
+    #
+    # def make_room_available(self, p_id, st_dt, et_st):
+    #     role = self.get_person_role_by_id(p_id)
+    #     room = RoomDAO()
+    #     if role == "2":
+    #         return
+    #     else:
+    #         return jsonify("You don't have access to make room available")
 
-    def role_to_get_access_to_room_info(self, p_id):
-        method = PersonDAO()
-        role = method.get_person_role_by_id(p_id)
-
-        if role == "0":
-            result = method.get_info_for_student()
-            return jsonify(result)
-        elif role == "1":
-            result = method.get_info_for_professor()
-            return jsonify(result)
-        elif role == "2":
-            result = method.get_info_for_staff()
-            return jsonify(result)
-
-    def make_room_available(self, p_id, st_dt, et_st):
-        role = self.get_person_role_by_id(p_id)
-        room = RoomDAO()
-        if role == "2":
-            return
-        else:
-            return jsonify("You don't have access to make room available")
-
-    def make_room_unavailable(self, p_id, st_dt, et_st):
-        role = self.get_person_role_by_id(p_id)
-        room = RoomDAO()
-        if role == "2":
-            return
-        else:
-            return jsonify("You don't have access to make room unavailable")
+    # def make_room_unavailable(self, p_id, st_dt, et_st):
+    #     role = self.get_person_role_by_id(p_id)
+    #     room = RoomDAO()
+    #     if role == "2":
+    #         return
+    #     else:
+    #         return jsonify("You don't have access to make room unavailable")
