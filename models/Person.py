@@ -20,7 +20,7 @@ class PersonDAO:
         p_id = cursor.fetchone()[0]
         self.conn.commit()
         return p_id
-    def createAvailablePersonTime(self, p_id, st_dt, et_dt):
+    def createUnavailablePersonTime(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'insert into "availableperson" ' \
                 '(st_dt, et_dt, user_id) values (%s, %s, %s);'
@@ -44,7 +44,7 @@ class PersonDAO:
         self.conn.commit()
         return deleted_rows != 0
 
-    def delete_Availableperson(self, p_id):
+    def delete_unavailableperson(self, p_id):
         cursor = self.conn.cursor()
         query = 'delete from "availableperson" where p_id = %s;'
         cursor.execute(query, (p_id,))
@@ -52,7 +52,7 @@ class PersonDAO:
         self.conn.commit()
         return deleted_rows != 0
 
-    def delete_AvailablepersonSchedule(self, p_id, st_dt, et_dt):
+    def delete_unavailablepersonSchedule(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'delete from "availableperson" where p_id = %s, st_dt= %s, et_dt= %s;'
         cursor.execute(query, (p_id, st_dt, et_dt))

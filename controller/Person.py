@@ -149,7 +149,7 @@ class Person:
             return jsonify(result)
         else:
             return jsonify('Not found person')
-    def addAvailabletimeschedule(self, p_id, json):
+    def addUnavailabletimeschedule(self, p_id, json):
         method = PersonDAO()
         starttime= json['st_dt']
         endtime=json['et_dt']
@@ -157,8 +157,8 @@ class Person:
         if not exist:
             return jsonify("Person doesn't exist")
 
-        Avialableschedule = method.createAvailablePersonTime(p_id, starttime, endtime)
-        if Avialableschedule:
+        unavialableschedule = method.createUnavailablePersonTime(p_id, starttime, endtime)
+        if unavialableschedule:
             result = self.build_person_attr_dict(p_id, )
             return jsonify(result)
 
@@ -166,14 +166,14 @@ class Person:
         method = PersonDAO()
         result = method.delete_person(p_id)
         if result:
-            method.delete_Availableperson(p_id)
+            method.delete_unavailableperson(p_id)
             return jsonify("DELETED")
         else:
            return jsonify("NOT FOUND"), 404
 
-   def delete_availableSchedule(self, p_id, st_dt,et_dt):
+   def delete_unavailableSchedule(self, p_id, st_dt,et_dt):
        method = PersonDAO()
-       result = method.delete_AvailablepersonSchedule(p_id,st_dt,et_dt)
+       result = method.delete_unavailablepersonSchedule(p_id, st_dt, et_dt)
        if result:
            return jsonify("DELETED")
        else:
