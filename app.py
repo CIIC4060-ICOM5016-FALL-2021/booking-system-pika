@@ -3,7 +3,7 @@ import os
 from controller.Person import Person
 from controller.Room import Room
 from controller.Booking import Booking
-
+from controller.Availableperson import AvailablePerson
 app = Flask(__name__, instance_relative_config=True)
 
 # ensure the instance folder exists
@@ -120,6 +120,15 @@ def handle_persons_schedule_by_id(p_id):
         return jsonify("Method Not Allowed"), 405
 
 
+# unavailable person
+@app.route('/pika-booking/unavailablepersons', methods=['GET', 'POST'])
+def handle_persons():
+    if request.method == 'POST':
+        return AvailablePerson().create_unavailable_time_schedule(request.json)
+    elif request.method == 'GET':
+        return AvailablePerson().get_all_unavailable_persons()
+    else:
+        return jsonify("Method Not Allowed"), 405
 # ================================= #
 # ===-| A V A I A B I L I T Y |-=== #
 # ================================= #

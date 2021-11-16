@@ -13,8 +13,9 @@ class AvailablePerson:
                   'et_dt': row[2], 'person_id': row[3]}
         return result
 
-    def add_unavailable_time_schedule(self, p_id, json):
+    def create_unavailable_time_schedule(self, json):
         method = Person()
+        p_id = json['p_id']
         start_time = json['st_dt']
         end_time = json['et_dt']
         exist = method.get_persons_by_id(p_id)
@@ -36,8 +37,8 @@ class AvailablePerson:
         return jsonify(result_list)
 
     def get_all_unavailable_persons(self):
-        method = PersonDAO()
-        available_users_list = method.get_all_available_person()
+        method = AvailablePersonDao()
+        available_users_list = method.get_all_unavailable_person()
         result_list = []
         for row in available_users_list:
             obj = self.build_available_time_person_map(row)
