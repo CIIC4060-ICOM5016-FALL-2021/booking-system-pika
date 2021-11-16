@@ -29,10 +29,10 @@ class RoomDAO:
     # NOTE:
     # This looks by id
     #
-    def get_room(self, r_id):
+    def get_room(self, r_id: int):
         # Open Cursor for operations
         cursor = self.conn.cursor()
-        query = "select r_id, r_building, r_dept, r_type from room where r_id =%s;"
+        query = "select r_building, r_dept, r_type from room where r_id = %s;"
         # Execute commands n close
         cursor.execute(query, (r_id,))
         result = []

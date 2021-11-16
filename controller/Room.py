@@ -6,7 +6,8 @@ from models.Room import RoomDAO
 class Room:
 
     # Generate the Rows
-    def build_room(self, row):
+    def build_room(self, row: list):
+        print(row, "ROW")
         result = {
             "r_id": row[0],
             "r_building": row[1],
@@ -69,7 +70,7 @@ class Room:
 
     # Update
     def update_room(self, r_id, json):
-        r_building = json['r_type']
+        r_building = json['r_building']
         r_dept = json['r_dept']
         r_type = json['r_type']
         dao = RoomDAO()
@@ -88,6 +89,7 @@ class Room:
         if not rooms_by_id:
             return jsonify("There's no rooms!"), 404
         else:
+            print(rooms_by_id)
             result = self.build_room(rooms_by_id)
             return jsonify(result), 200
 
