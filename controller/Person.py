@@ -213,3 +213,6 @@ class Person:
             return
         else:
             return jsonify("You don't have access to make room unavailable")
+
+    def get_person_by_id(self, p_id):
+        pass

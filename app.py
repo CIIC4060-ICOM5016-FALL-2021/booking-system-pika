@@ -63,9 +63,11 @@ def get_most_used_room():
 def get_room_by_person_id(p_id):
     pass
 
+
 @app.route('/pika-booking/rooms/unavailable-time-rooms', methods=['GET'])
 def get_unavailable_time_rooms():
     pass
+
 
 @app.route('/pika-booking/rooms/verify-time-frame', methods=['GET'])
 def get_verify_time_frame():
@@ -76,11 +78,23 @@ def get_verify_time_frame():
 # ===-| P E R S O N |-=== #
 # ======================= #
 @app.route('/pika-booking/persons', methods=['GET', 'POST'])
-def handle_users(username):
+def handle_users():
     if request.method == 'POST':
         return Person().create_new_person(request.json)
     else:
         return Person().get_all_persons()
+
+
+@app.route('/pika-booking/persons/<int:p_id>', methods=['GET', 'PUT', 'DELETE'])
+def handle_rooms_by_id(p_id):
+    if request.method == 'GET':
+        return Person().get_person_by_id(p_id)
+    elif request.method == 'PUT':
+        return Person().update_person(p_id, request.json)
+    elif request.method == 'DELETE':
+        return Person().delete_person(p_id)
+    else:
+        return jsonify("Method Not Allowed"), 405
 
 
 # ================================= #
