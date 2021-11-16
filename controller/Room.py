@@ -6,7 +6,7 @@ from models.Room import RoomDAO
 class Room:
 
     # Generate the Rows
-    def build_room(self, row: list):
+    def build_room(self, row: tuple):
         print(row, "ROW")
         result = {
             "r_id": row[0],
@@ -18,7 +18,7 @@ class Room:
 
     # Overloading
     def build_room_attr_dict(self, r_id, r_building, r_dept, r_type):
-        return self.build_room([r_id, r_building, r_dept, r_type])
+        return self.build_room((r_id, r_building, r_dept, r_type))
 
     def build_timeslot_attrdict(self, r_id, st_dt, et_dt):
         result = {'Room ID': r_id, 'start_time': st_dt, 'finish_time': et_dt}
@@ -90,7 +90,7 @@ class Room:
             return jsonify("There's no rooms!"), 404
         else:
             print(rooms_by_id)
-            result = self.build_room(rooms_by_id)
+            result = self.build_room(rooms_by_id[0])
             return jsonify(result), 200
 
     # test this
