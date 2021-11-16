@@ -63,7 +63,7 @@ class PersonDAO:
 
     def get_all_person(self):
         cursor = self.conn.cursor()
-        query = 'select p_fname, p_lname, p_role, p_email, p_phone ,p_gender from "person";'
+        query = 'select p_id, p_fname, p_lname, p_role, p_email, p_phone ,p_gender from "person";'
         cursor.execute(query)
         result = []
         for row in cursor:
