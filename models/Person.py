@@ -4,12 +4,11 @@ from config.dbcondig import db_root_config
 
 class PersonDAO:
     def __init__(self):
-        connection_url = "dbname=s%s user=%s password=%s port=%s host='localhost'" % (
-            db_root_config['dbname'],
-            db_root_config['user'],
-            db_root_config['password'],
-            db_root_config['dbport']
-        )
+        connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (db_root_config['dbname'],
+                                                                            db_root_config['user'],
+                                                                            db_root_config['password'],
+                                                                            db_root_config['dbport'],
+                                                                            db_root_config['host'])
         self.conn = psycopg2.connect(connection_url)
 
     def create_new_person(self, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
