@@ -92,3 +92,15 @@ class RoomDAO:
         for row in cursor:
             result.append(row)
         return result
+
+    def get_available_room(self, st_dt, et_dt):
+        cursor = self.conn.cursor()
+        # TODO Test this
+        query = "select r_id " \
+                "from room as r, booking as b, availableroom as a" \
+                "where b.st_dt != %s and b.et_st !=%s and r.r_id != b.room_id and a.r_id != r.rid;"
+        cursor.execute(query, (st_dt, et_dt, ))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
