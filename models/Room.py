@@ -93,6 +93,31 @@ class RoomDAO:
         # otherwise, it was deleted, so check if affected_rows != 0
         return affected_rows != 0
 
+    def create_unavailable_room_time(self, r_id, st_dt, et_dt):
+        cursor = self.conn.cursor()
+        query = 'insert into "availableroom" ' \
+                '(st_dt, et_dt, ra_id) values (%s, %s, %s);'
+        cursor.execute(query, (st_dt, et_dt, r_id,))
+        self.conn.commit()
+        return True
+    def create_unavailable_room_time(self, r_id, st_dt, et_dt):
+        cursor = self.conn.cursor()
+        query = 'insert into "availableroom" ' \
+                '(st_dt, et_dt, ra_id) values (%s, %s, %s);'
+        cursor.execute(query, (st_dt, et_dt, r_id,))
+        self.conn.commit()
+        return True
+    def get_most_booked_rooms(self):
+        cursor = self.conn.cursor()
+        query = 'select r_id, r_building, r_type, r_dept, count(booking.room_id) as rooms ' \
+                'from booking inner join room on booking.room_id = room.r_id ' \
+                'GROUP BY r_id order by rooms desc limit 10; '
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
     #TODO Fix
     def get_all_day_schedule_of_room(self):
         cursor = self.conn.cursor()
@@ -112,6 +137,17 @@ class RoomDAO:
                 "where b.st_dt != %s and b.et_dt !=%s and r.r_id != b.room_id and a.room_id != r.r_id;"
         cursor.execute(query, (st_dt, et_dt, ))
         result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def get_all_available_rooms(self):
+        cursor = self.conn.cursor()
+        query = 'select  st_dt, et_dt, room_id ' \
+                'from "availableroom";'
+        cursor.execute(query)
+        result = []
+        # ok
         for row in cursor:
             result.append(row)
         return result

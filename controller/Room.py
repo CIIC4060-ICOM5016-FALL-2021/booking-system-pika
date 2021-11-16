@@ -1,5 +1,4 @@
 from flask import jsonify
-import datetime as dt
 from models.Room import RoomDAO
 
 
@@ -43,6 +42,14 @@ class Room:
                 result.append(self.build_room(row))
             return jsonify(result)
 
+    def get_most_booked_rooms(self):
+        method = RoomDAO()
+        bookedroom_tuple = method.get_most_booked_rooms()
+        if not bookedroom_tuple:
+            return jsonify("Not Found"), 404
+        else:
+            result = self.build_person_map(bookedroom_tuple)
+            return jsonify(result), 200
     # Create
     #
     # Creates a new Room]
@@ -113,3 +120,12 @@ class Room:
             for row in list:
                 result.append(self.build_room(row))
             return jsonify(result)
+
+    def get_all_available_rooms(self):
+        method = RoomDAO()
+        available_users_list = method.get_all_available_rooms()
+        result_list = []
+        for row in available_users_list:
+            obj = self.build_available_time_person_dict(row)
+            result_list.append(obj)
+        return jsonify(result_list)

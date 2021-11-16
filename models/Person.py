@@ -23,7 +23,7 @@ class PersonDAO:
     def create_unavailable_person_time(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'insert into "availableperson" ' \
-                '(st_dt, et_dt, p_id) values (%s, %s, %s);'
+                '(st_dt, et_dt, pa_id) values (%s, %s, %s);'
         cursor.execute(query, (st_dt, et_dt, p_id,))
         self.conn.commit()
         return True
@@ -47,7 +47,7 @@ class PersonDAO:
 
     def delete_unavailable_person(self, p_id):
         cursor = self.conn.cursor()
-        query = 'delete from "availableperson" where p_id = %s;'
+        query = 'delete from "availableperson" where person_id = %s;'
         cursor.execute(query, (p_id,))
         deleted_rows = cursor.rowcount
         self.conn.commit()
@@ -55,7 +55,7 @@ class PersonDAO:
 
     def delete_unavailable_person_schedule(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
-        query = 'delete from "availableperson" where p_id = %s, st_dt= %s, et_dt= %s;'
+        query = 'delete from "availableperson" where person_id = %s, st_dt= %s, et_dt= %s;'
         cursor.execute(query, (p_id, st_dt, et_dt))
         deleted_rows = cursor.rowcount
         self.conn.commit()
@@ -120,8 +120,9 @@ class PersonDAO:
 
     def get_most_used_room(self, p_id):
         cursor = self.conn.cursor()
-        query = 'select r_id, count(booking.room_id) as uses' \
-                'from booking inner join person inner join room on person.p_id = booking.invite_id ' \
+        query = 'select r_id, count(booking.room_id) as uses ' \
+                'from booking inner join person on person.p_id = booking.invited_id inner join room on booking.room_id = room.r_id ' \
+                'group by r_id ' \
                 ' order by uses desc limit 1; '
         cursor.execute(query, (p_id,))
         result = []
@@ -131,10 +132,10 @@ class PersonDAO:
 
     def get_person_that_most_share_with_person(self, p_id):
         cursor = self.conn.cursor()
-        query = 'select p_id, p_fname , p_lname, count(booking.invite_id) as shared' \
-                'from booking b inner join person ' \
-                'on %s = b.invited_id' \
-                'group by b.invite_id' \
+        query = 'select p_id, p_fname , p_lname, count(b.invited_id) as shared ' \
+                'from booking as b inner join person ' \
+                'on b.invited_id = %s ' \
+                'group by b.invited_id, p_id ' \
                 'order by shared desc limit 1; '
         cursor.execute(query, (p_id,))
         result = []
