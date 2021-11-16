@@ -12,7 +12,7 @@ class AvailablePersonDao:
     def create_unavailable_person_time(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'insert into "availableperson" ' \
-                '(st_dt, et_dt, p_id) values (%s, %s, %s);'
+                '(st_dt, et_dt, person_id) values (%s, %s, %s);'
         cursor.execute(query, (st_dt, et_dt, p_id,))
         self.conn.commit()
         return True
@@ -29,9 +29,9 @@ class AvailablePersonDao:
 
     def  verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
        cursor = self.conn.cursor()
-       query = "select r_id " \
-               "from person as p, booking as b, availableperson as a" \
-               "where b.st_dt != %s and b.et_st !=%s and r.r_id != b.invite_id and a.p_id != p.p_id;"
+       query = "select p_id " \
+               "from person as p, booking as b, availableperson as a " \
+               "where b.st_dt != %s and b.et_dt !=%s and p.p_id != b.invited_id and a.person_id != p.p_id; "
        cursor.execute(query, (p_id,st_dt, et_dt, ))
        result = cursor.fetchone()
        return result
@@ -48,17 +48,17 @@ class AvailablePersonDao:
             result.append(row)
         return result
 
-    def delete_unavailable_person(self, p_id):
+    def delete_unavailable_person(self, person_id):
         cursor = self.conn.cursor()
-        query = 'delete from "availableperson" where p_id = %s;'
-        cursor.execute(query, (p_id,))
+        query = 'delete from "availableperson" where person_id = %s;'
+        cursor.execute(query, (person_id,))
         deleted_rows = cursor.rowcount
         self.conn.commit()
         return deleted_rows != 0
 
     def delete_unavailable_person_schedule(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
-        query = 'delete from "availableperson" where p_id = %s, st_dt= %s, et_dt= %s;'
+        query = 'delete from "availableperson" where person_id = %s AND st_dt= %s AND et_dt = %s; '
         cursor.execute(query, (p_id, st_dt, et_dt))
         deleted_rows = cursor.rowcount
         self.conn.commit()

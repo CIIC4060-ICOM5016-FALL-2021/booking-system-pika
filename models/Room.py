@@ -73,7 +73,13 @@ class RoomDAO:
         print(r_id)
         self.conn.commit()
         return r_id
-
+    def create_unavailable_room_time(self, room_id, st_dt, et_dt):
+        cursor = self.conn.cursor()
+        query = 'insert into "availableroom" ' \
+                '(st_dt, et_dt, room_id) values (%s, %s, %s);'
+        cursor.execute(query, (st_dt, et_dt, room_id,))
+        self.conn.commit()
+        return True
     # Update
     def update_room(self, r_id, new_r_building, new_r_dept, new_r_type):
         cursor = self.conn.cursor()

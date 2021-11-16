@@ -27,10 +27,22 @@ class Room:
     def build_timeslot_attrdict(self, r_id, st_dt, et_dt):
         result = {'Room ID': r_id, 'start_time': st_dt, 'finish_time': et_dt}
         return result
+    def add_unavailable_time_schedule(self, r_id, json):
+        method = RoomDAO()
+        start_time = json['st_dt']
+        end_time = json['et_dt']
+        exist = self.get_room_by_id(r_id)
+        if not exist:
+            return jsonify("Person doesn't exist")
 
+        unavailable_schedule = method.create_unavailable_room_time(r_id, start_time, end_time)
+        if unavailable_schedule:
+            result = {}
+            return jsonify(result)
     # Read
     #
     # Gets All Rooms
+
     def get_all_rooms(self):
         dao = RoomDAO()
         all_rooms = dao.get_all_rooms()

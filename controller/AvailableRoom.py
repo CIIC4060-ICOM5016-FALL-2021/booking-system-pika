@@ -1,6 +1,7 @@
 from flask import jsonify
 import datetime as dt
 from controller.Room import Room
+from models.Room import RoomDAO
 
 class AvailableRoom:
 
@@ -18,13 +19,13 @@ class AvailableRoom:
         if not exist:
             return jsonify("Person doesn't exist")
 
-        unavailable_schedule = method.createUnavailablePersonTime(p_id, start_time, end_time)
+        unavailable_schedule = method.add_unavailable_time_schedule(r_id, start_time, end_time)
         if unavailable_schedule:
             result = {}
             return jsonify(result)
 
     def verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
-        method = AvailablePersonDao()
+        method = AvailableRoomDao()
         available_users_list = method.verify_available_user_at_timeframe(p_id, st_dt, et_dt)
         result_list = []
         for row in available_users_list:
@@ -33,7 +34,7 @@ class AvailableRoom:
         return jsonify(result_list)
 
     def get_all_unavailable_persons(self):
-        method = PersonDAO()
+        method = Room()
         available_users_list = method.get_all_available_person()
         result_list = []
         for row in available_users_list:

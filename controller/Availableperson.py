@@ -21,7 +21,7 @@ class AvailablePerson:
         if not exist:
             return jsonify("Person doesn't exist")
 
-        unavailable_schedule = method.createUnavailablePersonTime(p_id, start_time, end_time)
+        unavailable_schedule = method.add_unavailable_time_schedule(p_id, start_time, end_time)
         if unavailable_schedule:
             result = {}
             return jsonify(result)

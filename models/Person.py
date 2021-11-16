@@ -55,7 +55,7 @@ class PersonDAO:
 
     def delete_unavailable_person_schedule(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
-        query = 'delete from "availableperson" where person_id = %s, st_dt= %s, et_dt= %s;'
+        query = 'delete from "availableperson" where person_id = %s and st_dt= %s and et_dt= %s;'
         cursor.execute(query, (p_id, st_dt, et_dt))
         deleted_rows = cursor.rowcount
         self.conn.commit()
@@ -111,7 +111,7 @@ class PersonDAO:
         cursor = self.conn.cursor()
         query = 'select p_id, p_fname , p_lname,  count(booking.host_id) as bookings ' \
                 'from booking inner join person on person.p_id = booking.host_id ' \
-                'GROUP BY p_id , order by bookings desc limit 10; '
+                'GROUP BY p_id  order by bookings desc limit 10; '
         cursor.execute(query)
         result = []
         for row in cursor:
