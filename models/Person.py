@@ -20,7 +20,7 @@ class PersonDAO:
         p_id = cursor.fetchone()[0]
         self.conn.commit()
         return p_id
-    def createAvailablePersonTime(self, p_id,st_dt, et_dt):
+    def createAvailablePersonTime(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'insert into "availableperson" ' \
                 '(st_dt, et_dt, user_id) values (%s, %s, %s);'
@@ -52,10 +52,10 @@ class PersonDAO:
         self.conn.commit()
         return deleted_rows != 0
 
-    def delete_AvailablepersonSchedule(self, p_id,st_dt,et_dt):
+    def delete_AvailablepersonSchedule(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'delete from "availableperson" where p_id = %s, st_dt= %s, et_dt= %s;'
-        cursor.execute(query, (p_id,st_dt,et_dt))
+        cursor.execute(query, (p_id, st_dt, et_dt))
         deleted_rows = cursor.rowcount
         self.conn.commit()
         return deleted_rows != 0
@@ -140,12 +140,43 @@ class PersonDAO:
         for row in cursor:
             result.append(row)
         return result
+
     def getbusiesthours(self):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt, count(*) as activeintheroom' \
                 'from booking  ' \
                 ' group by st_dt '\
-                 'ordered by activeinthehour desc limit 5'
+                 'ordered by activeinthehour desc limit 5;'
+        cursor.execute(query, )
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getinfoforstudent(self):
+        cursor = self.conn.cursor()
+        query = 'select st_dt, et_dt, room_id, host_id' \
+                'from booking;  '
+        cursor.execute(query, )
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getinfoforprofessor(self):
+        cursor = self.conn.cursor()
+        query = 'select st_dt, et_dt, room_id, host_id, invite_id' \
+                'from booking;  '
+        cursor.execute(query, )
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getinfoforstaff(self):
+        cursor = self.conn.cursor()
+        query = 'select *' \
+                'from booking;  '
         cursor.execute(query, )
         result = []
         for row in cursor:
