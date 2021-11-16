@@ -5,6 +5,8 @@ from controller.Person import Person
 from controller.Room import Room
 from models.Room import RoomDAO
 from models.Availableperson import AvailablePersonDao
+
+
 class AvailablePerson:
     def build_available_time_person_map(self, row):
         result = {'pa_id': row[0], 'st_dt': row[1],
@@ -25,7 +27,7 @@ class AvailablePerson:
             return jsonify(result)
 
     def verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
-        method =  AvailablePersonDao()
+        method = AvailablePersonDao()
         available_users_list = method.verify_available_user_at_timeframe(p_id, st_dt, et_dt)
         result_list = []
         for row in available_users_list:

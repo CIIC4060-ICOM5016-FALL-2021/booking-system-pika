@@ -6,7 +6,6 @@ from models.Room import RoomDAO
 
 
 class Person:
-
     ROLE_STUDENT = 1
     ROLE_PROF = 2
     ROLE_STAFF = 3
