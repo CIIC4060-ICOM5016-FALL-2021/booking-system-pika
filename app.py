@@ -67,9 +67,10 @@ def get_room_by_person_id(p_id):
     pass
 
 
-@app.route('/pika-booking/rooms/unavailable-time-rooms', methods=['GET'])
+@app.route('/pika-booking/rooms/unavailable_rooms/<int:r_id>', methods=['GET'])
 def get_unavailable_time_rooms():
-    pass
+    if request.method == 'GET':
+        return Room().get_available_room_in_timeslot()
 
 
 @app.route('/pika-booking/rooms/verify-time-frame', methods=['GET'])
