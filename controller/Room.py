@@ -70,7 +70,7 @@ class Room:
     # Update
     def update_room(self, r_id, json):
         r_building = json['r_type']
-        r_dept = json['r_type']
+        r_dept = json['r_dept']
         r_type = json['r_type']
         dao = RoomDAO()
         existing_room = dao.get_room(r_id)
