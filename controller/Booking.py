@@ -10,11 +10,11 @@ PROFESSOR = 1
 STAFF = 2
 VISITOR = 3
 
-# 1 - Laboratory
-# 2 - Classroom
-# 3 - Conference Room
-# 4 - Study room
-# 5 - Office
+Laboratory =1
+Classroom= 2
+Conference_Room=3
+Study_room=4
+Office= 5
 
 
 class Booking:
