@@ -5,11 +5,11 @@ from models.Room import RoomDAO
 from controller.Room import Room
 from controller.Person import Person
 from controller.Availableperson import AvailablePerson
+
 STUDENT = 0
 PROFESSOR = 1
 STAFF = 2
 VISITOR = 3
-
 
 LABORATORY = 1
 CLASSROOM = 2
@@ -28,7 +28,6 @@ class Booking:
     def build_booking_attr_dict(self, b_id, st_dt, et_dt, invited_id, host_id, room_id):
         return self.build_booking_map_dict([b_id, st_dt, et_dt, invited_id, host_id, room_id])
 
-
     def build_busy_times_map_dict(self, row):
         result = {'st_dt': row[0], 'et_dt': row[1], 'times_booked': row[2]}
         return result
@@ -36,7 +35,6 @@ class Booking:
     def build_most_booked_users_map_dict(self, row):
         result = {'p_id': row[0], 'times_booked': row[1]}
         return result
-
 
     def create_new_booking(self, p_id, json):
         st_dt = json['st_dt']
@@ -59,7 +57,7 @@ class Booking:
         method = Person()
         role = method.get_user_role_by_id(p_id)
 
-        if role == Person.ROLE_STUDENT or (role == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM)  or \
+        if role == Person.ROLE_STUDENT or (role == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM) or \
                 (role == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE):
 
             # TODO Design this extra function
@@ -86,6 +84,7 @@ class Booking:
         result = {}
         person_dao = PersonDAO()
         return jsonify(result)
+
     def update_booking(self, json):
         st_dt = json['st_dt']
         et_dt = json['et_dt']

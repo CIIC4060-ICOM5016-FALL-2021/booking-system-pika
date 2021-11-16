@@ -1,6 +1,7 @@
 from flask import jsonify
 import datetime as dt
 
+
 class AvailableRoom:
 
     def build_unavailable_time_room_map_dict(self, row):
