@@ -99,7 +99,7 @@ class BookingDAO:
 
     def get_invite_by_id(self, b_id):
         cursor = self.conn.cursor()
-        query = 'select invite_id ' \
+        query = 'select invited_id ' \
                 'from "booking" where b_id = %s;'
         cursor.execute(query, (b_id,))
         result = cursor.fetchone()
