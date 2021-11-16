@@ -15,6 +15,12 @@ VISITOR = 3
 # 4 - Study room
 # 5 - Office
 
+LABORATORY = 1
+CLASSROOM = 2
+CONFERENCE_ROOM = 3
+STUDY_ROOM = 4
+OFFICE = 5
+
 
 class Booking:
 
@@ -72,6 +78,24 @@ class Booking:
 
     #         result_list.append(obj)
     #     return jsonify(result_list)
+
+    def get_free_time_users(self,b_id,json):
+        bookingmethod = BookingD
+        AO()
+
+        selectedbooking = bookingmethod.get_booking_by_id(b_id)
+        if not selectedbooking:
+            return jsonify("Booking Not Found"), 404
+
+        meeting_invited = bookingmethod.get_invited_list_by_meeting(b_id)
+        meeting_invited.append(selectedbooking[3])
+
+        person_dao = PersonDAO()
+
+
+
+
+
 
     def update_booking(self, json):
         st_dt = json['st_dt']

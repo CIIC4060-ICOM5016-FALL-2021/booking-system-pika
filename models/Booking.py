@@ -55,6 +55,36 @@ class BookingDAO:
         result = cursor.fetchone()
         return result
 
+
+
+
+    def get_meeting_by_time_room(self,st_dt,et_dt,room_id):
+        cursor = self.conn.cursor()
+
+        query = 'select st_dt, et_dt, invited_id, host_id, room_id ' \
+                'from "booking" where st_dt = %s AND et_dt=%s AND room_id=%s ;'
+        cursor.execute(query, (st_dt,et_dt,room_id,))
+        result = []
+
+        for row in cursor:
+            result.append(row)
+        return result
+
+
+    def get_invited_list_by_meeting(self,b_id):
+
+        st_dt, et_dt, invited_id, host_id, room_id = self.get_booking_by_id(b_id)
+
+
+
+        tupples = self.get_meeting_by_time_room(st_dt,et_dt,room_id)
+
+        result = []
+        for tup in tupples:
+            result.append(tup)
+        return result
+
+
     # def get_host_at_dt(self, st_dt, et_dt, room_id):
     #     cursor = self.conn.cursor()
     #     query = 'select distinct host_id ' \
