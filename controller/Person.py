@@ -29,8 +29,8 @@ class Person:
                   'p_phone': p_phone, 'p_gender': p_gender}
         return result
 
-    def build_role_map_dict(self, p_role):
-        result = {'p_role': p_role}
+    def build_role_map_dict(self, row):
+        result = {'p_role': row[0]}
         return result
 
     def build_available_time_person_map(self, row):
