@@ -85,6 +85,15 @@ class Booking:
         person_dao = PersonDAO()
         return jsonify(result)
 
+
+    def get_booking_by_id(self, b_id):
+        method = BookingDAO()
+        booking_tuple = method.get_booking_by_id(b_id)
+        if not booking_tuple:
+            return jsonify("Not Found"), 404
+        else:
+            result = self.build_person_map(booking_tuple)
+            return jsonify(result), 200
     def update_booking(self, json):
         st_dt = json['st_dt']
         et_dt = json['et_dt']
