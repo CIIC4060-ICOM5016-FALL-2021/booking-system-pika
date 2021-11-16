@@ -58,7 +58,7 @@ class Booking:
 
         method = Person()
         role = method.get_user_role_by_id(p_id)
-        
+
         if role == Person.ROLE_STUDENT or (role == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM)  or \
                 (role == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE):
 
