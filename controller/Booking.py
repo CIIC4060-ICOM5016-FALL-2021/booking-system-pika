@@ -73,7 +73,18 @@ class Booking:
 
     #         result_list.append(obj)
     #     return jsonify(result_list)
+    def get_free_time_users(self, b_id, json):
+        bookingmethod = BookingDAO()
 
+        selectedbooking = bookingmethod.get_booking_by_id(b_id)
+        if not selectedbooking:
+            return jsonify("Booking Not Found"), 404
+
+        meeting_invited = bookingmethod.get_invited_list_by_meeting(b_id)
+        meeting_invited.append(selectedbooking[3])
+        result =
+        person_dao = PersonDAO()
+        return jsonify(result)
     def update_booking(self, json):
         st_dt = json['st_dt']
         et_dt = json['et_dt']
