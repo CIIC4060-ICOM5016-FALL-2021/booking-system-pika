@@ -133,6 +133,10 @@ class Room:
                 result.append(self.build_room(row))
             return jsonify(result)
 
+    def get_most_used_room(self):
+
+        pass
+
     def get_all_available_rooms(self):
         method = RoomDAO()
         available_users_list = method.get_all_available_rooms()

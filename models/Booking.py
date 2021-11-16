@@ -38,7 +38,7 @@ class BookingDAO:
         self.conn.commit()
         return deleted_rows != 0
 
-    def get_all_bookings(self):
+    def get_all_booking(self):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt, invited_id, host_id, room_id from "booking";'
         cursor.execute(query)
@@ -97,6 +97,21 @@ class BookingDAO:
         result = cursor.fetchone()
         return result
 
+    def get_invite_by_id(self, b_id):
+        cursor = self.conn.cursor()
+        query = 'select invite_id ' \
+                'from "booking" where b_id = %s;'
+        cursor.execute(query, (b_id,))
+        result = cursor.fetchone()
+        return result
+
+    def get_host_by_id(self, b_id):
+        cursor = self.conn.cursor()
+        query = 'select host_id ' \
+                'from "booking" where b_id = %s;'
+        cursor.execute(query, (b_id,))
+        result = cursor.fetchone()
+        return result
 
     def get_most_booked_rooms(self):
         cursor = self.conn.cursor()

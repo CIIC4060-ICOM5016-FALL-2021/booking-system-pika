@@ -56,7 +56,10 @@ def handle_rooms_by_id(r_id):
 
 @app.route('/pika-booking/rooms/most_used', methods=['GET'])
 def get_most_used_room():
-    pass
+    if request.method == 'GET':
+        return Room().get_most_used_room()
+    else:
+        return jsonify("Method Not Allowed"), 405
 
 
 @app.route('/pika-booking/persons/<int:p_id>/rooms', methods=['GET'])
