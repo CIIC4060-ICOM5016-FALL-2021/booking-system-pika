@@ -88,11 +88,11 @@ def handle_users():
 @app.route('/pika-booking/persons/<int:p_id>', methods=['GET', 'PUT', 'DELETE'])
 def handle_rooms_by_id(p_id):
     if request.method == 'GET':
-        return Person().get_person_by_id(p_id)
+        return Room().get_room_by_id(p_id)
     elif request.method == 'PUT':
-        return Person().update_person(p_id, request.json)
+        return Room().update_room(p_id, request.json)
     elif request.method == 'DELETE':
-        return Person().delete_person(p_id)
+        return Room().delete_room(p_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
