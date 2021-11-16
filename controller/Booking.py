@@ -4,6 +4,7 @@ from models.Person import PersonDAO
 from models.Room import RoomDAO
 from controller.Room import Room
 from controller.Person import Person
+from controller.Availableperson import AvailablePerson
 STUDENT = 0
 PROFESSOR = 1
 STAFF = 2
@@ -36,7 +37,7 @@ class Booking:
         return result
 
 
-    def create_new_booking(self, json):
+    def create_new_booking(self,p_id, json):
         st_dt = json['st_dt']
         et_dt = json['et_dt']
         invited_id = json['invited_id']
@@ -61,9 +62,9 @@ class Booking:
                 (role == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE):
 
             # TODO Design this extra function
-            available_room = Room().get_available_room_by_timeslot(room_id, )
+            available_room = Room().get_available_room_by_timeslot(room_id, st_dt, et_dt)
 
-            available_person = Person().verify_available_user_at_timeframe(p_id, st_dt, et_dt)
+            available_person = AvailablePerson().verify_available_user_at_timeframe(p_id, st_dt, et_dt)
             if not available_person:
                 return jsonify("User is not available during specified time"), 409
 
