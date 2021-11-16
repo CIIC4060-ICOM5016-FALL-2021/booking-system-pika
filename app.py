@@ -115,7 +115,7 @@ def handle_persons_role_by_id(p_id):
 @app.route('/pika-booking/persons/schedule/<int:p_id>', methods=['GET'])
 def handle_persons_schedule_by_id(p_id):
     if request.method == 'GET':
-        return Person().get_all_day_schedule_of_person(p_id)
+        return Person().get_all_day_schedule_of_person(p_id, request.json)
     else:
         return jsonify("Method Not Allowed"), 405
 
