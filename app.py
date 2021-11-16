@@ -78,23 +78,12 @@ def get_verify_time_frame():
 # ===-| P E R S O N |-=== #
 # ======================= #
 @app.route('/pika-booking/persons', methods=['GET', 'POST'])
-def handle_users():
+def handle_persons():
     if request.method == 'POST':
         return Person().create_new_person(request.json)
     else:
         return Person().get_all_persons()
 
-
-@app.route('/pika-booking/persons/<int:p_id>', methods=['GET', 'PUT', 'DELETE'])
-def handle_rooms_by_id(p_id):
-    if request.method == 'GET':
-        return Room().get_room_by_id(p_id)
-    elif request.method == 'PUT':
-        return Room().update_room(p_id, request.json)
-    elif request.method == 'DELETE':
-        return Room().delete_room(p_id)
-    else:
-        return jsonify("Method Not Allowed"), 405
 
 
 # ================================= #
