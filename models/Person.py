@@ -20,13 +20,15 @@ class PersonDAO:
         p_id = cursor.fetchone()[0]
         self.conn.commit()
         return p_id
-    def createUnavailablePersonTime(self, p_id, st_dt, et_dt):
+
+    def create_unavailable_person_time(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'insert into "availableperson" ' \
                 '(st_dt, et_dt, user_id) values (%s, %s, %s);'
         cursor.execute(query, (st_dt, et_dt, p_id,))
         self.conn.commit()
         return True
+
     def update_person(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
         cursor = self.conn.cursor()
         query = 'update "person" ' \
@@ -44,7 +46,7 @@ class PersonDAO:
         self.conn.commit()
         return deleted_rows != 0
 
-    def delete_unavailableperson(self, p_id):
+    def delete_unavailable_person(self, p_id):
         cursor = self.conn.cursor()
         query = 'delete from "availableperson" where p_id = %s;'
         cursor.execute(query, (p_id,))
@@ -52,7 +54,7 @@ class PersonDAO:
         self.conn.commit()
         return deleted_rows != 0
 
-    def delete_unavailablepersonSchedule(self, p_id, st_dt, et_dt):
+    def delete_unavailable_person_schedule(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'delete from "availableperson" where p_id = %s, st_dt= %s, et_dt= %s;'
         cursor.execute(query, (p_id, st_dt, et_dt))
@@ -83,12 +85,12 @@ class PersonDAO:
                 'from "availableperson";'
         cursor.execute(query)
         result = []
-        #ok
+        # ok
         for row in cursor:
             result.append(row)
         return result
 
-    def getpersonrolebyid(self, p_id):
+    def get_person_role_by_id(self, p_id):
         cursor = self.conn.cursor()
         query = 'select p_role ' \
                 'from "person" where p_id = %s;'
@@ -96,7 +98,7 @@ class PersonDAO:
         result = cursor.fetchone()
         return result
 
-    def getUnavailableTimeOfPersonById(self, p_id):
+    def get_unavailable_time_of_person_by_id(self, p_id):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt ' \
                 'from "booking" ' \
@@ -117,7 +119,7 @@ class PersonDAO:
             result.append(row)
         return result
 
-    def get_most_used_room(self,p_id):
+    def get_most_used_room(self, p_id):
         cursor = self.conn.cursor()
         query = 'select r_id, count(booking.room_id) as uses' \
                 'from booking inner join person inner join room on person.p_id = booking.invite_id ' \
@@ -132,8 +134,8 @@ class PersonDAO:
         cursor = self.conn.cursor()
         query = 'select p_id, p_fname , p_lname, count(booking.invite_id) as shared' \
                 'from booking b inner join person ' \
-                'on %s = b.invited_id'\
-                'group by b.invite_id'\
+                'on %s = b.invited_id' \
+                'group by b.invite_id' \
                 'order by shared desc limit 1; '
         cursor.execute(query, (p_id,))
         result = []
@@ -141,19 +143,19 @@ class PersonDAO:
             result.append(row)
         return result
 
-    def getbusiesthours(self):
+    def get_busiest_hours(self):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt, count(*) as activeintheroom' \
                 'from booking  ' \
-                ' group by st_dt '\
-                 'ordered by activeinthehour desc limit 5;'
+                ' group by st_dt ' \
+                'ordered by activeinthehour desc limit 5;'
         cursor.execute(query, )
         result = []
         for row in cursor:
             result.append(row)
         return result
 
-    def getinfoforstudent(self):
+    def get_info_for_student(self):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt, room_id, host_id' \
                 'from booking;  '
@@ -163,7 +165,7 @@ class PersonDAO:
             result.append(row)
         return result
 
-    def getinfoforprofessor(self):
+    def get_info_for_professor(self):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt, room_id, host_id, invite_id' \
                 'from booking;  '
@@ -173,7 +175,7 @@ class PersonDAO:
             result.append(row)
         return result
 
-    def getinfoforstaff(self):
+    def get_info_for_staff(self):
         cursor = self.conn.cursor()
         query = 'select *' \
                 'from booking;  '
