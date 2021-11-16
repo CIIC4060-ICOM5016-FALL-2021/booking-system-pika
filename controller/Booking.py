@@ -163,7 +163,8 @@ class Booking:
         method = BookingDAO()
         booking = self.get_booking_by_id(b_id)
         host_id = self.get_host_by_id(b_id)
-
+        invite_id = self.get_invite_by_id(b_id)
+        room_id =self.get_room_id_by_id(b_id)
         result = method.delete_booking(b_id)
         if result:
             return jsonify("DELETED")
