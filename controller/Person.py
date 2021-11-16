@@ -92,7 +92,7 @@ class Person:
         if not person_role:  #
             return jsonify("Person Not Found"), 404
         else:
-            result = self.build_role_map_dict(person_role[0])
+            result = self.build_role_map_dict(person_role)
             return jsonify(result), 200
 
     def get_most_booked_persons(self):
