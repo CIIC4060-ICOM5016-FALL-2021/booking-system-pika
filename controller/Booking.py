@@ -42,7 +42,7 @@ class Booking:
         return result
 
 
-    def create_new_booking(self, json):
+    def create_new_booking(self, p_id, json):
         st_dt = json['st_dt']
         et_dt = json['et_dt']
         invited_id = json['invited_id']
