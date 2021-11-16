@@ -32,9 +32,9 @@ class RoomDAO:
     def get_room(self, r_id):
         # Open Cursor for operations
         cursor = self.conn.cursor()
-        query = "select r_id, r_building, r_dept, r_type from room;"
+        query = "select r_id, r_building, r_dept, r_type from room where r_id =%s;"
         # Execute commands n close
-        cursor.execute(query)
+        cursor.execute(query, (r_id,))
         result = []
         for row in cursor:
             result.append(row)

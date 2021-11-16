@@ -19,6 +19,10 @@ class Room:
     def build_room_attr_dict(self, r_id, r_building, r_dept, r_type):
         return self.build_room([r_id, r_building, r_dept, r_type])
 
+    def build_timeslot_attrdict(self, r_id, st_dt, et_dt):
+        result = {'Room ID': r_id, 'start_time': st_dt, 'finish_time': et_dt}
+        return result
+
     # Read
     #
     # Gets All Rooms
@@ -78,4 +82,25 @@ class Room:
             return jsonify(result), 200
 
     def get_room_by_id(self, r_id):
-        pass
+        dao = RoomDAO()
+        rooms_by_id = dao.get_room(r_id)
+        if not rooms_by_id:
+            return jsonify("There's no rooms!"), 404
+        else:
+            result = self.build_room_attr_dict(rooms_by_id)
+            return jsonify(result), 200
+     # test this
+    def get_available_roomintimeslot(self, st_dt, et_dt):
+        dao = RoomDAO()
+        available_rooms = dao.get_room(st_dt, et_dt)
+        if not available_rooms:
+            return jsonify("Room Not Found"), 404
+        else:
+            list=[]
+            for line in available_rooms:
+                list.append(self.get_room_by_id(line))
+
+            result =[]
+            for row in list:
+                result.append(self.build_room(row))
+            return jsonify(result)
