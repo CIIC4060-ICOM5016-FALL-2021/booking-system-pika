@@ -18,6 +18,12 @@ class Person:
                   'p_email': row[4], 'p_phone': row[5], 'p_gender': row[6]}
         return result
 
+
+    def build_person_map_info(self, row):
+        result = {'p_fname': row[0], 'p_lname': row[1], 'p_role': row[2],
+                  'p_email': row[3], 'p_phone': row[4], 'p_gender': row[5]}
+        return result
+
     def build_person_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
         result = {'p_id': p_id, 'p_fname': p_fname, 'p_lname': p_lname, 'p_role': p_role, 'p_email': p_email,
                   'p_phone': p_phone, 'p_gender': p_gender}
@@ -223,5 +229,5 @@ class Person:
         if not person_tuple:
             return jsonify("Not Found"), 404
         else:
-            result = self.build_person_map(person_tuple)
+            result = self.build_person_map_info(person_tuple)
             return jsonify(result), 200
