@@ -47,6 +47,27 @@ class BookingDAO:
             result.append(row)
         return result
 
+
+    def extract_date(self,piece,b_id):
+        cursor = self.conn.cursor()
+        query = 'SELECT EXTRACT(piece = %s FROM timestamp st_dt)' \
+                'from booking ' \
+                'where b_id=%s; '
+        cursor.execute(query,(piece,b_id))
+        result = []
+        result = cursor.fetchone()
+        return result
+
+
+    def get_all_booking(self):
+        cursor = self.conn.cursor()
+        query = 'select st_dt, et_dt, invited_id, host_id, room_id from "booking";'
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
     def get_booking_by_id(self, b_id):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt, invited_id, host_id, room_id ' \

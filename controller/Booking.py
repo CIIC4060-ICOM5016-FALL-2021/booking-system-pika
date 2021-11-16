@@ -36,6 +36,48 @@ class Booking:
         result = {'p_id': row[0], 'times_booked': row[1]}
         return result
 
+    # def getFreeTimeForUsers(self, booking_id, json):
+    #     bookingmethod = BookingDAO()
+    #
+    #     selectedbooking = bookingmethod.get_booking_by_id(b_id)
+    #     if not selectedbooking:
+    #         return jsonify("Booking Not Found"), 404
+    #
+    #     meeting_invited = bookingmethod.get_invited_list_by_meeting(b_id)
+    #     meeting_invited.append(selectedbooking[3])
+    #     result = {}
+    #     person_dao = PersonDAO()
+    #
+    #     result_list = []
+    #     for p_id in meeting_invited:
+    #         user = person_dao.get_person_by_id(p_id)
+    #         if not user:  # User Not Found
+    #             return jsonify("User Not Found"), 404
+    #         user_unavailable_time_slots = person_dao.get_unavailable_time_of_person_by_id(p_id)
+    #         # start_date = date + " 0:00"
+    #         # start_time = dt.datetime.strptime(start_date, '%Y-%m-%d %H:%M')
+    #         # finish_date = date + " 23:59"
+    #         # finish_date = dt.datetime.strptime(finish_date, '%Y-%m-%d %H:%M')
+    #
+    #
+    #         bookingmethod.format_time_stamp()
+    #
+    #         for slot in user_unavailable_time_slots:
+    #             if slot[1] > start_time and slot[2] < finish_date:  # Compare as time (not string)
+    #                 finish_time = slot[1]
+    #                 obj = BaseUser().build_time_slot_attr_dict(start_time, finish_time)
+    #                 result_list.append(obj)
+    #                 start_time = slot[2]
+    #         finish_time = finish_date
+    #         result_list.append(BaseUser().build_time_slot_attr_dict(start_time, finish_time))  # Stores Free Time String
+    #
+    #     users_in_meeting = len(user_array)
+    #     for string_date in result_list:
+    #         # Intersection will all users
+    #         if self.dateIntersectionCount(string_date, result_list) == users_in_meeting:
+    #             return jsonify("All Users in Booking are free at the following hour", string_date), 200
+    #     return jsonify("No overlapping times available between users at the specified date"), 200
+
     def create_new_booking(self, p_id, json):
         st_dt = json['st_dt']
         et_dt = json['et_dt']
@@ -72,18 +114,7 @@ class Booking:
 
     #         result_list.append(obj)
     #     return jsonify(result_list)
-    def get_free_time_users(self, b_id, json):
-        bookingmethod = BookingDAO()
 
-        selectedbooking = bookingmethod.get_booking_by_id(b_id)
-        if not selectedbooking:
-            return jsonify("Booking Not Found"), 404
-
-        meeting_invited = bookingmethod.get_invited_list_by_meeting(b_id)
-        meeting_invited.append(selectedbooking[3])
-        result = {}
-        person_dao = PersonDAO()
-        return jsonify(result)
 
 
     def get_booking_by_id(self, b_id):
