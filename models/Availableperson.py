@@ -12,7 +12,7 @@ class AvailablePersonDao:
     def create_unavailable_person_time(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'insert into "availableperson" ' \
-                '(st_dt, et_dt, person_id) values (%s, %s, %s);'
+                '(st_dt, et_dt, person_id) values (%s, %s, %s) returning pa_id;'
         cursor.execute(query, (st_dt, et_dt, p_id,))
         self.conn.commit()
         return True

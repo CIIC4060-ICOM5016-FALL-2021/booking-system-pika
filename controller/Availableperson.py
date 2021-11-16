@@ -44,7 +44,7 @@ class AvailablePerson:
     def get_all_unavailable_persons(self):
         method = AvailablePersonDao()
         available_users_list = method.get_all_unavailable_person()
-        if not  available_users_list:
+        if not available_users_list:
             return jsonify("Everyone is Available!!!!!!!")
         else:
          result_list = []
