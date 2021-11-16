@@ -74,6 +74,14 @@ class RoomDAO:
         self.conn.commit()
         return r_id
 
+    def create_unavailable_new_room(self, r_id, st_dt, et_dt):
+        cursor = self.conn.cursor()
+        query = "insert into availableroom (st_dt, et_dt, r_id)  values (%s, %s, %s) returning ra_id; "
+        cursor.execute(query, (st_dt, et_dt, r_id, ))
+        r_id = cursor.fetchone()[0]
+        print(r_id)
+        self.conn.commit()
+        return r_id
     # Update
     def update_room(self, r_id, new_r_building, new_r_dept, new_r_type):
         cursor = self.conn.cursor()

@@ -15,15 +15,24 @@ class Room:
     def build_room(self, row: tuple):
         print(row, "ROW")
         result = {
-            "r_building": row[0],
-            "r_dept": row[1],
-            "r_type": row[2]
+            "r_id" : row[0],
+            "r_building": row[1],
+            "r_dept": row[2],
+            "r_type": row[3]
         }
         return result
 
     # Overloading
     def build_room_attr_dict(self, r_id, r_building, r_dept, r_type):
         return self.build_room((r_id, r_building, r_dept, r_type))
+
+    def build_available_room(self, row: tuple):
+        print(row, "ROW")
+        result = {'ra_id': row[0], 'st_dt': row[1],'et_dt': row[2], 'r_id': row[3],}
+        return result
+
+    def build_available_room_attr_dict(self, ra_id,st_dt, et_dt, r_id):
+        return self.build_room((ra_id, st_dt, et_dt, r_id))
 
     def build_timeslot_attrdict(self, r_id, st_dt, et_dt):
         result = {'Room ID': r_id, 'start_time': st_dt, 'finish_time': et_dt}
@@ -63,6 +72,15 @@ class Room:
         return jsonify(result), 201
         # else:
         #     return jsonify("A room with that ID already exists"), 409
+
+    def create_unavailable_room(self, r_id, st_dt, et_dt):
+        method = RoomDAO
+        exist = method.get_room_by_id(r_id)
+        if not exist:
+            return jsonify("room doesn't exist")
+        ra_id = method.create_unavailable_new_room(r_id, st_dt, et_dt)
+        result = self.build_available_room_attr_dict(ra_id,st_dt, et_dt, r_id)
+        return jsonify(result)
 
     # Delete
     def delete_room(self, r_id):

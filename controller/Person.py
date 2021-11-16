@@ -48,7 +48,7 @@ class Person:
         result = self.build_person_attr_dict(p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
         return jsonify(result)
 
-    def get_all_persons(self):
+    def get_all_person(self):
         method = PersonDAO()
         person_list = method.get_all_person()
         if not person_list:
@@ -60,7 +60,7 @@ class Person:
             result_list.append(obj)
         return jsonify(result_list)
 
-    def get_persons_by_id(self, p_id):
+    def get_person_by_id(self, p_id):
         method = PersonDAO()
         person_tuple = method.get_person_by_id(p_id)
         if not person_tuple:

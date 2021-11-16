@@ -8,21 +8,21 @@ from models.Availableperson import AvailablePersonDao
 class AvailablePerson:
     def build_available_time_person_map(self, row):
         result = {'pa_id': row[0], 'st_dt': row[1],
-                  'et_dt': row[2], 'person_id': row[3]}
+                  'et_dt': row[2], 'p_id': row[3]}
         return result
 
-    def add_unavailable_time_schedule(self, p_id, json):
+    def build_person_attr_dict(self, pa_id, st_dt, et_dt, p_id):
+     return self.build_available_time_person_map(pa_id, st_dt, et_dt, p_id)
+
+    def create_unavailable_time_schedule(self, p_id, start_time, end_time):
         method = Person()
-        start_time = json['st_dt']
-        end_time = json['et_dt']
         exist = method.get_persons_by_id(p_id)
         if not exist:
             return jsonify("Person doesn't exist")
 
-        unavailable_schedule = method.createUnavailablePersonTime(p_id, start_time, end_time)
-        if unavailable_schedule:
-            result = {}
-            return jsonify(result)
+        pa_id = method.createUnavailablePersonTime(p_id, start_time, end_time)
+        result = self.build_person_attr_dict(pa_id, start_time, end_time, p_id)
+        return jsonify(result)
 
     def verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
         method =  AvailablePersonDao()
