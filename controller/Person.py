@@ -137,14 +137,13 @@ class Person:
         else:
             return jsonify("Person is available all day"), 200
 
-    def update_person(self, json):
+    def update_person(self, p_id, json):
         p_fname = json['p_fname']
         p_lname = json['p_lname']
         p_role = json['p_role']
         p_email = json['p_email']
         p_phone = json['p_phone']
         p_gender = json['p_gender']
-        p_id = json['p_id']
         method = PersonDAO()
         updated_info = method.update_person(p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
         if updated_info:
