@@ -72,9 +72,9 @@ class PersonDAO:
 
     def get_person_by_id(self, p_id):
         cursor = self.conn.cursor()
-        query = 'select p_fname = %s, p_lname= %s, p_role = %s, p_email= %s , p_phone = %s ,p_gender= %s ' \
+        query = 'select p_fname, p_lname, p_role, p_email, p_phone, p_gender ' \
                 'from "person" where p_id = %s;'
-        cursor.execute(query, (p_id,))
+        cursor.execute(query, (p_id, ))
         result = cursor.fetchone()
         return result
 
