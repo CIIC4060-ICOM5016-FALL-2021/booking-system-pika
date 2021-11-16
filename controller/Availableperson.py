@@ -13,6 +13,11 @@ class AvailablePerson:
                   'et_dt': row[2], 'person_id': row[3]}
         return result
 
+    def build_unavailable_person_attr_dict(self, pa_id, st_dt, et_dt, p_id):
+        result = {'pa_id': pa_id, 'st_dt': st_dt,
+                  'et_dt': et_dt, 'person_id': p_id}
+        return result
+
     def create_unavailable_time_schedule(self, json):
         method = Person()
         p_id = json['p_id']
@@ -21,10 +26,10 @@ class AvailablePerson:
         exist = method.get_persons_by_id(p_id)
         if not exist:
             return jsonify("Person doesn't exist")
-
-        unavailable_schedule = method.add_unavailable_time_schedule(p_id, start_time, end_time)
-        if unavailable_schedule:
-            result = {}
+        else:
+            method2 = AvailablePersonDao()
+            pa_id = method2.create_unavailable_time_schedule(p_id, start_time, end_time)
+            result = self.build_unavailable_person_attr_dict( pa_id, start_time, end_time, p_id)
             return jsonify(result)
 
     def verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
