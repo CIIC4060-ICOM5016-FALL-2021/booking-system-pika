@@ -36,6 +36,17 @@ class Booking:
         result = {'p_id': row[0], 'times_booked': row[1]}
         return result
 
+    def build_invite_id_map_dict(self, invite_id):
+        result = {'invite_id': invite_id}
+        return result
+
+    def build_host_id_map_dict(self, host_id):
+        result = {'invite_id': host_id}
+        return result
+
+    def build_room_id_map_dict(self, room_id):
+        result = {'room_id': room_id}
+        return result
 
     def create_new_booking(self, json):
         st_dt = json['st_dt']
@@ -85,6 +96,54 @@ class Booking:
             result = self.build_booking_attr_dict(b_id, st_dt, et_dt, invited_id,host_id,room_id)
             return jsonify(result)
 
+    def get_all_booking(self):
+        method = BookingDAO()
+        booking_list = method.get_all_booking()
+        if not booking_list:
+            return jsonify("No booking is on the list!"), 404
+        else:
+            result_list = []
+        for row in booking_list:
+            obj = self.build_booking_map_dict(row)
+            result_list.append(obj)
+        return jsonify(result_list)
+
+    def get_booking_by_id(self,b_id):
+        method = BookingDAO()
+        Booking_tuple = method.get_booking_by_id(b_id)
+        if not Booking_tuple:
+            return jsonify("Not Found"), 404
+        else:
+            result = self.build_booking_map_dict(Booking_tuple)
+            return jsonify(result), 200
+
+    def get_invite_by_id(self, b_id):
+        method = BookingDAO()
+        Booking_tuple = method.get_booking_by_id(b_id)
+        if not Booking_tuple:
+            return jsonify("Not Found"), 404
+        else:
+            result = self.build_invite_id_map_dict(Booking_tuple)
+            return jsonify(result), 200
+
+    def get_host_by_id(self, b_id):
+        method = BookingDAO()
+        Booking_tuple = method.get_booking_by_id(b_id)
+        if not Booking_tuple:
+            return jsonify("Not Found"), 404
+        else:
+            result = self.build_host_id_map_dict(Booking_tuple)
+            return jsonify(result), 200
+
+    def get_room_id_by_id(self, b_id):
+        method = BookingDAO()
+        Booking_tuple = method.get_booking_by_id(b_id)
+        if not Booking_tuple:
+            return jsonify("Not Found"), 404
+        else:
+            result = self.build_room_id_map_dict(Booking_tuple)
+            return jsonify(result), 200
+
     def update_booking(self, json):
         st_dt = json['st_dt']
         et_dt = json['et_dt']
@@ -102,6 +161,9 @@ class Booking:
 
     def delete_booking(self, b_id):
         method = BookingDAO()
+        booking = self.get_booking_by_id(b_id)
+        host_id = self.get_host_by_id(b_id)
+
         result = method.delete_booking(b_id)
         if result:
             return jsonify("DELETED")
