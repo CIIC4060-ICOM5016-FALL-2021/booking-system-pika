@@ -14,8 +14,9 @@ class AvailablePersonDao:
         query = 'insert into "availableperson" ' \
                 '(st_dt, et_dt, person_id) values (%s, %s, %s) returning pa_id;'
         cursor.execute(query, (st_dt, et_dt, p_id,))
+        pa_id = cursor.fetchone()[0]
         self.conn.commit()
-        return True
+        return pa_id
 
     def get_all_unavailable_person(self):
         cursor = self.conn.cursor()
