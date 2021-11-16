@@ -92,15 +92,15 @@ class Booking:
         if not booking_tuple:
             return jsonify("Not Found"), 404
         else:
-            result = self.build_person_map(booking_tuple)
+            result = self.build_booking_map_dict(booking_tuple)
             return jsonify(result), 200
-    def update_booking(self, json):
+
+    def update_booking(self, b_id, json):
         st_dt = json['st_dt']
         et_dt = json['et_dt']
         invited_id = json['invited_id']
         host_id = json['host_id']
         room_id = json['room_id']
-        b_id = json['b_id']
         method = BookingDAO()
         updatedinfo = method.update_booking(b_id, st_dt, et_dt, invited_id, host_id, room_id)
         if updatedinfo:

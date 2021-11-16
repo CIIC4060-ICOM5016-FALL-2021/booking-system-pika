@@ -1,5 +1,7 @@
 import datetime as dt
 from flask import jsonify
+
+from models.Booking import BookingDAO
 from models.Person import PersonDAO
 from controller.Room import Room
 from models.Room import RoomDAO
@@ -174,7 +176,8 @@ class Person:
             return jsonify("NOT FOUND"), 404
 
     def get_all_available_time_persons(self, p_id):
-        pass
+        method_a = PersonDAO()
+        method_b = BookingDAO()
 
     def delete_unavailable_schedule(self, p_id, st_dt, et_dt):
         method = PersonDAO()
