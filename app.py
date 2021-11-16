@@ -122,7 +122,7 @@ def handle_persons_role_by_id(p_id):
 
 # # unavailable person
 @app.route('/pika-booking/unavailablepersons', methods=['GET', 'POST'])
-def handle_persons():
+def handle_unavailable_persons():
     if request.method == 'POST':
         return AvailablePerson().create_unavailable_time_schedule(request.json)
     elif request.method == 'GET':
