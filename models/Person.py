@@ -23,7 +23,7 @@ class PersonDAO:
     def create_unavailable_person_time(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'insert into "availableperson" ' \
-                '(st_dt, et_dt, user_id) values (%s, %s, %s);'
+                '(st_dt, et_dt, p_id) values (%s, %s, %s);'
         cursor.execute(query, (st_dt, et_dt, p_id,))
         self.conn.commit()
         return True
@@ -144,7 +144,7 @@ class PersonDAO:
 
     def get_busiest_hours(self):
         cursor = self.conn.cursor()
-        query = 'select st_dt, et_dt, count(*) as activeintheroom' \
+        query = 'select st_dt, et_dt, count(*) as activeinthehour' \
                 'from booking  ' \
                 ' group by st_dt ' \
                 'ordered by activeinthehour desc limit 5;'
