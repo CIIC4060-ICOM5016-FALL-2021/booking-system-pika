@@ -78,10 +78,10 @@ class Person:
             result_list.append(obj)
         return jsonify(result_list)
 
-    def get_user_role_by_id(self, user_id):
+    def get_person_role_by_id(self, p_id):
 
         dao = PersonDAO()
-        person_role = dao.get_person_role_by_id(user_id)
+        person_role = dao.get_person_role_by_id(p_id)
         if not person_role:  #
             return jsonify("Person Not Found"), 404
         else:
