@@ -54,9 +54,9 @@ class AvailablePerson:
         return jsonify(result_list)
     # def update_unavailable_schedule(self):
 
-    def delete_unavailable_schedule(self, p_id, st_dt, et_dt):
+    def delete_unavailable_schedule(self, pa_id):
         method = AvailablePersonDao()
-        result = method.delete_unavailable_person_schedule(p_id, st_dt, et_dt)
+        result = method.delete_unavailable_person_schedule(pa_id)
         if result:
             return jsonify("DELETED")
         else:

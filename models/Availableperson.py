@@ -68,10 +68,10 @@ class AvailablePersonDao:
         self.conn.commit()
         return deleted_rows != 0
 
-    def delete_unavailable_person_schedule(self, p_id, st_dt, et_dt):
+    def delete_unavailable_person_schedule(self, pa_id):
         cursor = self.conn.cursor()
-        query = 'delete from "availableperson" where person_id = %s AND st_dt= %s AND et_dt = %s; '
-        cursor.execute(query, (p_id, st_dt, et_dt))
+        query = 'delete from "availableperson" where pa_id = %s; '
+        cursor.execute(query, (pa_id,))
         deleted_rows = cursor.rowcount
         self.conn.commit()
         return deleted_rows != 0
