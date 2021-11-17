@@ -34,7 +34,7 @@ class AvailablePerson:
         else:
             method2 = AvailablePersonDao()
             pa_id = method2.create_unavailable_person_time( st_dt, et_dt,person_id)
-            result = self.build_available_time_person_map(pa_id, st_dt, et_dt, person_id)
+            result = self. build_unavailable_person_attr_dict(pa_id, st_dt, et_dt, person_id)
             return jsonify(result)
 
     def verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
