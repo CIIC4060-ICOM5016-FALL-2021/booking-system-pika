@@ -121,7 +121,7 @@ def handle_persons_role_by_id(p_id):
 
 
 # unavailable person
-@app.route('/pika-booking/unavailablepersons', methods=['GET', 'POST', 'DELETE'])
+@app.route('/pika-booking/unavailablepersons', methods=['GET', 'POST'])
 def handle_unavailable_persons():
     if request.method == 'POST':
         return AvailablePerson().create_unavailable_time_schedule(request.json)
@@ -132,11 +132,11 @@ def handle_unavailable_persons():
 
 @app.route('/pika-booking/unavailablepersons/<int:pa_id>', methods=['GET', 'PUT', 'DELETE'])
 def handle_unavaliable_persons_by_id(pa_id):
-    # if request.method == 'GET':
-    #   #  return AvailablePerson().get_unavailable_person_by_id()
-    # elif request.method == 'PUT':
-    #    # return AvailablePerson().update_unav
-    if request.method == 'DELETE':
+    if request.method == 'GET':
+      #  return AvailablePerson().get_unavailable_person_by_id()
+    elif request.method == 'PUT':
+       # return AvailablePerson().update_unavailable_person()
+    elif request.method == 'DELETE':
         return AvailablePerson().delete_unavailable_schedule(pa_id)
     else:
         return jsonify("Method Not Allowed"), 405
