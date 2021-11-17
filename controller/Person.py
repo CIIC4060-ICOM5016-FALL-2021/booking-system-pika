@@ -28,6 +28,11 @@ class Person:
                   'p_phone': p_phone, 'p_gender': p_gender}
         return result
 
+    def build_person_update_attr_dict(self, p_fname, p_lname, p_email, p_phone, p_gender):
+        result = {'p_fname': p_fname, 'p_lname': p_lname, 'p_email': p_email,
+                  'p_phone': p_phone, 'p_gender': p_gender}
+        return result
+
     def build_role_map_dict(self, row):
         result = {'p_role': row[0]}
         return result
@@ -151,14 +156,13 @@ class Person:
     def update_person(self, p_id, json):
         p_fname = json['p_fname']
         p_lname = json['p_lname']
-        p_role = json['p_role']
         p_email = json['p_email']
         p_phone = json['p_phone']
         p_gender = json['p_gender']
         method = PersonDAO()
-        updated_info = method.update_person(p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
+        updated_info = method.update_person(p_id, p_fname, p_lname, p_email, p_phone, p_gender)
         if updated_info:
-            result = self.build_person_attr_dict(p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
+            result = self.build_person_update_attr_dict(p_id, p_fname, p_lname, p_email, p_phone, p_gender)
             return jsonify(result)
         else:
             return jsonify('Not found person')

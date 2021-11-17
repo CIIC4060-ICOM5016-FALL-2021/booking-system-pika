@@ -20,12 +20,12 @@ class PersonDAO:
         self.conn.commit()
         return p_id
 
-    def update_person(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
+    def update_person(self, p_id, p_fname, p_lname, p_email, p_phone, p_gender):
         cursor = self.conn.cursor()
         query = 'update "person" ' \
-                'set p_fname = %s, p_lname= %s, p_role = %s, p_email= %s , p_phone = %s ,p_gender= %s ' \
+                'set p_fname = %s, p_lname= %s, p_email= %s , p_phone = %s ,p_gender= %s ' \
                 'where p_id = %s '
-        cursor.execute(query, (p_fname, p_lname, p_role, p_email, p_phone, p_gender, p_id))
+        cursor.execute(query, (p_fname, p_lname, p_email, p_phone, p_gender, p_id))
         self.conn.commit()
         return True
 
