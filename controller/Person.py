@@ -170,7 +170,7 @@ class Person:
 
 
     def delete_person(self, p_id):
-        method = PersonDAO()
+        method = AvailablePersonDao()
         result = method.delete_person(p_id)
         if result:
             method.delete_unavailable_person(p_id)
