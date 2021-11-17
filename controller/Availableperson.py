@@ -79,6 +79,7 @@ class AvailablePerson:
             return jsonify(result)
         else:
             return jsonify('Not found person')
+
     def delete_unavailable_schedule(self, pa_id):
         method = AvailablePersonDao()
         result = method.delete_unavailable_person_schedule(pa_id)
