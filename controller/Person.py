@@ -163,18 +163,6 @@ class Person:
         else:
             return jsonify('Not found person')
 
-    def add_unavailable_time_schedule(self, p_id, json):
-        method = PersonDAO()
-        start_time = json['st_dt']
-        end_time = json['et_dt']
-        exist = self.get_persons_by_id(p_id)
-        if not exist:
-            return jsonify("Person doesn't exist")
-
-        unavailable_schedule = method.create_unavailable_person_time(p_id, start_time, end_time)
-        if unavailable_schedule:
-            result = {}
-            return jsonify(result)
 
     def delete_person(self, p_id):
         method = PersonDAO()
@@ -185,17 +173,6 @@ class Person:
         else:
             return jsonify("NOT FOUND"), 404
 
-    def get_all_available_time_persons(self, p_id):
-        method_a = PersonDAO()
-        method_b = BookingDAO()
-
-    def delete_unavailable_schedule(self, p_id, st_dt, et_dt):
-        method = PersonDAO()
-        result = method.delete_unavailable_person_schedule(p_id, st_dt, et_dt)
-        if result:
-            return jsonify("DELETED")
-        else:
-            return jsonify("NOT FOUND")
 
     def role_to_get_access_to_room_info(self, p_id):
         method = PersonDAO()

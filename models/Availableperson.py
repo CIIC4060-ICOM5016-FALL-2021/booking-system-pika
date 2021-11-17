@@ -48,7 +48,17 @@ class AvailablePersonDao:
         result = cursor.fetchone()
         return result
 
-    def  verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
+    def get_unavailable_time_of_person_by_id(self, pa_id):
+        cursor = self.conn.cursor()
+        query = 'select st_dt, et_dt ' \
+                'from "availableperson" ' \
+                'where pa_id = %s ' \
+
+        cursor.execute(query, (pa_id,))
+        result = cursor.fetchone()
+        return result
+
+    def verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
        cursor = self.conn.cursor()
        query = "select p_id " \
                "from person as p, booking as b, availableperson as a " \
@@ -57,8 +67,7 @@ class AvailablePersonDao:
        result = cursor.fetchone()
        return result
 
-
-    def delete_unavailable_person(self, person_id):
+    def delete_all_unavailable_person_schedule(self, person_id):
         cursor = self.conn.cursor()
         query = 'delete from "availableperson" where person_id = %s;'
         cursor.execute(query, (person_id,))
@@ -70,6 +79,14 @@ class AvailablePersonDao:
         cursor = self.conn.cursor()
         query = 'delete from "availableperson" where pa_id = %s; '
         cursor.execute(query, (pa_id,))
+        deleted_rows = cursor.rowcount
+        self.conn.commit()
+        return deleted_rows != 0
+
+    def delete_unavailable_person_schedule_at_certain_time(self, p_id, st_dt, et_dt):
+        cursor = self.conn.cursor()
+        query = 'delete from "availableperson" where person_id = %s and st_dt= %s and et_dt= %s;'
+        cursor.execute(query, (p_id, st_dt, et_dt))
         deleted_rows = cursor.rowcount
         self.conn.commit()
         return deleted_rows != 0
