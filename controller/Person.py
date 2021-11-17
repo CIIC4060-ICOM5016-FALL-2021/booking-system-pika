@@ -162,7 +162,7 @@ class Person:
         method = PersonDAO()
         updated_info = method.update_person(p_id, p_fname, p_lname, p_email, p_phone, p_gender)
         if updated_info:
-            result = self.build_person_update_attr_dict(p_id, p_fname, p_lname, p_email, p_phone, p_gender)
+            result = self.build_person_update_attr_dict( p_fname, p_lname, p_email, p_phone, p_gender)
             return jsonify(result)
         else:
             return jsonify('Not found person')
