@@ -68,7 +68,17 @@ class AvailablePerson:
         return jsonify(result)
 
     # def update_unavailable_schedule(self):
-
+    def update_unavailable_schedule(self, pa_id, json):
+        person_id = json['person_id']
+        st_dt = json['st_dt']
+        et_dt = json['et_dt']
+        method = AvailablePersonDao()
+        updated_info = method.update_unavailable_person(pa_id, st_dt, et_dt, person_id)
+        if updated_info:
+            result = self.build_person_attr_dict(pa_id, st_dt, et_dt, person_id)
+            return jsonify(result)
+        else:
+            return jsonify('Not found person')
     def delete_unavailable_schedule(self, pa_id):
         method = AvailablePersonDao()
         result = method.delete_unavailable_person_schedule(pa_id)

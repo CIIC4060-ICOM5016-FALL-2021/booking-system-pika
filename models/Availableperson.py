@@ -67,6 +67,15 @@ class AvailablePersonDao:
        result = cursor.fetchone()
        return result
 
+    def update_unavailable_person(self, pa_id,st_dt, et_dt,person_id):
+        cursor = self.conn.cursor()
+        query = 'update "availableperson" ' \
+                'set st_dt= %s, et_dt= %s, person_id= %s ' \
+                'where pa_id = %s '
+        cursor.execute(query, (st_dt, et_dt, person_id, pa_id))
+        self.conn.commit()
+        return True
+
     def delete_all_unavailable_person_schedule(self, person_id):
         cursor = self.conn.cursor()
         query = 'delete from "availableperson" where person_id = %s;'
