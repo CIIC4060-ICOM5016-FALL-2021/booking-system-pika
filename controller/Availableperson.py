@@ -75,7 +75,7 @@ class AvailablePerson:
         method = AvailablePersonDao()
         updated_info = method.update_unavailable_person(pa_id, st_dt, et_dt, person_id)
         if updated_info:
-            result = self.build_person_attr_dict(pa_id, st_dt, et_dt, person_id)
+            result = self.build_unavailable_person_attr_dict(pa_id, st_dt, et_dt, person_id)
             return jsonify(result)
         else:
             return jsonify('Not found person')
