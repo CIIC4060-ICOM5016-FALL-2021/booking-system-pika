@@ -75,14 +75,13 @@ class Person:
             result = self.build_person_map(person_tuple)
             return jsonify(result), 200
 
-    def get_all_available_persons(self):
+    def persons_by_id_exist(self, p_id):
         method = PersonDAO()
-        available_users_list = method.get_all_available_person()
-        result_list = []
-        for row in available_users_list:
-            obj = self.build_available_time_person_dict(row)
-            result_list.append(obj)
-        return jsonify(result_list)
+        person_tuple = method.get_person_by_id(p_id)
+        if not person_tuple:
+            return False
+        else:
+            return True, 200
 
     def get_person_role_by_id(self, p_id):
 

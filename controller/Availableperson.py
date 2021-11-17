@@ -28,7 +28,7 @@ class AvailablePerson:
         person_id = json['person_id']
         st_dt= json['st_dt']
         et_dt = json['et_dt']
-        exist = method.get_persons_by_id(person_id)
+        exist = method.persons_by_id_exist(person_id)
         if not exist:
             return jsonify("Person doesn't exist")
         else:
