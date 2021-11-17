@@ -132,21 +132,21 @@ class Person:
         if not person_unavailable_time_slots:
             return jsonify("Person has no schedule "), 200
         else:
-         result_list = []
-         start_date = date + " 0:00"
-         start_time = dt.datetime.strptime(start_date, '%Y-%m-%d %H:%M')
-         finish_date = date + " 23:59"
-         finish_date = dt.datetime.strptime(finish_date, '%Y-%m-%d %H:%M')
-         for row in person_unavailable_time_slots:
+          result_list = []
+          start_date = date + " 0:00"
+          start_time = dt.datetime.strptime(start_date, '%Y-%m-%d %H:%M')
+          finish_date = date + " 23:59"
+          finish_date = dt.datetime.strptime(finish_date, '%Y-%m-%d %H:%M')
+        for row in person_unavailable_time_slots:
             if row[1] > start_time and row[2] < finish_date:
                 finish_time = row[1]
                 obj = self.build_timeslot_attrdict(start_time, finish_time)
                 result_list.append(obj)
                 start_time = row[2]
-         finish_time = finish_date
-         result_list.append(self.build_timeslot_attrdict(start_time, finish_time))
-         print(result_list)
-         return jsonify("Person is unavailable at the following time frames", result_list), 200
+        finish_time = finish_date
+        result_list.append(self.build_timeslot_attrdict(start_time, finish_time))
+        print(result_list)
+        return jsonify("Person is unavailable at the following time frames", result_list), 200
 
     def update_person(self, p_id, json):
         p_fname = json['p_fname']
