@@ -160,8 +160,9 @@ class Person:
         p_phone = json['p_phone']
         p_gender = json['p_gender']
         method = PersonDAO()
+        exist = self.persons_by_id_exist(p_id)
         updated_info = method.update_person(p_id, p_fname, p_lname, p_email, p_phone, p_gender)
-        if updated_info:
+        if updated_info & exist:
             result = self.build_person_update_attr_dict( p_fname, p_lname, p_email, p_phone, p_gender)
             return jsonify(result)
         else:
