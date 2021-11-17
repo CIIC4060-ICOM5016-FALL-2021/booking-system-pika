@@ -77,7 +77,7 @@ class Person:
         if not person_tuple:
             return jsonify("Not Found"), 404
         else:
-            result = self.build_person_map(person_tuple)
+            result = self.build_person_map_info(person_tuple)
             return jsonify(result), 200
 
     def persons_by_id_exist(self, p_id):
