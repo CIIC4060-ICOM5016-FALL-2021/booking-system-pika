@@ -125,7 +125,8 @@ class Person:
 
         if not person:
             return jsonify("Person Not Found"), 404
-         method2= AvailablePersonDao()
+
+        method2= AvailablePersonDao()
         person_unavailable_time_slots = method2.get_unavailable_time_of_person_by_id(p_id)
         result_list = []
         start_date = date + " 0:00"
