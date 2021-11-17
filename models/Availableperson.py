@@ -20,7 +20,7 @@ class AvailablePersonDao:
 
     def get_all_unavailable_person(self):
         cursor = self.conn.cursor()
-        query = 'select  st_dt, et_dt, person_id ' \
+        query = 'select  pa_id, st_dt, et_dt, person_id ' \
                 'from "availableperson";'
         cursor.execute(query)
         result = []
