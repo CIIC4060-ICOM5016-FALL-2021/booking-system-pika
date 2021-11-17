@@ -86,7 +86,7 @@ class Person:
         if not person_tuple:
             return False
         else:
-            return True, 200
+            return True
 
     def get_person_role_by_id(self, p_id):
 
