@@ -9,11 +9,11 @@ class AvailablePersonDao:
                                                                             db_root_config['host'])
         self.conn = psycopg2.connect(connection_url)
 
-    def create_unavailable_person_time(self, p_id, st_dt, et_dt):
+    def create_unavailable_person_time(self, st_dt, et_dt, person_id):
         cursor = self.conn.cursor()
         query = 'insert into "availableperson" ' \
                 '(st_dt, et_dt, person_id) values (%s, %s, %s) returning pa_id;'
-        cursor.execute(query, (st_dt, et_dt, p_id,))
+        cursor.execute(query, (st_dt, et_dt, person_id,))
         pa_id = cursor.fetchone()[0]
         self.conn.commit()
         return pa_id
