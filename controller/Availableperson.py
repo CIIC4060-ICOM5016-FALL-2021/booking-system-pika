@@ -54,7 +54,7 @@ class AvailablePerson:
         else:
          result_list = []
          for row in available_users_list:
-            obj = self.build_available_time_person_map(row)
+            obj = self.build_unavailable_person_attr_dict(row)
             result_list.append(obj)
         return jsonify(result_list)
 
