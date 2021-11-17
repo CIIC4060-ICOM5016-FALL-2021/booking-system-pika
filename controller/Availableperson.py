@@ -13,6 +13,11 @@ class AvailablePerson:
                   'et_dt': row[2], 'person_id': row[3]}
         return result
 
+    def build_unavailable_time_person_info(self, row):
+        result = {'st_dt': row[0],
+                  'et_dt': row[1], 'person_id': row[2]}
+        return result
+
     def build_unavailable_person_attr_dict(self, pa_id, st_dt, et_dt, p_id):
         result = {'pa_id': pa_id, 'st_dt': st_dt,
                   'et_dt': et_dt, 'person_id': p_id}
@@ -52,6 +57,16 @@ class AvailablePerson:
             obj = self.build_available_time_person_map(row)
             result_list.append(obj)
         return jsonify(result_list)
+
+    def get_unavailable_person_by_id(self, pa_id):
+        method = AvailablePersonDao()
+        person = method.et_unavailable_person_by_id(pa_id)
+        if not person:
+            return jsonify("That person is available")
+        else:
+         result = self.build_unavailable_time_person_info(person)
+        return jsonify(result)
+
     # def update_unavailable_schedule(self):
 
     def delete_unavailable_schedule(self, pa_id):

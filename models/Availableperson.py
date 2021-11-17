@@ -29,6 +29,15 @@ class AvailablePersonDao:
             result.append(row)
         return result
 
+    def get_unavailable_person_by_id(self, pa_id):
+        cursor = self.conn.cursor()
+        query = 'select  st_dt, et_dt, person_id ' \
+                'from "availableperson"'\
+                'where pa_id = %s'
+        cursor.execute(query, (pa_id,))
+        result = cursor.fetchone()
+        return result
+
     def get_unavailable_time_of_person_by_id(self, p_id):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt ' \
@@ -48,17 +57,6 @@ class AvailablePersonDao:
        result = cursor.fetchone()
        return result
 
-
-    def get_all_unavailable_person(self):
-        cursor = self.conn.cursor()
-        query = 'select  st_dt, et_dt, person_id ' \
-                'from "availableperson";'
-        cursor.execute(query)
-        result = []
-        # ok
-        for row in cursor:
-            result.append(row)
-        return result
 
     def delete_unavailable_person(self, person_id):
         cursor = self.conn.cursor()
