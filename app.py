@@ -134,8 +134,8 @@ def handle_unavailable_persons():
 def handle_unavaliable_persons_by_id(pa_id):
     if request.method == 'GET':
       return AvailablePerson().get_unavailable_person_by_id(pa_id)
-    # elif request.method == 'PUT':
-    #  return AvailablePerson().update_unavailable_person()
+    elif request.method == 'PUT':
+     return AvailablePerson().update_unavailable_person()
     elif request.method == 'DELETE':
         return AvailablePerson().delete_unavailable_schedule(pa_id)
     else:
