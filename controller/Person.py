@@ -5,7 +5,7 @@ from models.Booking import BookingDAO
 from models.Person import PersonDAO
 from controller.Room import Room
 from models.Room import RoomDAO
-
+from models.Availableperson import AvailablePersonDao
 
 class Person:
     ROLE_STUDENT = 1
@@ -125,8 +125,8 @@ class Person:
 
         if not person:
             return jsonify("Person Not Found"), 404
-
-        person_unavailable_time_slots = method.get_unavailable_time_of_person_by_id(p_id)
+         method2= AvailablePersonDao()
+        person_unavailable_time_slots = method2.get_unavailable_time_of_person_by_id(p_id)
         result_list = []
         start_date = date + " 0:00"
         start_time = dt.datetime.strptime(start_date, '%Y-%m-%d %H:%M')
