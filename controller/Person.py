@@ -99,8 +99,11 @@ class Person:
         if not bookedperson_tuple:
             return jsonify("Not Found"), 404
         else:
-            result = self.build_person_map(bookedperson_tuple)
-            return jsonify(result), 200
+            result_list = []
+            for row in bookedperson_tuple:
+                obj = self.build_person_map(row)
+                result_list.append(obj)
+            return jsonify(result_list)
 
     def get_most_used_room(self, p_id):
         method = PersonDAO()
