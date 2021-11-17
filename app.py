@@ -176,7 +176,7 @@ def handle_bookings():
     if request.method=='POST':
         return Booking().create_new_booking(request.json)
     elif request.method== 'GET':
-        return Booking().get_all_bookings()
+        return Booking().get_all_booking()
     else:
         return jsonify("Method Not Allowed"), 405
 
