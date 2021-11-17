@@ -21,15 +21,15 @@ class AvailablePerson:
     def create_unavailable_time_schedule(self, json):
         method = Person()
         p_id = json['p_id']
-        start_time = json['st_dt']
-        end_time = json['et_dt']
+        st_dt= json['st_dt']
+        et_dt = json['et_dt']
         exist = method.get_persons_by_id(p_id)
         if not exist:
             return jsonify("Person doesn't exist")
         else:
             method2 = AvailablePersonDao()
-            pa_id = method2.create_unavailable_time_schedule(p_id, start_time, end_time)
-            result = self.build_unavailable_person_attr_dict( pa_id, start_time, end_time, p_id)
+            pa_id = method2.create_unavailable_person_time(p_id, st_dt, et_dt)
+            result = self.build_unavailable_person_attr_dict(pa_id, st_dt, et_dt, p_id)
             return jsonify(result)
 
     def verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
