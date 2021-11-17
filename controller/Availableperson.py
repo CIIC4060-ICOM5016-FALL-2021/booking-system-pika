@@ -52,7 +52,7 @@ class AvailablePerson:
             obj = self.build_available_time_person_map(row)
             result_list.append(obj)
         return jsonify(result_list)
-    def update_unavailable_schedule(self):
+    # def update_unavailable_schedule(self):
 
     def delete_unavailable_schedule(self, p_id, st_dt, et_dt):
         method = AvailablePersonDao()
