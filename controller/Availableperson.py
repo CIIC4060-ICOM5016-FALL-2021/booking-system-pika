@@ -60,7 +60,7 @@ class AvailablePerson:
 
     def get_unavailable_person_by_id(self, pa_id):
         method = AvailablePersonDao()
-        person = method.et_unavailable_person_by_id(pa_id)
+        person = method.get_unavailable_person_by_id(pa_id)
         if not person:
             return jsonify("That person is available")
         else:
