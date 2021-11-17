@@ -8,7 +8,8 @@ class BookingDAO:
             db_root_config['dbname'],
             db_root_config['user'],
             db_root_config['password'],
-            db_root_config['dbport']
+            db_root_config['dbport'],
+            db_root_config['host']
         )
         self.conn = psycopg2.connect(connection_url)
 
