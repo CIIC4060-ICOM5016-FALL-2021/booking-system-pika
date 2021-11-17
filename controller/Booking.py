@@ -112,6 +112,19 @@ class Booking:
             if not available_room:
                 return jsonify("Sorry, this room is not available at said time")
 
+        for line in invited_id:
+         available_invitee = AvailablePerson().verify_available_user_at_timeframe(line, st_dt, et_dt)
+        if not available_invitee:
+            return jsonify("One or more Invitee not available")
+
+        AvailablePerson().create_unavailable_time_schedule(host_id, st_dt, et_dt)
+        Room.create_unavailable_room(room_id, st_dt, et_dt)
+        for j in invited_id:
+         AvailablePerson().create_unavailable_time_schedule(j, st_dt, et_dt)
+          method = BookingDAO()
+         b_id = method.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
+         result = self.build_booking_attr_dict(b_id, st_dt, et_dt, invited_id, host_id, room_id)
+         return jsonify(result)
     #         result_list.append(obj)
     #     return jsonify(result_list)
 
