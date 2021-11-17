@@ -78,7 +78,7 @@ class Booking:
     #             return jsonify("All Users in Booking are free at the following hour", string_date), 200
     #     return jsonify("No overlapping times available between users at the specified date"), 200
 
-    def create_new_booking(self, p_id, json):
+    def create_new_booking(self, json):
         st_dt = json['st_dt']
         et_dt = json['et_dt']
         invited_id = json['invited_id']
@@ -129,6 +129,17 @@ class Booking:
     #     return jsonify(result_list)
 
 
+    def get_all_booking(self):
+        method = BookingDAO()
+        bookings = method.get_all_booking
+        if not bookings:
+            return jsonify("No Meetings, Free day!!!!!!!")
+        else:
+            result_list = []
+            for row in bookings:
+                obj = self.build_available_time_person_map(row)
+                result_list.append(obj)
+        return jsonify(result_list)
 
     def get_booking_by_id(self, b_id):
         method = BookingDAO()

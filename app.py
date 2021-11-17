@@ -171,6 +171,15 @@ def handle_person_available(p_id):
 # ========================= #
 # ===-| B O O K I N G |-=== #
 # ========================= #
+@app.route('/pika-booking/booking', methods=['GET', 'POST'])
+def handle_bookings():
+    if request.method=='POST':
+        return Booking().create_new_booking(request.json)
+    elif request.method== 'GET':
+        return Booking().get_all_bookings()
+    else:
+        return jsonify("Method Not Allowed"), 405
+
 @app.route('/pika-booking/booking/<int:b_id>', methods=['GET', 'PUT', 'DELETE'])
 def handle_bookings_by_id(b_id):
     if request.method == 'GET':
