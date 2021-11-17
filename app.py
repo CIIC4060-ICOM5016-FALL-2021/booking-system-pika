@@ -95,7 +95,7 @@ def handle_persons():
 @app.route('/pika-booking/persons/<int:p_id>', methods=['GET', 'PUT', 'DELETE'])
 def handle_persons_by_id(p_id):
     if request.method == 'GET':
-        return Person().get_person_by_id(p_id)
+        return Person().get_persons_by_id(p_id)
     elif request.method == 'PUT':
         return Person().update_person(p_id, request.json)
     elif request.method == 'DELETE':
