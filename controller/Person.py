@@ -117,14 +117,16 @@ class Person:
                                                most_used_room[3])
             return jsonify(result), 200
 
-    def get_all_day_schedule_of_person(self, p_id, json):
+    def get_all_day_schedule_of_person(self, json):
         method = PersonDAO()
         date = json['date']
+        p_id = json['p_id']
         person = method.get_person_by_id(p_id)
-        person_unavailable_time_slots = method.get_unavailable_time_of_person_by_id(p_id)
+
         if not person:
             return jsonify("Person Not Found"), 404
 
+        person_unavailable_time_slots = method.get_unavailable_time_of_person_by_id(p_id)
         result_list = []
         start_date = date + " 0:00"
         start_time = dt.datetime.strptime(start_date, '%Y-%m-%d %H:%M')
