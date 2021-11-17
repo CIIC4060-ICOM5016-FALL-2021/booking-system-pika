@@ -9,8 +9,7 @@ from models.Availableperson import AvailablePersonDao
 
 class AvailablePerson:
     def build_available_time_person_map(self, row):
-        result = {'pa_id': row[0], 'st_dt': row[1],
-                  'et_dt': row[2], 'person_id': row[3]}
+        result = {'pa_id': row[0], 'st_dt': row[1], 'et_dt': row[2], 'person_id': row[3]}
         return result
 
     def build_unavailable_time_person_info(self, row):
@@ -54,7 +53,7 @@ class AvailablePerson:
         else:
          result_list = []
          for row in available_users_list:
-            obj = self.build_unavailable_person_attr_dict(row)
+            obj = self.build_available_time_person_map(row)
             result_list.append(obj)
         return jsonify(result_list)
 
