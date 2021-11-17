@@ -170,10 +170,11 @@ class Person:
 
 
     def delete_person(self, p_id):
-        method = AvailablePersonDao()
+        method = PersonDAO()
         result = method.delete_person(p_id)
         if result:
-            method.delete_unavailable_person(p_id)
+            method2 = AvailablePersonDao
+            method2.delete_unavailable_person(p_id)
             return jsonify("DELETED")
         else:
             return jsonify("NOT FOUND"), 404
