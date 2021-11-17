@@ -131,7 +131,7 @@ class Booking:
 
     def get_all_booking(self):
         method = BookingDAO()
-        bookings = method.get_all_booking
+        bookings = method.get_all_booking()
         if not bookings:
             return jsonify("No Meetings, Free day!!!!!!!")
         else:
