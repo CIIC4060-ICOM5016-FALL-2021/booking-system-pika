@@ -1,9 +1,5 @@
-import datetime as dt
 from flask import jsonify
-from models.Person import PersonDAO
 from controller.Person import Person
-from controller.Room import Room
-from models.Room import RoomDAO
 from models.AvailablePerson import AvailablePersonDAO
 
 

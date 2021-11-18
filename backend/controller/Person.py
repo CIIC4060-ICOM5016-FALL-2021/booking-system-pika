@@ -1,7 +1,6 @@
 import datetime as dt
 from flask import jsonify
 
-from models.Booking import BookingDAO
 from models.Person import PersonDAO
 from controller.Room import Room
 from models.Room import RoomDAO
