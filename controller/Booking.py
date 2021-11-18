@@ -100,35 +100,37 @@ class Booking:
 
         method = Person()
         role = method.get_person_role_by_id(host_id)
-
+        print(role == Person.ROLE_STUDENT or (role == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM) or (role == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE))
         if role == Person.ROLE_STUDENT or (role == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM) or \
                 (role == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE):
             print(role, "Got the role of multiple persons")
-            # Checking if person and room are available at given timeframe
-            available_room = AvailableRoom().verify_available_room_at_timeframe(room_id, st_dt, et_dt)
-            available_person = AvailablePerson().verify_available_user_at_timeframe(invited_id, st_dt, et_dt)
-            if not available_person:
-                return jsonify("User is not available during specified time"), 409
 
-            if not available_room:
-                return jsonify("Sorry, this room is not available at said time"), 409
-
-        # for line in invited_id:
-        available_invitee = AvailablePerson().verify_available_user_at_timeframe(invited_id, st_dt, et_dt)
-        print("invitees seems to be working")
-        if not available_invitee:
-            return jsonify("One or more Invitee not available")
-
-        AvailablePerson().create_unavailable_time_schedule(host_id, st_dt, et_dt)
-
-        AvailableRoom().create_unavailable_time_schedule(room_id, st_dt, et_dt)
-
-        # for j in invited_id:
-        AvailablePerson().create_unavailable_time_schedule(invited_id, st_dt, et_dt)
-        method = BookingDAO()
-        b_id = method.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
-        result = self.build_booking_attr_dict(b_id, st_dt, et_dt, invited_id, host_id, room_id)
-        return jsonify(result)
+        # Commented for debugging
+        #     # Checking if person and room are available at given timeframe
+        #     available_room = AvailableRoom().verify_available_room_at_timeframe(room_id, st_dt, et_dt)
+        #     available_person = AvailablePerson().verify_available_user_at_timeframe(invited_id, st_dt, et_dt)
+        #     if not available_person:
+        #         return jsonify("User is not available during specified time"), 409
+        #
+        #     if not available_room:
+        #         return jsonify("Sorry, this room is not available at said time"), 409
+        #
+        # # for line in invited_id:
+        # available_invitee = AvailablePerson().verify_available_user_at_timeframe(invited_id, st_dt, et_dt)
+        # print("invitees seems to be working")
+        # if not available_invitee:
+        #     return jsonify("One or more Invitee not available")
+        #
+        # AvailablePerson().create_unavailable_time_schedule(host_id, st_dt, et_dt)
+        #
+        # AvailableRoom().create_unavailable_time_schedule(room_id, st_dt, et_dt)
+        #
+        # # for j in invited_id:
+        # AvailablePerson().create_unavailable_time_schedule(invited_id, st_dt, et_dt)
+        # method = BookingDAO()
+        # b_id = method.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
+        # result = self.build_booking_attr_dict(b_id, st_dt, et_dt, invited_id, host_id, room_id)
+        # return jsonify(result)
     #         result_list.append(obj)
     #     return jsonify(result_list)
 
