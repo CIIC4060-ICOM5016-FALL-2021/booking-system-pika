@@ -101,6 +101,7 @@ class Booking:
         method = Person()
         print(host_id, "host id")
         role = method.get_person_role_by_id(host_id)
+        print(json.loads(role), "REEEEEEEEEEEEEEEe")
         print(role)
         print(role == Person.ROLE_STUDENT)
         print(role == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM)
