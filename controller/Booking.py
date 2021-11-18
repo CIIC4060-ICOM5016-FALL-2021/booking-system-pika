@@ -92,11 +92,11 @@ class Booking:
 
 
         # TODO Build BY TYPE Method (DONE)
-        r_type = room_dao.get_room_by_type(room_id)
+        room = room_dao.get_room(room_id)
         if not room_dao.get_room(room_id):
             return jsonify("Room Not Found"), 404
 
-        r_type = r_type[2]
+        r_type = room[3]
 
         method = Person()
         role = method.get_person_role_by_id(host_id)
