@@ -100,7 +100,7 @@ class Booking:
 
         if role == Person.ROLE_STUDENT or (role == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM) or \
                 (role == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE):
-
+            print(role, "Got the role of multiple persons")
             # Checking if person and room are available at given timeframe
             available_room = AvailableRoom().verify_available_room_at_timeframe(room_id, st_dt, et_dt)
             available_person = AvailablePerson().verify_available_user_at_timeframe(invited_id, st_dt, et_dt)
