@@ -32,6 +32,7 @@ class AvailableRoom:
             result = {}
             return jsonify(result)
 
+    # DEBUGING
     def verify_available_room_at_timeframe(self, r_id, st_dt, et_dt):
         method = AvailableRoomDAO()
         available_room_list = method.verify_available_room_at_timeframe(r_id, st_dt, et_dt)
@@ -51,7 +52,7 @@ class AvailableRoom:
             result_list.append(obj)
         return jsonify(result_list)
 
-
+    ##########################
     def create_unavailable_time_schedule(self, json):
         method = Room()
         room_id = json['room_id']
