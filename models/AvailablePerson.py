@@ -60,6 +60,7 @@ class AvailablePersonDAO:
         return result
 
     def verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
+        # time.mktime(datetime.datetime.strptime(string2, "%Y-%m-%d %H:%M:%S").timetuple())
         cursor = self.conn.cursor()
         query = "select p_id " \
                 "from person as p, booking as b, availableperson as a " \

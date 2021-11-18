@@ -73,11 +73,12 @@ class Room:
 
     # Returns a query of most booked rooms
     # example: {r_id: serial, r_count: int}, in descending order
+    #TODO TEST AFTER VERIFYING BOOKING
     def get_most_booked_rooms(self):
         method = RoomDAO()
         booked_rooms = method.get_most_booked_rooms()
         if not booked_rooms:
-            return jsonify("Not Found"), 404
+            return jsonify("There's either no Bookings or no Rooms created"), 404
         else:
             result = []
             for row in booked_rooms:

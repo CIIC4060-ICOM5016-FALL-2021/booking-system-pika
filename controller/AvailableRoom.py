@@ -39,6 +39,7 @@ class AvailableRoom:
         for row in available_room_list:
             obj = self.build_available_time_room_map(row)
             result_list.append(obj)
+        print("ITS WORKING OVER HERE at aval room")
         return jsonify(result_list)
 
     def get_all_unavailable_rooms(self):

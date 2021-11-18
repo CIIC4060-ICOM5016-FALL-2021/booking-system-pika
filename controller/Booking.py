@@ -88,14 +88,11 @@ class Booking:
 
         room_dao = RoomDAO()
 
-
-        # TODO Build BY TYPE Method (DONE)
         room = room_dao.get_room(room_id)
         if not room:
             return jsonify("Room Not Found"), 404
 
-
-        print(room)
+        print(room, "Got the room")
         r_type = room[0][2]
 
         method = Person()
@@ -104,18 +101,18 @@ class Booking:
         if role == Person.ROLE_STUDENT or (role == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM) or \
                 (role == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE):
 
-            # TODO Design this extra function
+            # Checking if person and room are available at given timeframe
             available_room = AvailableRoom().verify_available_room_at_timeframe(room_id, st_dt, et_dt)
-
             available_person = AvailablePerson().verify_available_user_at_timeframe(invited_id, st_dt, et_dt)
             if not available_person:
                 return jsonify("User is not available during specified time"), 409
 
             if not available_room:
-                return jsonify("Sorry, this room is not available at said time")
+                return jsonify("Sorry, this room is not available at said time"), 409
 
         # for line in invited_id:
         available_invitee = AvailablePerson().verify_available_user_at_timeframe(invited_id, st_dt, et_dt)
+        print("invitees seems to be working")
         if not available_invitee:
             return jsonify("One or more Invitee not available")
 
