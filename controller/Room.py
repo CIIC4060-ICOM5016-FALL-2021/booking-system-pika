@@ -24,9 +24,19 @@ class Room:
     def build_room_attr_dict(self, r_id, r_building, r_dept, r_type):
         return self.build_room((r_id, r_building, r_dept, r_type))
 
-    def build_timeslot_attrdict(self, r_id, st_dt, et_dt):
-        result = {'Room ID': r_id, 'start_time': st_dt, 'finish_time': et_dt}
+    def build_timeslot(self, row: tuple):
+        print(row, "ROW")
+        result = {
+            "r_id": row[0],
+            "st_dt": row[1],
+            "et_dt": row[2]
+        }
         return result
+
+    def build_timeslot_attr_dict(self, r_id, st_dt, et_dt):
+        return self.build_timeslot((r_id, st_dt, et_dt))
+
+    # Adds a query where timeframe which represents the time such room will not be available
     def add_unavailable_time_schedule(self, r_id, json):
         method = RoomDAO()
         start_time = json['st_dt']
@@ -54,14 +64,19 @@ class Room:
                 result.append(self.build_room(row))
             return jsonify(result)
 
+    # Returns a query of most booked rooms
+    # example: {r_id: serial, r_count: int}, in descending order
     def get_most_booked_rooms(self):
         method = RoomDAO()
-        bookedroom_tuple = method.get_most_booked_rooms()
-        if not bookedroom_tuple:
+        booked_rooms = method.get_most_booked_rooms()
+        if not booked_rooms:
             return jsonify("Not Found"), 404
         else:
-            result = self.build_person_map(bookedroom_tuple)
+            result = []
+            for row in booked_rooms:
+                result.append(self.build_room(row))
             return jsonify(result), 200
+
     # Create
     #
     # Creates a new Room]
@@ -120,18 +135,19 @@ class Room:
     # test this
     def get_available_room_in_timeslot(self, st_dt, et_dt):
         dao = RoomDAO()
-        available_rooms = dao.get_room(st_dt, et_dt)
+        available_rooms = dao.get_available_rooms_by_timeslot(st_dt, et_dt)
         if not available_rooms:
             return jsonify("Room Not Found"), 404
         else:
-            list = []
+            return_list = []
             for line in available_rooms:
-                list.append(self.get_room_by_id(line))
+                return_list.append(self.get_room_by_id(line))
 
             result = []
-            for row in list:
+            for row in return_list:
                 result.append(self.build_room(row))
             return jsonify(result)
+
     def room_by_id_exist(self, p_id):
         method = RoomDAO()
         room_tuple = method.get_room(p_id)
@@ -139,15 +155,23 @@ class Room:
             return False
         else:
             return True
-    def get_most_used_room(self):
-
-        pass
 
     def get_all_available_rooms(self):
         method = RoomDAO()
         available_users_list = method.get_all_available_rooms()
         result_list = []
         for row in available_users_list:
-            obj = self.build_available_time_person_dict(row)
+            obj = self.build_timeslot(row)
             result_list.append(obj)
         return jsonify(result_list)
+
+    def get_rooms(self, args: dict):
+        dao = RoomDAO()
+        rooms_by = dao.get_room_by(args)
+        if not rooms_by:
+            return jsonify("There's no rooms!"), 404
+        else:
+            result_list = []
+            for row in rooms_by:
+                result_list.append(self.build_room(row))
+            return jsonify(result_list), 200

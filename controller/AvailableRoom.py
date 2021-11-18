@@ -5,8 +5,6 @@ from models.AvailableRoom import AvailableRoomDAO
 
 class AvailableRoom:
 
-
-
     def build_available_time_room_map(self, row):
         result = {'ra_id': row[0], 'st_dt': row[1], 'et_dt': row[2], 'room_id': row[3]}
         return result

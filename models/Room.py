@@ -42,12 +42,20 @@ class RoomDAO:
 
     # Gets room by building, department, or type
     # TODO: Make this more general
-    def get_room_by(self, r_building="", r_dept="", r_type=""):
+    def get_room_by(self, args: dict):
+        parser = ""
+        for i, j in reversed(list(enumerate(args.items()))):
+            if i == 0:
+                parser += str(j[0]) + " = " + str(j[1])
+            else:
+                parser += str(j[0]) + " = " + str(j[1]) + " and "
+
         # Open Cursor for operations
         cursor = self.conn.cursor()
-        query = "select %s, %s, %s from room;"
+
+        query = "select r_id, r_building, r_dept, r_type from room where %s;"
         # Execute commands n close
-        cursor.execute(query, (r_building, r_dept, r_type ))
+        cursor.execute(query, parser)
         result = []
         for row in cursor:
             result.append(row)

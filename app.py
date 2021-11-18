@@ -32,6 +32,9 @@ def handle_rooms():
     if request.method == 'POST':
         return Room().create_new_room(request.json)
     elif request.method == 'GET':
+        args = request.args
+        if args:
+            return Room().get_rooms(args)
         return Room().get_all_rooms()
     else:
         return jsonify("Method Not Allowed"), 405
@@ -40,9 +43,6 @@ def handle_rooms():
 @app.route('/pika-booking/rooms/<int:r_id>', methods=['GET', 'PUT', 'DELETE'])
 def handle_rooms_by_id(r_id):
     if request.method == 'GET':
-        args = request.args
-
-        print(args)
         return Room().get_room_by_id(r_id)
     elif request.method == 'PUT':
         return Room().update_room(r_id, request.json)
@@ -52,10 +52,10 @@ def handle_rooms_by_id(r_id):
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/rooms/most_used', methods=['GET'])
+@app.route('/pika-booking/rooms/most-booked', methods=['GET'])
 def get_most_used_room():
     if request.method == 'GET':
-        return Room().get_most_used_room()
+        return Room().get_most_booked_rooms()
     else:
         return jsonify("Method Not Allowed"), 405
 
