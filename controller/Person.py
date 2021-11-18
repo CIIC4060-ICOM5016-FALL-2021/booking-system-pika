@@ -34,7 +34,7 @@ class Person:
         return result
 
     def build_role_map_dict(self, row):
-        result = {'p_role': row[0]}
+        result = {'p_role': row}
         return result
 
     def build_available_time_person_map(self, row):
