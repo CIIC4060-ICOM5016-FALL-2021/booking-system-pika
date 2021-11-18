@@ -29,10 +29,13 @@ class AvailableRoomDAO:
         return result
 
     def verify_available_room_at_timeframe(self, r_id, st_dt, et_dt):
+
+        print(type(st_dt), "ST DT")
+
         cursor = self.conn.cursor()
         query = "select r_id " \
                 "from room as r, booking as b, availableroom as a " \
-                "where b.st_dt != %s and b.et_dt !=%s and r.r_id != b.invited_id and a.room_id != r.r_id;"
+                "where b.st_dt != %s and b.et_dt !=%s and r.r_id != b.room_id and a.room_id != r.r_id;"
         cursor.execute(query, (r_id, st_dt, et_dt,))
         result = cursor.fetchone()
         return result
