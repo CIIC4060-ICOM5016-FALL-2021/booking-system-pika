@@ -28,7 +28,7 @@ class AvailableRoom:
         end_time = json['et_dt']
         exist = method.get_room_by_id(r_id)
         if not exist:
-            return jsonify("Person doesn't exist")
+            return jsonify("room doesn't exist")
 
         unavailable_schedule = method.add_unavailable_time_schedule(r_id, start_time, end_time)
         if unavailable_schedule:
@@ -44,12 +44,12 @@ class AvailableRoom:
             result_list.append(obj)
         return jsonify(result_list)
 
-    def get_all_unavailable_persons(self):
+    def get_all_unavailable_rooms(self):
         method = Room()
-        available_users_list = method.get_all_available_person()
+        available_rooms_list = method.get_all_available_rooms()
         result_list = []
-        for row in available_users_list:
-            obj = self.build_available_time_person_map(row)
+        for row in available_rooms_list:
+            obj = self.build_available_time_room_map(row)
             result_list.append(obj)
         return jsonify(result_list)
 
