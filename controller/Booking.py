@@ -116,8 +116,8 @@ class Booking:
             if not available_room:
                 return jsonify("Sorry, this room is not available at said time")
 
-        for line in invited_id:
-            available_invitee = AvailablePerson().verify_available_user_at_timeframe(line, st_dt, et_dt)
+        # for line in invited_id:
+        available_invitee = AvailablePerson().verify_available_user_at_timeframe(invited_id, st_dt, et_dt)
         if not available_invitee:
             return jsonify("One or more Invitee not available")
 
