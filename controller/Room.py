@@ -12,7 +12,6 @@ class Room:
 
     # Generate the Rows
     def build_room(self, row: tuple):
-        print(row, "ROW")
         result = {
             "r_building": row[0],
             "r_dept": row[1],
@@ -33,6 +32,13 @@ class Room:
         }
         return result
 
+    def build_most_booked_room(self, row: tuple):
+        result = {
+            "r_id": row[0],
+            "timed_booked": row[1]
+        }
+        return result
+
     def build_timeslot_attr_dict(self, r_id, st_dt, et_dt):
         return self.build_timeslot((r_id, st_dt, et_dt))
 
@@ -49,6 +55,7 @@ class Room:
         if unavailable_schedule:
             result = {}
             return jsonify(result)
+
     # Read
     #
     # Gets All Rooms
@@ -74,7 +81,7 @@ class Room:
         else:
             result = []
             for row in booked_rooms:
-                result.append(self.build_room(row))
+                a = self.build_most_booked_room(row)
             return jsonify(result), 200
 
     # Create
@@ -133,6 +140,7 @@ class Room:
             return jsonify(result), 200
 
     # test this
+    #TODO FIX
     def get_available_room_in_timeslot(self, st_dt, et_dt):
         dao = RoomDAO()
         available_rooms = dao.get_available_rooms_by_timeslot(st_dt, et_dt)

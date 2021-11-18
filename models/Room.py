@@ -109,6 +109,7 @@ class RoomDAO:
         # otherwise, it was deleted, so check if affected_rows != 0
         return affected_rows != 0
 
+    #TODO FIX
     def create_unavailable_room_time(self, r_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'insert into "availableroom" ' \
@@ -116,6 +117,8 @@ class RoomDAO:
         cursor.execute(query, (st_dt, et_dt, r_id,))
         self.conn.commit()
         return True
+
+    # TODO FIX
     def create_unavailable_room_time(self, r_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'insert into "availableroom" ' \
@@ -123,11 +126,12 @@ class RoomDAO:
         cursor.execute(query, (st_dt, et_dt, r_id,))
         self.conn.commit()
         return True
+
     def get_most_booked_rooms(self):
         cursor = self.conn.cursor()
-        query = 'select r_id, r_building, r_type, r_dept, count(booking.room_id) as rooms ' \
+        query = 'select r_id, count(booking.room_id) as timed_booked ' \
                 'from booking inner join room on booking.room_id = room.r_id ' \
-                'GROUP BY r_id order by rooms desc limit 10; '
+                'GROUP BY r_id order by timed_booked desc limit 10; '
         cursor.execute(query)
         result = []
         for row in cursor:
