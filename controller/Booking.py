@@ -95,6 +95,9 @@ class Booking:
         print(room, "Got the room")
         r_type = room[2]
 
+        print(r_type, "Got the r type")
+        print(type(r_type), "Got the r type datatype")
+
         method = Person()
         role = method.get_person_role_by_id(host_id)
 
