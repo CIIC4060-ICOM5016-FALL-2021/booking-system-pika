@@ -2,7 +2,7 @@ import psycopg2
 from config.dbcondig import db_root_config
 
 
-class AvailablePersonDao:
+class AvailableRoomDAO:
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (db_root_config['dbname'],
                                                                             db_root_config['user'],
@@ -11,11 +11,11 @@ class AvailablePersonDao:
                                                                             db_root_config['host'])
         self.conn = psycopg2.connect(connection_url)
 
-    def create_unavailable_room_time(self, p_id, st_dt, et_dt):
+    def create_unavailable_room_time(self, st_dt, et_dt,r_id):
         cursor = self.conn.cursor()
         query = 'insert into "availableroom" ' \
                 '(st_dt, et_dt, room_id) values (%s, %s, %s);'
-        cursor.execute(query, (st_dt, et_dt, p_id,))
+        cursor.execute(query, (st_dt, et_dt, r_id,))
         self.conn.commit()
         return True
 
@@ -28,12 +28,12 @@ class AvailablePersonDao:
         result = cursor.fetchone()
         return result
 
-    def  verify_available_room_at_timeframe(self, p_id, st_dt, et_dt):
+    def verify_available_room_at_timeframe(self, r_id, st_dt, et_dt):
        cursor = self.conn.cursor()
        query = "select r_id " \
                "from room as r, booking as b, availableroom as a " \
                "where b.st_dt != %s and b.et_dt !=%s and r.r_id != b.invited_id and a.room_id != r.r_id;"
-       cursor.execute(query, (p_id,st_dt, et_dt, ))
+       cursor.execute(query, (r_id,st_dt, et_dt, ))
        result = cursor.fetchone()
        return result
 

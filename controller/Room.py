@@ -132,7 +132,13 @@ class Room:
             for row in list:
                 result.append(self.build_room(row))
             return jsonify(result)
-
+    def room_by_id_exist(self, p_id):
+        method = RoomDAO()
+        room_tuple = method.get_room(p_id)
+        if not room_tuple:
+            return False
+        else:
+            return True
     def get_most_used_room(self):
 
         pass

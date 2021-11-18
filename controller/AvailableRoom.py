@@ -1,16 +1,27 @@
 from flask import jsonify
 import datetime as dt
 from controller.Room import Room
+from models.AvailableRoom import AvailableRoomDAO
 from models.Room import RoomDAO
 
 class AvailableRoom:
 
-    def build_unavailable_time_room_map_dict(self, row):
-        result = {'unavailable_time_room_id': row[0], 'unavailable_time_room_start': row[1],
-                  'unavailable_time_room_finish': row[2], 'room_id': row[3]}
+
+
+    def build_available_time_room_map(self, row):
+        result = {'ra_id': row[0], 'st_dt': row[1], 'et_dt': row[2], 'room_id': row[3]}
         return result
 
 
+    def build_unavailable_time_room_info(self, row):
+        result = {'st_dt': row[0],
+                  'et_dt': row[1], 'room_id': row[2]}
+        return result
+
+    def build_unavailable_room_attr_dict(self, pa_id, st_dt, et_dt, r_id):
+        result = {'ra_id': pa_id, 'st_dt': st_dt,
+                  'et_dt': et_dt, 'room_id': r_id}
+        return result
     def add_unavailable_time_schedule(self, r_id, json):
         method = Room()
         start_time = json['st_dt']
@@ -24,12 +35,12 @@ class AvailableRoom:
             result = {}
             return jsonify(result)
 
-    def verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
-        method = AvailableRoomDao()
-        available_users_list = method.verify_available_user_at_timeframe(p_id, st_dt, et_dt)
+    def verify_available_room_at_timeframe(self, r_id, st_dt, et_dt):
+        method = AvailableRoomDAO()
+        available_room_list = method.verify_available_room_at_timeframe(r_id, st_dt, et_dt)
         result_list = []
-        for row in available_users_list:
-            obj = self.build_available_time_person_map(row)
+        for row in available_room_list:
+            obj = self.build_available_time_room_map(row)
             result_list.append(obj)
         return jsonify(result_list)
 
@@ -42,9 +53,25 @@ class AvailableRoom:
             result_list.append(obj)
         return jsonify(result_list)
 
-    def delete_unavailable_schedule(self, p_id, st_dt, et_dt):
-        method = AvailablePersonDao()
-        result = method.delete_unavailable_person_schedule(p_id, st_dt, et_dt)
+
+    def create_unavailable_time_schedule(self, json):
+        method = Room()
+        room_id = json['room_id']
+        st_dt = json['st_dt']
+        et_dt = json['et_dt']
+        exist = method.room_by_id_exist(room_id)
+        if not exist:
+            return jsonify("Room doesn't exist")
+        else:
+            method2 = AvailableRoomDAO()
+            ra_id = method2.create_unavailable_room_time(st_dt, et_dt, room_id)
+            result = self.build_unavailable_room_attr_dict(ra_id, st_dt, et_dt, room_id)
+            return jsonify(result)
+
+
+    def delete_unavailable_schedule(self, r_id, st_dt, et_dt):
+        method = AvailableRoomDAO()
+        result = method.delete_unavailable_room_schedule(r_id, st_dt, et_dt)
         if result:
             return jsonify("DELETED")
         else:

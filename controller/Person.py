@@ -5,7 +5,7 @@ from models.Booking import BookingDAO
 from models.Person import PersonDAO
 from controller.Room import Room
 from models.Room import RoomDAO
-from models.Availableperson import AvailablePersonDao
+from models.AvailablePerson import AvailablePersonDAO
 
 
 class Person:
