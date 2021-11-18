@@ -89,7 +89,6 @@ class Person:
             return True
 
     def get_person_role_by_id(self, p_id):
-
         dao = PersonDAO()
         person_role = dao.get_person_role_by_id(p_id)
         if not person_role:  #
