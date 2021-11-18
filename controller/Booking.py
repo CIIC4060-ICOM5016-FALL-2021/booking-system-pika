@@ -103,7 +103,7 @@ class Booking:
         print(host_id, "host id")
         role = method.get_person_role_by_id(host_id)
         # print(JSONDecoder().decode(role))
-        print(role)
+        print(role["p_role"])
         print(role["p_role"] == Person.ROLE_STUDENT)
         print(role["p_role"] == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM)
         print(role["p_role"] == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE)
