@@ -98,7 +98,7 @@ class Person:
             print(person_role, "PERSON ROLE IN CONTROLLER ELSE")
             result = self.build_role_map_dict(person_role)
             print(result)
-            return jsonify(result), 200
+            return result, 200
 
     def get_most_booked_persons(self):
         method = PersonDAO()
