@@ -93,7 +93,7 @@ class Booking:
             return jsonify("Room Not Found"), 404
 
         print(room, "Got the room")
-        r_type = room[0][2]
+        r_type = room[2]
 
         method = Person()
         role = method.get_person_role_by_id(host_id)

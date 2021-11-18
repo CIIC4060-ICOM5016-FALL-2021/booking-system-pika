@@ -35,9 +35,7 @@ class RoomDAO:
         query = "select r_building, r_dept, r_type from room where r_id = %s;"
         # Execute commands n close
         cursor.execute(query, (r_id,))
-        result = []
-        for row in cursor:
-            result.append(row)
+        result = cursor.fetchone()
         return result
 
     # Gets room by building, department, or type
