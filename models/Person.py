@@ -70,7 +70,10 @@ class PersonDAO:
         query = 'select p_role ' \
                 'from "person" where p_id = %s;'
         cursor.execute(query, (p_id,))
-        result = cursor.fetchone()[0]
+        result = None
+        # result = cursor.fetchone()[0]
+        for row in cursor:
+            result = row[0]
         return result
 
 
