@@ -69,7 +69,7 @@ class PersonDAO:
         cursor = self.conn.cursor()
         query = 'select p_role ' \
                 'from "person" where p_id = %s;'
-        cursor.execute(query, p_id)
+        cursor.execute(query, (p_id,))
         print(cursor)
         result = cursor.fetchone()[0]
         print(result, "RESULT")
