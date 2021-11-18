@@ -36,7 +36,7 @@ setup(
     url="https://github.com/CIIC4060-ICOM5016-FALL-2021/booking-system-pika",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
-    author=["FrenzyExists", "JuanGonzalezLopez", "Frank"],
+    author=["Detective Pikachu", "JuanGonzalezLopez", "Frank"],
     packages=find_packages(exclude=["tests", ".github"]),
     install_requires=read_requirements("requirements.txt"),
     entry_points={
