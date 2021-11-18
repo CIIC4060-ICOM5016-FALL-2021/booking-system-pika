@@ -8,10 +8,10 @@ from controller.Room import Room
 from controller.Person import Person
 from controller.AvailablePerson import AvailablePerson
 
-STUDENT = 0
-PROFESSOR = 1
-STAFF = 2
-VISITOR = 3
+STUDENT = 1
+PROFESSOR = 2
+STAFF = 3
+VISITOR = 4
 
 LABORATORY = 1
 CLASSROOM = 2
@@ -104,12 +104,13 @@ class Booking:
         role = method.get_person_role_by_id(host_id)
         # print(JSONDecoder().decode(role))
         print(role["p_role"])
-        print(role["p_role"] == Person.ROLE_STUDENT)
+        print(role["p_role"] == Person.ROLE_STAFF)
         print(role["p_role"] == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM)
         print(role["p_role"] == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE)
-        if role["p_role"] == Person.ROLE_STUDENT or \
-                (role["p_role"] == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM) or \
-                (role["p_role"] == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE):
+
+        if ((role["p_role"] == Person.ROLE_STAFF) or
+                ((role["p_role"] == Person.ROLE_PROF) and (r_type == Room.TYPE_CLASSROOM)) or
+                ((role["p_role"] == Person.ROLE_STUDENT) and (r_type == Room.TYPE_STUDY_SPACE))):
             print(role, "Got the role of multiple persons")
 
         # Commented for debugging
