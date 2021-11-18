@@ -96,6 +96,8 @@ class Booking:
         if not room:
             return jsonify("Room Not Found"), 404
 
+
+        print(room)
         r_type = room[0][2]
 
         method = Person()
