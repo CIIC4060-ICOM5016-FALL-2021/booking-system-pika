@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask.json import JSONEncoder
+from flask.json import JSONDecoder
 import os
 from controller.Person import Person
 from controller.Room import Room
