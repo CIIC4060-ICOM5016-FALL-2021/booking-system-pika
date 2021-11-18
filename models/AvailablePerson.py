@@ -59,13 +59,13 @@ class AvailablePersonDAO:
         result = cursor.fetchone()
         return result
 
-    def verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
+    def verify_available_user_at_timeframe(self, st_dt, et_dt):
         # time.mktime(datetime.datetime.strptime(string2, "%Y-%m-%d %H:%M:%S").timetuple())
         cursor = self.conn.cursor()
         query = "select p_id " \
                 "from person as p, booking as b, availableperson as a " \
                 "where b.st_dt != %s and b.et_dt !=%s and p.p_id != b.invited_id and a.person_id != p.p_id; "
-        cursor.execute(query, (p_id, st_dt, et_dt,))
+        cursor.execute(query, (st_dt, et_dt,))
         result = cursor.fetchone()
         return result
 
