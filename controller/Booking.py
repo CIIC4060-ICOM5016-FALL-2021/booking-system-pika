@@ -100,8 +100,11 @@ class Booking:
 
         method = Person()
         role = method.get_person_role_by_id(host_id)
-        print(role == Person.ROLE_STUDENT or (role == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM) or (role == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE))
-        if role == Person.ROLE_STUDENT or (role == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM) or \
+        print(role == Person.ROLE_STUDENT)
+        print(role == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM)
+        print(role == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE)
+        if role == Person.ROLE_STUDENT or \
+                (role == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM) or \
                 (role == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE):
             print(role, "Got the role of multiple persons")
 
