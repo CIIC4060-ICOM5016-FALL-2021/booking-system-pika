@@ -3,7 +3,8 @@ import os
 from controller.Person import Person
 from controller.Room import Room
 from controller.Booking import Booking
-from controller.Availableperson import AvailablePerson
+from controller.AvailablePerson import AvailablePerson
+
 app = Flask(__name__, instance_relative_config=True)
 
 # ensure the instance folder exists
@@ -130,16 +131,18 @@ def handle_unavailable_persons():
     else:
         return jsonify("Method Not Allowed"), 405
 
+
 @app.route('/pika-booking/unavailablepersons/<int:pa_id>', methods=['GET', 'PUT', 'DELETE'])
 def handle_unavaliable_persons_by_id(pa_id):
     if request.method == 'GET':
-      return AvailablePerson().get_unavailable_person_by_id(pa_id)
+        return AvailablePerson().get_unavailable_person_by_id(pa_id)
     elif request.method == 'PUT':
-     return AvailablePerson().update_unavailable_schedule(pa_id, request.json)
+        return AvailablePerson().update_unavailable_schedule(pa_id, request.json)
     elif request.method == 'DELETE':
         return AvailablePerson().delete_unavailable_schedule(pa_id)
     else:
         return jsonify("Method Not Allowed"), 405
+
 
 # ================================= #
 # ===-| A V A I A B I L I T Y |-=== #
@@ -173,12 +176,13 @@ def handle_person_available(p_id):
 # ========================= #
 @app.route('/pika-booking/booking', methods=['GET', 'POST'])
 def handle_bookings():
-    if request.method=='POST':
+    if request.method == 'POST':
         return Booking().create_new_booking(request.json)
-    elif request.method== 'GET':
+    elif request.method == 'GET':
         return Booking().get_all_booking()
     else:
         return jsonify("Method Not Allowed"), 405
+
 
 @app.route('/pika-booking/booking/<int:b_id>', methods=['GET', 'PUT', 'DELETE'])
 def handle_bookings_by_id(b_id):
