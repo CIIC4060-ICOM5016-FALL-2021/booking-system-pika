@@ -7,6 +7,7 @@ from controller.Room import Room
 from models.Room import RoomDAO
 from models.Availableperson import AvailablePersonDao
 
+
 class Person:
     ROLE_STUDENT = 1
     ROLE_PROF = 2

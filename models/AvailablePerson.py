@@ -1,6 +1,8 @@
 import psycopg2
 from config.dbcondig import db_root_config
-class AvailablePersonDao:
+
+
+class AvailablePersonDAO:
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (db_root_config['dbname'],
                                                                             db_root_config['user'],
@@ -32,7 +34,7 @@ class AvailablePersonDao:
     def get_unavailable_person_by_id(self, pa_id):
         cursor = self.conn.cursor()
         query = 'select  st_dt, et_dt, person_id ' \
-                'from "availableperson"'\
+                'from "availableperson"' \
                 'where pa_id = %s'
         cursor.execute(query, (pa_id,))
         result = cursor.fetchone()
@@ -52,22 +54,21 @@ class AvailablePersonDao:
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt ' \
                 'from "availableperson" ' \
-                'where p_id = %s ' \
-
+                'where pa_id = %s ;'
         cursor.execute(query, (p_id,))
         result = cursor.fetchone()
         return result
 
     def verify_available_user_at_timeframe(self, p_id, st_dt, et_dt):
-       cursor = self.conn.cursor()
-       query = "select p_id " \
-               "from person as p, booking as b, availableperson as a " \
-               "where b.st_dt != %s and b.et_dt !=%s and p.p_id != b.invited_id and a.person_id != p.p_id; "
-       cursor.execute(query, (p_id,st_dt, et_dt, ))
-       result = cursor.fetchone()
-       return result
+        cursor = self.conn.cursor()
+        query = "select p_id " \
+                "from person as p, booking as b, availableperson as a " \
+                "where b.st_dt != %s and b.et_dt !=%s and p.p_id != b.invited_id and a.person_id != p.p_id; "
+        cursor.execute(query, (p_id, st_dt, et_dt,))
+        result = cursor.fetchone()
+        return result
 
-    def update_unavailable_person(self, pa_id,st_dt, et_dt,person_id):
+    def update_unavailable_person(self, pa_id, st_dt, et_dt, person_id):
         cursor = self.conn.cursor()
         query = 'update "availableperson" ' \
                 'set st_dt= %s, et_dt= %s, person_id= %s ' \
