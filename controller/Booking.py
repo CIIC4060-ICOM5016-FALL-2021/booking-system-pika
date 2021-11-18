@@ -93,36 +93,24 @@ class Booking:
         if not room:
             return jsonify("Room Not Found"), 404
 
-        print(room, "Got the room")
         r_type = room[2]
 
-        print(r_type, "Got the r type")
-        print(type(r_type), "Got the r type datatype")
-
         method = Person()
-        print(host_id, "host id")
         role = method.get_person_role_by_id(host_id)
-        # print(JSONDecoder().decode(role))
-        print(role["p_role"])
-        print(role["p_role"] == Person.ROLE_STAFF)
-        print(role["p_role"] == Person.ROLE_PROF and r_type == Room.TYPE_CLASSROOM)
-        print(role["p_role"] == Person.ROLE_STUDENT and r_type == Room.TYPE_STUDY_SPACE)
 
         if ((role["p_role"] == Person.ROLE_STAFF) or
                 ((role["p_role"] == Person.ROLE_PROF) and (r_type == Room.TYPE_CLASSROOM)) or
                 ((role["p_role"] == Person.ROLE_STUDENT) and (r_type == Room.TYPE_STUDY_SPACE))):
-            print(role, "Got the role of multiple persons")
 
-        # Commented for debugging
-        #     # Checking if person and room are available at given timeframe
-        #     available_room = AvailableRoom().verify_available_room_at_timeframe(room_id, st_dt, et_dt)
-        #     available_person = AvailablePerson().verify_available_user_at_timeframe(invited_id, st_dt, et_dt)
-        #     if not available_person:
-        #         return jsonify("User is not available during specified time"), 409
-        #
-        #     if not available_room:
-        #         return jsonify("Sorry, this room is not available at said time"), 409
-        #
+            # Checking if person and room are available at given timeframe
+            available_room = AvailableRoom().verify_available_room_at_timeframe(room_id, st_dt, et_dt)
+            available_person = AvailablePerson().verify_available_user_at_timeframe(invited_id, st_dt, et_dt)
+            if not available_person:
+                return jsonify("User is not available during specified time"), 409
+
+            if not available_room:
+                return jsonify("Sorry, this room is not available at said time"), 409
+
         # # for line in invited_id:
         # available_invitee = AvailablePerson().verify_available_user_at_timeframe(invited_id, st_dt, et_dt)
         # print("invitees seems to be working")
