@@ -4,7 +4,7 @@ from models.Person import PersonDAO
 from controller.Person import Person
 from controller.Room import Room
 from models.Room import RoomDAO
-from models.Availableperson import AvailablePersonDAO
+from models.AvailablePerson import AvailablePersonDAO
 
 
 class AvailablePerson:

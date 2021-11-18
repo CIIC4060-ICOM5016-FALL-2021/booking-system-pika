@@ -15,9 +15,9 @@ class Person:
     ROLE_VISITOR = 4
 
     def build_person_map(self, row):
-        result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'p_role': row[3], 'p_email': row[4], 'p_phone': row[5], 'p_gender': row[6]}
+        result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'p_role': row[3], 'p_email': row[4],
+                  'p_phone': row[5], 'p_gender': row[6]}
         return result
-
 
     def build_person_map_info(self, row):
         result = {'p_fname': row[0], 'p_lname': row[1], 'p_role': row[2],
@@ -133,16 +133,16 @@ class Person:
         if not person:
             return jsonify("Person Not Found"), 404
 
-        method2 = AvailablePersonDao()
+        method2 = AvailablePersonDAO()
         person_unavailable_time_slots = method2.get_unavailable_time_of_person_by_id(p_id)
         if not person_unavailable_time_slots:
             return jsonify("Person has no schedule "), 200
         else:
-          result_list = []
-          start_date = date + " 0:00"
-          start_time = dt.datetime.strptime(start_date, '%Y-%m-%d %H:%M')
-          finish_date = date + " 23:59"
-          finish_date = dt.datetime.strptime(finish_date, '%Y-%m-%d %H:%M')
+            result_list = []
+            start_date = date + " 0:00"
+            start_time = dt.datetime.strptime(start_date, '%Y-%m-%d %H:%M')
+            finish_date = date + " 23:59"
+            finish_date = dt.datetime.strptime(finish_date, '%Y-%m-%d %H:%M')
         for row in person_unavailable_time_slots:
             if row[1] > start_time and row[2] < finish_date:
                 finish_time = row[1]
@@ -164,22 +164,20 @@ class Person:
         exist = self.persons_by_id_exist(p_id)
         updated_info = method.update_person(p_id, p_fname, p_lname, p_email, p_phone, p_gender)
         if updated_info and exist:
-            result = self.build_person_update_attr_dict( p_fname, p_lname, p_email, p_phone, p_gender)
+            result = self.build_person_update_attr_dict(p_fname, p_lname, p_email, p_phone, p_gender)
             return jsonify(result)
         else:
             return jsonify('Not found person')
-
 
     def delete_person(self, p_id):
         method = PersonDAO()
         result = method.delete_person(p_id)
         if result:
-            method2 = AvailablePersonDao
+            method2 = AvailablePersonDAO()
             method2.delete_unavailable_person(p_id)
             return jsonify("DELETED")
         else:
             return jsonify("NOT FOUND"), 404
-
 
     def role_to_get_access_to_room_info(self, p_id):
         method = PersonDAO()
@@ -210,5 +208,3 @@ class Person:
             return
         else:
             return jsonify("You don't have access to make room unavailable")
-
-
