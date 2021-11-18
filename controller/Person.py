@@ -91,9 +91,11 @@ class Person:
     def get_person_role_by_id(self, p_id):
         dao = PersonDAO()
         person_role = dao.get_person_role_by_id(p_id)
+        print(person_role, "PERSON ROLE IN CONTROLLER")
         if not person_role:  #
             return jsonify("Person Not Found"), 404
         else:
+            print(person_role, "PERSON ROLE IN CONTROLLER ELSE")
             result = self.build_role_map_dict(person_role)
             return jsonify(result), 200
 
