@@ -124,6 +124,17 @@ class Person:
             result = room.build_room_attr_dict(most_used_room[0], most_used_room[1], most_used_room[2],
                                                most_used_room[3])
             return jsonify(result), 200
+    def get_busiest_hours(self):
+        method = PersonDAO()
+        busiest = method.get_busiest_hours()
+        if not busiest:
+            return jsonify("Not Found"), 404
+        else:
+            result_list = []
+            for row in busiest:
+                obj = self.build_person_map(row)
+                result_list.append(obj)
+            return jsonify(result_list)
 
     def get_all_day_schedule_of_person(self, json):
         method = PersonDAO()
