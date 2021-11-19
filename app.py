@@ -118,6 +118,13 @@ def handle_persons_schedule_by_id():
     else:
         return jsonify("Method Not Allowed"), 405
 
+@app.route('/pika-booking/persons/mostbookedperson', methods=['GET'])
+def handle_most_booked_persons():
+    if request.method == 'GET':
+        return Person().get_most_booked_persons()
+    else:
+        return jsonify("Method Not Allowed"), 405
+
 
 # unavailable person
 @app.route('/pika-booking/unavailablepersons', methods=['GET', 'POST'])
