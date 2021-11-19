@@ -118,7 +118,7 @@ class PersonDAO:
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt, count(*) as activeinthehour' \
                 ' from booking  ' \
-                ' group by st_dt and et_dt ' \
+                ' group by st_dt, et_dt ' \
                 'order by activeinthehour desc limit 5;'
         cursor.execute(query, )
         result = []
