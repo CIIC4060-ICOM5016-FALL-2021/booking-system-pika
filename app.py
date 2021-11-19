@@ -125,6 +125,12 @@ def handle_most_booked_persons():
     else:
         return jsonify("Method Not Allowed"), 405
 
+@app.route('/pika-booking/persons/busiesthours', methods=['GET'])
+def handle_busiest_hours_persons():
+    if request.method == 'GET':
+        return Person().get_busiest_hours()
+    else:
+        return jsonify("Method Not Allowed"), 405
 
 # unavailable person
 @app.route('/pika-booking/unavailablepersons', methods=['GET', 'POST'])
