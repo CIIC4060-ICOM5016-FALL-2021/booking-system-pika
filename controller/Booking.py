@@ -122,7 +122,7 @@ class Booking:
         # AvailableRoom().create_unavailable_time_schedule(room_id, st_dt, et_dt)
         #
         # # for j in invited_id:
-        # AvailablePerson().create_unavailable_time_schedule(invited_id, st_dt, et_dt)
+        # AvailablePerson().create_unavailable_time_schedule(j, st_dt, et_dt)
         # method = BookingDAO()
         # b_id = method.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
         # result = self.build_booking_attr_dict(b_id, st_dt, et_dt, invited_id, host_id, room_id)
