@@ -80,7 +80,8 @@ class AvailablePersonDAO:
 
     def delete_all_unavailable_person_schedule(self, person_id):
         cursor = self.conn.cursor()
-        query = 'delete from "availableperson" where person_id = %s;'
+        query = 'delete from "availableperson"' \
+                ' where person_id = %s;'
         cursor.execute(query, (person_id,))
         deleted_rows = cursor.rowcount
         self.conn.commit()
@@ -88,7 +89,8 @@ class AvailablePersonDAO:
 
     def delete_unavailable_person_schedule(self, pa_id):
         cursor = self.conn.cursor()
-        query = 'delete from "availableperson" where pa_id = %s; '
+        query = 'delete from "availableperson" ' \
+                'where pa_id = %s; '
         cursor.execute(query, (pa_id,))
         deleted_rows = cursor.rowcount
         self.conn.commit()
@@ -96,7 +98,8 @@ class AvailablePersonDAO:
 
     def delete_unavailable_person_schedule_at_certain_time(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
-        query = 'delete from "availableperson" where person_id = %s and st_dt= %s and et_dt= %s;'
+        query = 'delete from "availableperson" ' \
+                'where person_id = %s and st_dt= %s and et_dt= %s;'
         cursor.execute(query, (p_id, st_dt, et_dt))
         deleted_rows = cursor.rowcount
         self.conn.commit()

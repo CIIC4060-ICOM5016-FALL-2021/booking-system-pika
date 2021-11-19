@@ -31,7 +31,8 @@ class PersonDAO:
 
     def delete_person(self, p_id):
         cursor = self.conn.cursor()
-        query = 'delete from "person" where p_id = %s;'
+        query = 'delete from "person" ' \
+                'where p_id = %s;'
         cursor.execute(query, (p_id,))
         deleted_rows = cursor.rowcount
         self.conn.commit()
@@ -39,7 +40,8 @@ class PersonDAO:
 
     def get_all_person(self):
         cursor = self.conn.cursor()
-        query = 'select p_id, p_fname, p_lname, p_role, p_email, p_phone ,p_gender from "person";'
+        query = 'select p_id, p_fname, p_lname, p_role, p_email, p_phone ,p_gender ' \
+                'from "person";'
         cursor.execute(query)
         result = []
         for row in cursor:
