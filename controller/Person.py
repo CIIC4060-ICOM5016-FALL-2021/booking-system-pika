@@ -124,6 +124,7 @@ class Person:
             result = room.build_room_attr_dict(most_used_room[0], most_used_room[1], most_used_room[2],
                                                most_used_room[3])
             return jsonify(result), 200
+
     def get_busiest_hours(self):
         method = PersonDAO()
         busiest = method.get_busiest_hours()
@@ -139,14 +140,14 @@ class Person:
     def get_all_day_schedule_of_person(self, json):
         method = PersonDAO()
         date = json['date']
-        pa_id = json['pa_id']
+        p_id = json['p_id']
         person = method.get_person_by_id(p_id)
 
         if not person:
             return jsonify("Person Not Found"), 404
 
         method2 = AvailablePersonDAO()
-        person_unavailable_time_slots = method2.get_unavailable_time_of_person_by_id(pa_id)
+        person_unavailable_time_slots = method2.get_unavailable_time_of_person_by_person_id(p_id)
         if not person_unavailable_time_slots:
             return jsonify("Person has no schedule "), 200
         else:

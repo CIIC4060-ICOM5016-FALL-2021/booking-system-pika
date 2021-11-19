@@ -59,6 +59,15 @@ class AvailablePersonDAO:
         result = cursor.fetchone()
         return result
 
+    def get_unavailable_time_of_person_by_person_id(self, p_id):
+        cursor = self.conn.cursor()
+        query = 'select st_dt, et_dt ' \
+                'from "availableperson" ' \
+                'where p_id = %s ;'
+        cursor.execute(query, (p_id,))
+        result = cursor.fetchone()
+        return result
+
     def verify_available_user_at_timeframe(self, st_dt, et_dt):
         # time.mktime(datetime.datetime.strptime(string2, "%Y-%m-%d %H:%M:%S").timetuple())
         cursor = self.conn.cursor()

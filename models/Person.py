@@ -117,7 +117,7 @@ class PersonDAO:
     def get_busiest_hours(self):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt, count(*) as activeinthehour' \
-                'from booking  ' \
+                ' from booking  ' \
                 ' group by st_dt ' \
                 'ordered by activeinthehour desc limit 5;'
         cursor.execute(query, )
