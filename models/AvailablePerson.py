@@ -63,7 +63,7 @@ class AvailablePersonDAO:
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt ' \
                 'from "availableperson" ' \
-                'where p_id = %s ;'
+                'where person_id = %s ;'
         cursor.execute(query, (p_id,))
         result = cursor.fetchone()
         return result
