@@ -128,14 +128,14 @@ class Person:
     def get_all_day_schedule_of_person(self, json):
         method = PersonDAO()
         date = json['date']
-        p_id = json['p_id']
+        pa_id = json['pa_id']
         person = method.get_person_by_id(p_id)
 
         if not person:
             return jsonify("Person Not Found"), 404
 
         method2 = AvailablePersonDAO()
-        person_unavailable_time_slots = method2.get_unavailable_time_of_person_by_id(p_id)
+        person_unavailable_time_slots = method2.get_unavailable_time_of_person_by_id(pa_id)
         if not person_unavailable_time_slots:
             return jsonify("Person has no schedule "), 200
         else:
