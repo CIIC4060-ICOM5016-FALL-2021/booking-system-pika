@@ -141,12 +141,12 @@ class Booking:
                     for inv in invited_id:
 
 
-                        if not(AvailablePersonDAO().verify_conflict_at_timeframe(inv,st_dt,et_dt)):
+                        if (AvailablePersonDAO().verify_conflict_at_timeframe(inv,st_dt,et_dt)):
 
                             b_id.append(booking_dao.create_new_booking(st_dt,et_dt,inv,host_id,room_id))
                             print(b_id)
                 elif type(invited_id) == int:
-                    if not (AvailablePersonDAO().verify_conflict_at_timeframe(invited_id,st_dt,et_dt)):
+                    if  (AvailablePersonDAO().verify_conflict_at_timeframe(invited_id,st_dt,et_dt)):
 
                         b_id = booking_dao.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
 
