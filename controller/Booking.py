@@ -18,6 +18,7 @@ class Booking:
     def build_booking_map_dict(self, row):
         result = {'b_id': row[0], 'st_dt': row[1], 'et_dt': row[2], 'invited_id': row[3],
                   'host_id': row[4], 'room_id': row[5]}
+        print(result)
         return result
 
     def build_booking_attr_dict(self, b_id, st_dt, et_dt, invited_id, host_id, room_id):
@@ -25,6 +26,7 @@ class Booking:
             result = {}
             for bookingid in b_id:
                 result[b_id] = self.build_booking_map_dict([bookingid, st_dt, et_dt, invited_id, host_id, room_id])
+            print(result)
             return result
 
         elif type(b_id) == int:
@@ -138,15 +140,19 @@ class Booking:
                     b_id=[]
                     for inv in invited_id:
 
+
                         if not(AvailablePersonDAO().verify_conflict_at_timeframe(inv,st_dt,et_dt)):
 
                             b_id.append(booking_dao.create_new_booking(st_dt,et_dt,inv,host_id,room_id))
+                            print(b_id)
                 elif type(invited_id) == int:
                     if not (AvailablePersonDAO().verify_conflict_at_timeframe(invited_id,st_dt,et_dt)):
 
                         b_id = booking_dao.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
 
                 result = self.build_booking_attr_dict(b_id,st_dt,et_dt,invited_id,host_id,room_id)
+                print(result)
+                print(jsonify(result))
                 return jsonify(result)
 
 
