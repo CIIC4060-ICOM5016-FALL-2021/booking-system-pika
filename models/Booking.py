@@ -63,7 +63,7 @@ class BookingDAO:
     # returns the whole booking query
     def get_all_booking(self):
         cursor = self.conn.cursor()
-        query = 'select st_dt, et_dt, invited_id, host_id, room_id from "booking";'
+        query = 'select b_id, st_dt, et_dt, invited_id, host_id, room_id from "booking";'
         cursor.execute(query)
         result = []
         for row in cursor:

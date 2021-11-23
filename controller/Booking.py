@@ -21,7 +21,18 @@ class Booking:
         return result
 
     def build_booking_attr_dict(self, b_id, st_dt, et_dt, invited_id, host_id, room_id):
-        return self.build_booking_map_dict([b_id, st_dt, et_dt, invited_id, host_id, room_id])
+
+
+
+        if type(b_id) == list:
+            result = []
+            for bookingid in b_id:
+                result.append(self.build_booking_map_dict([bookingid, st_dt, et_dt, invited_id, host_id, room_id]))
+            return result
+
+        elif type(b_id) == int:
+
+            return self.build_booking_map_dict([b_id, st_dt, et_dt, invited_id, host_id, room_id])
 
     def build_busy_times_map_dict(self, row):
         result = {'st_dt': row[0], 'et_dt': row[1], 'times_booked': row[2]}
@@ -127,17 +138,19 @@ class Booking:
 
                 # checks if
                 if type(invited_id) == list:
-
+                    b_id=[]
                     for inv in invited_id:
 
                         if not(AvailablePersonDAO().verify_conflict_at_timeframe(inv,st_dt,et_dt)):
 
-                            booking_dao.create_new_booking(st_dt,et_dt,inv,host_id,room_id)
+                            b_id.append(booking_dao.create_new_booking(st_dt,et_dt,inv,host_id,room_id))
                 elif type(invited_id) == int:
                     if not (AvailablePersonDAO().verify_conflict_at_timeframe(invited_id,st_dt,et_dt)):
 
-                        booking_dao.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
+                        b_id = booking_dao.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
 
+                result = self.build_booking_attr_dict(b_id,st_dt,et_dt,invited_id,host_id,room_id)
+                return jsonify(result)
 
 
 
