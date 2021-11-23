@@ -18,15 +18,16 @@ class Booking:
     def build_booking_map_dict(self, row):
         result = {'b_id': row[0], 'st_dt': row[1], 'et_dt': row[2], 'invited_id': row[3],
                   'host_id': row[4], 'room_id': row[5]}
-        print(result)
         return result
 
     def build_booking_attr_dict(self, b_id, st_dt, et_dt, invited_id, host_id, room_id):
+
+
+
         if type(b_id) == list:
-            result = {}
+            result = []
             for bookingid in b_id:
-                result[b_id] = self.build_booking_map_dict([bookingid, st_dt, et_dt, invited_id, host_id, room_id])
-            print(result)
+                result.append(self.build_booking_map_dict([bookingid, st_dt, et_dt, invited_id, host_id, room_id]))
             return result
 
         elif type(b_id) == int:
@@ -127,6 +128,7 @@ class Booking:
             # period to not know about the outside world. For that, we input the id, and booking timeframe,
             # and search if there's any availableperson timeframe (which again, represents a "no, plz leave me
             # alone". If there is one, check if the timeframe overlaps with the booking timeframe, if so, panic
+            booking_dao = BookingDAO()
 
 
             if(not(AvailableRoomDAO().verify_conflict_at_timeframe(room_id,st_dt,et_dt))):
@@ -139,19 +141,15 @@ class Booking:
                     b_id=[]
                     for inv in invited_id:
 
+                        if not(AvailablePersonDAO().verify_conflict_at_timeframe(inv,st_dt,et_dt)):
 
-                        if (AvailablePersonDAO().verify_conflict_at_timeframe(inv,st_dt,et_dt)):
-                            booking_dao = BookingDAO()
                             b_id.append(booking_dao.create_new_booking(st_dt,et_dt,inv,host_id,room_id))
-                            print(b_id)
                 elif type(invited_id) == int:
-                    if  (AvailablePersonDAO().verify_conflict_at_timeframe(invited_id,st_dt,et_dt)):
-                        booking_dao = BookingDAO()
+                    if not (AvailablePersonDAO().verify_conflict_at_timeframe(invited_id,st_dt,et_dt)):
+
                         b_id = booking_dao.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
 
                 result = self.build_booking_attr_dict(b_id,st_dt,et_dt,invited_id,host_id,room_id)
-                print(result)
-                print(jsonify(result))
                 return jsonify(result)
 
 
