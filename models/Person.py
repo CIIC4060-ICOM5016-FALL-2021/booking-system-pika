@@ -62,6 +62,22 @@ class PersonDAO:
         result = cursor.fetchone()
         return result
 
+    def get_dict_person_by_id(self, p_id: int):
+        cursor = self.conn.cursor()
+        query = 'select p_fname, p_lname, p_role, p_email, p_phone, p_gender ' \
+                'from "person" where p_id = %s;'
+        cursor.execute(query, (p_id, ))
+
+
+        columnsnames = ["p_fname","p_lname","p_role","p_email","p_phone","p_gender"]
+        result = cursor.fetchone()
+
+        dictionary = {}
+        for i in range(0,len(columnsnames)):
+            dictionary[columnsnames[i]]= result[i]
+
+        return dictionary
+
     def get_all_available_person(self):
         cursor = self.conn.cursor()
         query = 'select  st_dt, et_dt, person_id ' \

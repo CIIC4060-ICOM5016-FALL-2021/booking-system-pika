@@ -75,12 +75,12 @@ class Booking:
 
         elif type(invited_id) == int:
             print(person_dao.get_person_by_id(invited_id))
-            if person_dao.get_person_by_id(invited_id):
+            if not person_dao.get_person_by_id(invited_id):
                 return jsonify("Oops! Seems your invitee does not exists in our database. Its id is: %s",
                                invited_id), 404
 
         # Checks if the Host exists
-        host = person_dao.get_person_by_id(host_id)
+        host = person_dao.get_dict_person_by_id(host_id)
         htr = host["p_role"]  # We will use this to check the host role
         rty = room["r_type"]  # the room's type, ie, what kind of room is
         if not host:
