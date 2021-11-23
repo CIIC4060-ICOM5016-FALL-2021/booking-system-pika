@@ -63,6 +63,7 @@ class Booking:
         person_dao = PersonDAO()
 
         # Invitees may be actually a list of ids, therefore, we iterate over all of em
+        print(invited_id)
         if type(invited_id) == list:
             for i in invited_id:
                 if not person_dao.get_person_by_id(i):
