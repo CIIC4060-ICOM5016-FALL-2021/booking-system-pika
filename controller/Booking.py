@@ -4,6 +4,10 @@ from controller.AvailableRoom import AvailableRoom
 from models.Booking import BookingDAO
 from models.Person import PersonDAO
 from models.Room import RoomDAO
+
+from models.AvailablePerson import AvailablePersonDAO
+from models.AvailableRoom import AvailableRoomDAO
+
 from controller.Room import Room
 from controller.Person import Person
 from controller.AvailablePerson import AvailablePerson
