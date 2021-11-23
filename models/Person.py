@@ -37,7 +37,8 @@ class PersonDAO:
 
     def delete_person(self, p_id):
         cursor = self.conn.cursor()
-        query = 'delete from "person" where p_id = %s;'
+        query = 'delete from "person" ' \
+                'where p_id = %s;'
         cursor.execute(query, (p_id,))
         deleted_rows = cursor.rowcount
         self.conn.commit()
@@ -45,7 +46,8 @@ class PersonDAO:
 
     def get_all_person(self):
         cursor = self.conn.cursor()
-        query = 'select p_id, p_fname, p_lname, p_role, p_email, p_phone ,p_gender from "person";'
+        query = 'select p_id, p_fname, p_lname, p_role, p_email, p_phone ,p_gender ' \
+                'from "person";'
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -121,9 +123,9 @@ class PersonDAO:
     def get_busiest_hours(self):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt, count(*) as activeinthehour' \
-                'from booking  ' \
-                ' group by st_dt ' \
-                'ordered by activeinthehour desc limit 5;'
+                ' from booking  ' \
+                ' group by st_dt, et_dt ' \
+                'order by activeinthehour desc limit 5;'
         cursor.execute(query, )
         result = []
         for row in cursor:

@@ -121,6 +121,18 @@ class Person:
                                                most_used_room[3])
             return jsonify(result), 200
 
+    def get_busiest_hours(self):
+        method = PersonDAO()
+        busiest = method.get_busiest_hours()
+        if not busiest:
+            return jsonify("Not Found"), 404
+        else:
+            result_list = []
+            for row in busiest:
+                obj = self.build_person_map(row)
+                result_list.append(obj)
+            return jsonify(result_list)
+
     def get_all_day_schedule_of_person(self, json):
         method = PersonDAO()
         date = json['date']
@@ -131,7 +143,7 @@ class Person:
             return jsonify("Person Not Found"), 404
 
         method2 = AvailablePersonDAO()
-        person_unavailable_time_slots = method2.get_unavailable_time_of_person_by_id(p_id)
+        person_unavailable_time_slots = method2.get_unavailable_time_of_person_by_person_id(p_id)
         if not person_unavailable_time_slots:
             return jsonify("Person has no schedule "), 200
         else:
