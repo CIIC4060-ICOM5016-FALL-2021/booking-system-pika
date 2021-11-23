@@ -3,6 +3,12 @@ from config.dbcondig import db_root_config
 
 
 class PersonDAO:
+    R_STUDENT = 1
+    R_PROF = 2
+    R_STAFF = 3
+    R_INSTRUCTOR = 4
+    R_VISITOR = 5
+
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (db_root_config['dbname'],
                                                                             db_root_config['user'],
@@ -46,7 +52,7 @@ class PersonDAO:
             result.append(row)
         return result
 
-    def get_person_by_id(self, p_id):
+    def get_person_by_id(self, p_id: int):
         cursor = self.conn.cursor()
         query = 'select p_fname, p_lname, p_role, p_email, p_phone, p_gender ' \
                 'from "person" where p_id = %s;'

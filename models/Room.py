@@ -3,6 +3,13 @@ from config.dbcondig import db_root_config
 
 
 class RoomDAO:
+    # CONSTANTS N STUFF
+    T_LAB = 1
+    T_CLASSROOM = 2
+    T_CONFERENCE = 3
+    T_OFFICE = 4
+    T_STY_SPACE = 5
+
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (db_root_config['dbname'],
                                                                             db_root_config['user'],
@@ -13,7 +20,7 @@ class RoomDAO:
 
     # Read
 
-    # GET All
+    # Returns a query of all rooms
     def get_all_rooms(self):
         cursor = self.conn.cursor()
         query = 'select r_id, r_building, r_type, r_dept ' \
@@ -24,11 +31,7 @@ class RoomDAO:
             result.append(row)
         return result
 
-    # GET Target Room
-    #
-    # NOTE:
-    # This looks by id
-    #
+    # GET Target Room using its id
     def get_room(self, r_id: int):
         # Open Cursor for operations
         cursor = self.conn.cursor()
@@ -39,7 +42,6 @@ class RoomDAO:
         return result
 
     # Gets room by building, department, or type
-    # TODO: Make this more general
     def get_room_by(self, args: dict):
         parser = ""
         for i, j in reversed(list(enumerate(args.items()))):
@@ -70,7 +72,7 @@ class RoomDAO:
             result.append(row)
         return result
 
-    # Create
+    # creates a new room entry
     def create_new_room(self, r_building, r_dept, r_type):
         cursor = self.conn.cursor()
         query = "insert into room (r_building, r_dept, r_type)  values (%s, %s, %s) returning r_id; "
@@ -80,15 +82,7 @@ class RoomDAO:
         self.conn.commit()
         return r_id
 
-    def create_unavailable_room_time(self, room_id, st_dt, et_dt):
-        cursor = self.conn.cursor()
-        query = 'insert into "availableroom" ' \
-                '(st_dt, et_dt, room_id) values (%s, %s, %s);'
-        cursor.execute(query, (st_dt, et_dt, room_id,))
-        self.conn.commit()
-        return True
-
-    # Update
+    # Updates an existing entry
     def update_room(self, r_id, new_r_building, new_r_dept, new_r_type):
         cursor = self.conn.cursor()
         query = "update room set r_building = %s, r_dept = %s, r_type = %s where r_id = %s;"
@@ -96,7 +90,7 @@ class RoomDAO:
         self.conn.commit()
         return True
 
-    # Delete
+    # Deletes an entry
     def delete_room(self, r_id):
         cursor = self.conn.cursor()
         query = "deleting room %s..."
@@ -107,15 +101,6 @@ class RoomDAO:
         # otherwise, it was deleted, so check if affected_rows != 0
         return affected_rows != 0
 
-    #TODO FIX
-    def create_unavailable_room_time(self, r_id, st_dt, et_dt):
-        cursor = self.conn.cursor()
-        query = 'insert into "availableroom" ' \
-                '(st_dt, et_dt, ra_id) values (%s, %s, %s);'
-        cursor.execute(query, (st_dt, et_dt, r_id,))
-        self.conn.commit()
-        return True
-
     # TODO FIX
     def create_unavailable_room_time(self, r_id, st_dt, et_dt):
         cursor = self.conn.cursor()
@@ -125,6 +110,7 @@ class RoomDAO:
         self.conn.commit()
         return True
 
+    # Returns a single row which is the most booked room
     def get_most_booked_rooms(self):
         cursor = self.conn.cursor()
         query = 'select r_id, count(booking.room_id) as timed_booked ' \
@@ -147,6 +133,7 @@ class RoomDAO:
             result.append(row)
         return result
 
+    # Checks if the room is available at a given timeframe
     def get_available_room(self, st_dt, et_dt):
         cursor = self.conn.cursor()
         # TODO Test this

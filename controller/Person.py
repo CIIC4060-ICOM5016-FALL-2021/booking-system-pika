@@ -8,10 +8,6 @@ from models.AvailablePerson import AvailablePersonDAO
 
 
 class Person:
-    ROLE_STUDENT = 1
-    ROLE_PROF = 2
-    ROLE_STAFF = 3
-    ROLE_VISITOR = 4
 
     def build_person_map(self, row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'p_role': row[3], 'p_email': row[4],
@@ -193,19 +189,3 @@ class Person:
         elif role == "2":
             result = method.get_info_for_staff()
             return jsonify(result)
-
-    def make_room_available(self, p_id, st_dt, et_st):
-        role = self.get_person_role_by_id(p_id)
-        room = RoomDAO()
-        if role == "2":
-            return
-        else:
-            return jsonify("You don't have access to make room available")
-
-    def make_room_unavailable(self, p_id, st_dt, et_st):
-        role = self.get_person_role_by_id(p_id)
-        room = RoomDAO()
-        if role == "2":
-            return
-        else:
-            return jsonify("You don't have access to make room unavailable")

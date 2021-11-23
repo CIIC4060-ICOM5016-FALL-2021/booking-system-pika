@@ -3,12 +3,6 @@ from models.Room import RoomDAO
 
 
 class Room:
-    # CONSTANTS N STUFF
-    TYPE_LAB = 1
-    TYPE_CLASSROOM = 2
-    TYPE_CONFERENCE = 3
-    TYPE_OFFICE = 4
-    TYPE_STUDY_SPACE = 5
 
     # Generate the Rows
     def build_room(self, row: tuple):
@@ -41,20 +35,6 @@ class Room:
 
     def build_timeslot_attr_dict(self, r_id, st_dt, et_dt):
         return self.build_timeslot((r_id, st_dt, et_dt))
-
-    # Adds a query where timeframe which represents the time such room will not be available
-    def add_unavailable_time_schedule(self, r_id, json):
-        method = RoomDAO()
-        start_time = json['st_dt']
-        end_time = json['et_dt']
-        exist = self.get_room_by_id(r_id)
-        if not exist:
-            return jsonify("Person doesn't exist")
-
-        unavailable_schedule = method.create_unavailable_room_time(r_id, start_time, end_time)
-        if unavailable_schedule:
-            result = {}
-            return jsonify(result)
 
     # Read
     #

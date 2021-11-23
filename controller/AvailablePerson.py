@@ -36,12 +36,11 @@ class AvailablePerson:
     def verify_available_user_at_timeframe(self, p_id: int, st_dt, et_dt):
 
         method = AvailablePersonDAO()
-        available_users_list = method.verify_available_user_at_timeframe(p_id, st_dt, et_dt)
+        available_users_list = method.verify_available_person_at_timeframe(p_id, st_dt, et_dt)
         result_list = []
         for row in available_users_list:
             obj = self.build_available_time_person_map(row)
             result_list.append(obj)
-        print("ITS WORKING OVER HERE at available person")
         return jsonify(result_list)
 
     def get_all_unavailable_persons(self):

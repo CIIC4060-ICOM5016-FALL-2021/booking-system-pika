@@ -59,14 +59,26 @@ class AvailablePersonDAO:
         result = cursor.fetchone()
         return result
 
-    def verify_available_user_at_timeframe(self, st_dt, et_dt):
+    def verify_available_person_at_timeframe(self, p_id, st_dt, et_dt):
         # time.mktime(datetime.datetime.strptime(string2, "%Y-%m-%d %H:%M:%S").timetuple())
         cursor = self.conn.cursor()
         query = "select p_id " \
                 "from person as p, booking as b, availableperson as a " \
-                "where b.st_dt != %s and b.et_dt !=%s and p.p_id != b.invited_id and a.person_id != p.p_id; "
-        cursor.execute(query, (st_dt, et_dt,))
+                "where b.st_dt != %s and b.et_dt != %s and %s != b.invited_id and a.person_id != %s; "
+        cursor.execute(query, (st_dt, et_dt, p_id, p_id))
         result = cursor.fetchone()
+        return result
+
+    def verify_conflict_at_timeframe(self, p_id, st_dt, et_dt):
+        cursor = self.conn.cursor()
+        query = 'select person_id, is_there_conflict, st_dt, et_dt from ( select person_id, st_dt, et_dt, tsrange(st_dt, ' \
+                'et_dt) && tsrange(%s, %s) as is_there_conflict from (select person_id, st_dt, et_dt from availableperson where ' \
+                'person_id = %s UNION select host_id as person_id, st_dt, et_dt from booking where host_id = %s) as ' \
+                'hisdedpisded ) t; '
+        cursor.execute(query, (st_dt, et_dt, p_id, p_id))
+        result = []
+        for row in cursor:
+            result.append(row)
         return result
 
     def update_unavailable_person(self, pa_id, st_dt, et_dt, person_id):

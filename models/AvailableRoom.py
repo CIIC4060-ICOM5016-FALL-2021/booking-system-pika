@@ -11,7 +11,8 @@ class AvailableRoomDAO:
                                                                             db_root_config['host'])
         self.conn = psycopg2.connect(connection_url)
 
-    def create_unavailable_room_time(self, st_dt, et_dt, r_id):
+    # creates new unavailable room entry
+    def create_unavailable_room_time(self, r_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'insert into "availableroom" ' \
                 '(st_dt, et_dt, room_id) values (%s, %s, %s);'
@@ -19,6 +20,7 @@ class AvailableRoomDAO:
         self.conn.commit()
         return True
 
+    # returns a single
     def get_unavailable_time_of_room_by_id(self, r_id):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt ' \
@@ -29,13 +31,25 @@ class AvailableRoomDAO:
         return result
 
     def verify_available_room_at_timeframe(self, r_id, st_dt, et_dt):
-
         cursor = self.conn.cursor()
+        # select host_id, st_dt, et_dt from booking where host_id =41 UNION select pa_id, st_dt, et_dt from availableperson where pa_id =41;
         query = "select r_id " \
                 "from room as r, booking as b, availableroom as a " \
                 "where b.st_dt != %s and b.et_dt != %s and r.r_id != b.room_id and a.room_id != r.r_id;"
         cursor.execute(query, (st_dt, et_dt,))
         result = cursor.fetchone()
+        return result
+
+    def verify_conflict_at_timeframe(self, r_id, st_dt, et_dt):
+        cursor = self.conn.cursor()
+        query = 'select room_id, is_there_conflict, st_dt, et_dt from ( select room_id, st_dt, et_dt, tsrange(st_dt, ' \
+                'et_dt) && tsrange(%s, %s) as is_there_conflict from (select room_id, st_dt, et_dt from availableroom ' \
+                'where room_id = %s UNION select room_id, st_dt, et_dt from booking where room_id = %s) as ' \
+                'hisdedpisded) t; '
+        cursor.execute(query, (st_dt, et_dt, r_id, r_id))
+        result = []
+        for row in cursor:
+            result.append(row)
         return result
 
     def get_all_unavailable_room(self):
