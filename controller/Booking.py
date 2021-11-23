@@ -53,7 +53,7 @@ class Booking:
 
         # Checking if the room exists
         room_dao = RoomDAO()
-        room = room_dao.get_room(room_id)
+        room = room_dao.get_room_dict(room_id)
         if not room:
             return jsonify("Room Not Found"), 404
 
