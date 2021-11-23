@@ -127,7 +127,6 @@ class Booking:
             # period to not know about the outside world. For that, we input the id, and booking timeframe,
             # and search if there's any availableperson timeframe (which again, represents a "no, plz leave me
             # alone". If there is one, check if the timeframe overlaps with the booking timeframe, if so, panic
-            booking_dao = BookingDAO()
 
 
             if(not(AvailableRoomDAO().verify_conflict_at_timeframe(room_id,st_dt,et_dt))):
@@ -142,12 +141,12 @@ class Booking:
 
 
                         if (AvailablePersonDAO().verify_conflict_at_timeframe(inv,st_dt,et_dt)):
-
+                            booking_dao = BookingDAO()
                             b_id.append(booking_dao.create_new_booking(st_dt,et_dt,inv,host_id,room_id))
                             print(b_id)
                 elif type(invited_id) == int:
                     if  (AvailablePersonDAO().verify_conflict_at_timeframe(invited_id,st_dt,et_dt)):
-
+                        booking_dao = BookingDAO()
                         b_id = booking_dao.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
 
                 result = self.build_booking_attr_dict(b_id,st_dt,et_dt,invited_id,host_id,room_id)
