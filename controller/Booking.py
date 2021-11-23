@@ -21,13 +21,10 @@ class Booking:
         return result
 
     def build_booking_attr_dict(self, b_id, st_dt, et_dt, invited_id, host_id, room_id):
-
-
-
         if type(b_id) == list:
-            result = []
+            result = {}
             for bookingid in b_id:
-                result.append(self.build_booking_map_dict([bookingid, st_dt, et_dt, invited_id, host_id, room_id]))
+                result[b_id] = self.build_booking_map_dict([bookingid, st_dt, et_dt, invited_id, host_id, room_id])
             return result
 
         elif type(b_id) == int:
