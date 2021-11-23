@@ -66,13 +66,15 @@ class Booking:
         print(invited_id)
         if type(invited_id) == list:
             for i in invited_id:
+                print(person_dao.get_person_by_id(i))
                 if not person_dao.get_person_by_id(i):
+
                     return jsonify("Oops! Seems one of your invitees do not exists in our database. Their id is: %s",
                                    i), 404
 
 
         elif type(invited_id) == int:
-
+            print(person_dao.get_person_by_id(invited_id))
             if person_dao.get_person_by_id(invited_id):
                 return jsonify("Oops! Seems your invitee does not exists in our database. Its id is: %s",
                                invited_id), 404
