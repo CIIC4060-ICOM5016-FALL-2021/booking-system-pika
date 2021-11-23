@@ -120,7 +120,7 @@ class Booking:
             booking_dao = BookingDAO()
 
 
-            if(len(AvailableRoomDAO().verify_conflict_at_timeframe(room_id,st_dt,et_dt)==0)):
+            if(not(AvailableRoomDAO().verify_conflict_at_timeframe(room_id,st_dt,et_dt))):
 
 
 
