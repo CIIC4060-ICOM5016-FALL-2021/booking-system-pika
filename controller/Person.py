@@ -37,11 +37,12 @@ class Person:
         result = {'pa_id': row[0], 'st_dt': row[1],
                   'et_dt': row[2], 'person_id': row[3]}
         return result
-
+    def build_mostusedroom_attrdict(self,row):
+        result = {'start_time': row[0], 'finish_time': row[1], 'activebooking': row[2]}
+        return result
     def build_timeslot_attrdict(self, row):
         result = {'start_time': row[0], 'finish_time': row[1], 'activebooking': row[2]}
         return result
-
     def build_mostbookedperson_attrdict(self,row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'count': row[3]}
         return result
