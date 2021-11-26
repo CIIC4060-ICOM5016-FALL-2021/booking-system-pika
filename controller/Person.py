@@ -42,8 +42,8 @@ class Person:
         result = {'start_time': row[0], 'finish_time': row[1], 'activebooking': row[2]}
         return result
 
-    def build_mostbookedperson_attrdict(self,p_id, p_fname, p_lname, count):
-        result = {'p_id': p_id, 'p_fname': p_fname, 'p_lname': p_lname, 'count': count}
+    def build_mostbookedperson_attrdict(self,row):
+        result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'count': row[3]}
         return result
     # ok
     def create_new_person(self, json):
