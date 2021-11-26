@@ -38,8 +38,8 @@ class Person:
                   'et_dt': row[2], 'person_id': row[3]}
         return result
 
-    def build_timeslot_attrdict(self, st_dt, et_dt, activebookings):
-        result = {'start_time': st_dt, 'finish_time': et_dt, 'activebooking': activebookings}
+    def build_timeslot_attrdict(self, row):
+        result = {'start_time': row[0], 'finish_time': row[1], 'activebooking': row[2]}
         return result
 
     def build_mostbookedperson_attrdict(self,p_id, p_fname, p_lname, count):
