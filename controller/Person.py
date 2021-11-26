@@ -38,9 +38,10 @@ class Person:
                   'et_dt': row[2], 'person_id': row[3]}
         return result
 
-    def build_timeslot_attrdict(self, st_dt, et_dt,activebookings):
-        result = {'start_time': st_dt, 'finish_time': et_dt, 'activebooking':activebookings}
+    def build_timeslot_attrdict(self, st_dt, et_dt, activebookings):
+        result = {'start_time': st_dt, 'finish_time': et_dt, 'activebooking': activebookings}
         return result
+
     def build_mostbookedperson_attrdict(self,p_id, p_fname, p_lname, count):
         result = {'p_id': p_id, 'p_fname': p_fname, 'p_lname': p_lname, 'count': count}
         return result
@@ -131,6 +132,7 @@ class Person:
         else:
             result_list = []
             for row in busiest:
+                print(row)
                 obj = self.build_timeslot_attrdict(row)
                 result_list.append(obj)
             return jsonify(result_list)
