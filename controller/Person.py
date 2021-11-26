@@ -133,6 +133,7 @@ class Person:
             result_list = []
             for row in busiest:
                 print(row)
+                #dk
                 obj = self.build_timeslot_attrdict(row)
                 result_list.append(obj)
             return jsonify(result_list)
