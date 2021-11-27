@@ -92,7 +92,7 @@ class Booking:
         host = person_dao.get_dict_person_by_id(host_id)
         htr = host["p_role"]  # We will use this to check the host role
         print(room)
-        rty = room[0]  # the room's type, ie, what kind of room is
+        rty = room[2]  # the room's type, ie, what kind of room is
         if not host:
             return jsonify("I'm sorry, but this host does not exists in our database")
 
@@ -129,10 +129,10 @@ class Booking:
             # alone". If there is one, check if the timeframe overlaps with the booking timeframe, if so, panic
             booking_dao = BookingDAO()
 
-
+            print("AWESOME")
             if(not(AvailableRoomDAO().verify_conflict_at_timeframe(room_id,st_dt,et_dt))):
 
-
+                print("Great")
 
 
                 # checks if
@@ -156,7 +156,7 @@ class Booking:
 
 
         else:
-            return jsonify("I'm sorry,not exists in our database")
+            return jsonify("I'm sorry, but that host cannot book for this particular room")
 
     # returns a full query of all booking entries
     def get_all_booking(self):
