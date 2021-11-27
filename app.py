@@ -28,30 +28,91 @@ def main():
 # =================== #
 # ===-| R O O M |-=== #
 # =================== #
-@app.route('/pika-booking/rooms', methods=['GET', 'POST'])
+
+# Room Basic CRUD
+# This crud maanges all 5 main basic requests for room
+# Create a new room (json)
+# Delete an existing room given a room id
+# Update an existing room also by a given id
+# Get either all rooms or by a specified query parameter
+@app.route('/pika-booking/rooms', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def handle_rooms():
+    args = request.args
     if request.method == 'POST':
         return Room().create_new_room(request.json)
     elif request.method == 'GET':
-        args = request.args
         if args:
-            return Room().get_rooms(args)
-        return Room().get_all_rooms()
-    else:
-        return jsonify("Method Not Allowed"), 405
-
-
-@app.route('/pika-booking/rooms/<int:r_id>', methods=['GET', 'PUT', 'DELETE'])
-def handle_rooms_by_id(r_id):
-    if request.method == 'GET':
-        return Room().get_room_by_id(r_id)
+            args_dict = {}
+            if "room" in args:
+                args_dict["r_id"] = args["room"]
+            if "building" in args:
+                args_dict["r_building"] = args["building"]
+            if "department" in args:
+                args_dict["r_dept"] = args["department"]
+            if "lab" in args:
+                args_dict["r_type"] = 1
+            if "classroom" in args:
+                args_dict["r_type"] = 2
+            if "conference" in args:
+                args_dict["r_type"] = 3
+            if "office" in args:
+                args_dict["r_type"] = 4
+            if "study" in args:
+                args_dict["r_type"] = 4
+            if args_dict == {}:
+                return jsonify("Parameter Doesn't match with query!"), 200
+            return Room().get_rooms(args_dict)
+        else:
+            return Room().get_all_rooms()
     elif request.method == 'PUT':
-        return Room().update_room(r_id, request.json)
+        if args:
+            args_dict = {}
+            if "room" in args:
+                return Room().update_room(args["room"], request.json)
+            else:
+                return jsonify("Parameter Doesn't match with query!"), 200
+        else:
+            return jsonify("Parameter Doesn't match with query!"), 200
     elif request.method == 'DELETE':
-        return Room().delete_room(r_id)
+        if args:
+            args_dict = {}
+            if "room" in args:
+                return Room().delete_room(args["room"])
+            else:
+                return jsonify("Parameter Doesn't match with query!"), 200
+        else:
+            return jsonify("Parameter Doesn't match with query!"), 200
     else:
         return jsonify("Method Not Allowed"), 405
 
+
+# ========================= #
+# ===-| B O O K I N G |-=== #
+# ========================= #
+@app.route('/pika-booking/booking', methods=['GET', 'POST'])
+def handle_bookings():
+    if request.method == 'POST':
+        return Booking().create_new_booking(request.json)
+    elif request.method == 'GET':
+        return Booking().get_all_booking()
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/booking/<int:b_id>', methods=['GET', 'PUT', 'DELETE'])
+def handle_bookings_by_id(b_id):
+    if request.method == 'GET':
+        return Booking().get_booking_by_id(b_id)
+    elif request.method == 'PUT':
+        return Booking().update_booking(b_id, request.json)
+    elif request.method == 'DELETE':
+        return Booking().delete_booking(b_id)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+
+# Other
 
 @app.route('/pika-booking/rooms/most-booked', methods=['GET'])
 def get_most_used_room():
@@ -178,31 +239,6 @@ def handle_available_time_of_users_by_id(p_id):
 def handle_person_available(p_id):
     if request.method == 'POST':
         return Person().add_unavailable_time_schedule(p_id, request.json)
-    else:
-        return jsonify("Method Not Allowed"), 405
-
-
-# ========================= #
-# ===-| B O O K I N G |-=== #
-# ========================= #
-@app.route('/pika-booking/booking', methods=['GET', 'POST'])
-def handle_bookings():
-    if request.method == 'POST':
-        return Booking().create_new_booking(request.json)
-    elif request.method == 'GET':
-        return Booking().get_all_booking()
-    else:
-        return jsonify("Method Not Allowed"), 405
-
-
-@app.route('/pika-booking/booking/<int:b_id>', methods=['GET', 'PUT', 'DELETE'])
-def handle_bookings_by_id(b_id):
-    if request.method == 'GET':
-        return Booking().get_booking_by_id(b_id)
-    elif request.method == 'PUT':
-        return Booking().update_booking(b_id, request.json)
-    elif request.method == 'DELETE':
-        return Booking().delete_booking(b_id)
     else:
         return jsonify("Method Not Allowed"), 405
 

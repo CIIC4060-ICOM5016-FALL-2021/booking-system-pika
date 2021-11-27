@@ -64,13 +64,12 @@ class RoomDAO:
                 parser += str(j[0]) + " = " + str(j[1])
             else:
                 parser += str(j[0]) + " = " + str(j[1]) + " and "
-
         # Open Cursor for operations
         cursor = self.conn.cursor()
-
-        query = "select r_id, r_building, r_dept, r_type from room where %s;"
+        query = "select r_id, r_building, r_dept, r_type from room where " + parser + ";"
+        print(query)
         # Execute commands n close
-        cursor.execute(query, parser)
+        cursor.execute(query)
         result = []
         for row in cursor:
             result.append(row)
