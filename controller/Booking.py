@@ -64,7 +64,7 @@ class Booking:
 
         # Checking if the room exists
         room_dao = RoomDAO()
-        room = room_dao.get_room_dict(room_id)
+        room = room_dao.get_room(room_id)
         if not room:
             return jsonify("Room Not Found"), 404
 
@@ -79,7 +79,6 @@ class Booking:
             for i in invited_id:
                 print(person_dao.get_person_by_id(i))
                 if not person_dao.get_person_by_id(i):
-
                     return jsonify("Oops! Seems one of your invitees do not exists in our database. Their id is: %s",
                                    i), 404
 

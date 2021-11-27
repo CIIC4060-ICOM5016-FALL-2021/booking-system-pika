@@ -41,21 +41,6 @@ class RoomDAO:
         result = cursor.fetchone()
         return result
 
-    def get_room_dict(self, r_id: int):
-        # Open Cursor for operations
-        cursor = self.conn.cursor()
-        query = "select r_building, r_dept, r_type from room where r_id = %s;"
-        # Execute commands n close
-        cursor.execute(query, (r_id,))
-        columnsnames = ["r_building", "r_dept", "r_type"]
-        result = cursor.fetchone()
-
-        dictionary = {}
-        for i in range(0, len(columnsnames)):
-            dictionary[columnsnames[i]] = result[i]
-
-        return dictionary
-
     # Gets room by building, department, or type
     def get_room_by(self, args: dict):
         parser = ""
