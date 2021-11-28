@@ -22,8 +22,6 @@ class Booking:
 
     def build_booking_attr_dict(self, b_id, st_dt, et_dt, invited_id, host_id, room_id):
 
-
-
         if type(b_id) == list:
             result = []
             for bookingid in b_id:
@@ -129,32 +127,39 @@ class Booking:
             # alone". If there is one, check if the timeframe overlaps with the booking timeframe, if so, panic
             booking_dao = BookingDAO()
 
-            print("AWESOME")
-            if(not(AvailableRoomDAO().verify_conflict_at_timeframe(room_id,st_dt,et_dt))):
+            # Is there a conflict with the room?
+            print(AvailableRoomDAO().verify_conflict_at_timeframe(room_id, st_dt, et_dt), "A list of conflicts...")
+            for i in AvailableRoomDAO().verify_conflict_at_timeframe(room_id, st_dt, et_dt):
+                if True in i:
+                    return jsonify("I'm sorry, but there's a schedule conflict with this room in your booking"), 404
 
-                print("Great")
+            print("No conflicts yay!")
 
+            # Is there a conflict with the invited? If not, then generate the booking, we done boys
+            if type(invited_id) == list:
+                b_id = []
+                for i in AvailablePersonDAO().verify_conflict_at_timeframe(invited_id, st_dt, et_dt):
+                    if True in i:
+                        return jsonify("I'm sorry, but it seems there's a schedule conflict with one or more than "
+                                       "your invitees in your booking"), 404
 
-                # checks if
-                if type(invited_id) == list:
-                    b_id=[]
-                    for inv in invited_id:
+                for inv in invited_id:
+                    if not (AvailablePersonDAO().verify_conflict_at_timeframe(inv, st_dt, et_dt)):
+                        b_id.append(booking_dao.create_new_booking(st_dt, et_dt, inv, host_id, room_id))
 
-                        if not(AvailablePersonDAO().verify_conflict_at_timeframe(inv,st_dt,et_dt)):
+                mega_map = {}
+                for i, b in enumerate(b_id):
+                    mega_map[i] = self.build_booking_attr_dict(b, st_dt, et_dt, invited_id, host_id, room_id)
+                return jsonify(mega_map)
 
-                            b_id.append(booking_dao.create_new_booking(st_dt,et_dt,inv,host_id,room_id))
-                elif type(invited_id) == int:
-                    if not (AvailablePersonDAO().verify_conflict_at_timeframe(invited_id,st_dt,et_dt)):
-
-                        b_id = booking_dao.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
-
-                result = self.build_booking_attr_dict(b_id,st_dt,et_dt,invited_id,host_id,room_id)
-                return jsonify(result)
-
-
-
-
-
+            elif type(invited_id) == int:
+                for i in AvailablePersonDAO().verify_conflict_at_timeframe(invited_id, st_dt, et_dt):
+                    if True in i:
+                        return jsonify("I'm sorry, but it seems that there's a schedule conflict with your invitee in "
+                                       "your booking"), 404
+                print("There's no conflicts, yay")
+                b_id = booking_dao.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
+                return jsonify(self.build_booking_attr_dict(b_id, st_dt, et_dt, invited_id, host_id, room_id))
         else:
             return jsonify("I'm sorry, but that host cannot book for this particular room")
 
