@@ -95,10 +95,11 @@ class Room:
             return jsonify("Room Not Found"), 404
 
     # Update
-    def update_room(self, r_id, json):
-        r_building = json['r_building']
-        r_dept = json['r_dept']
-        r_type = json['r_type']
+    def update_room(self, json):
+        r_id = json['r_id'] # 1
+        r_building = json['r_building'] # "ADEM"
+        r_dept = json['r_dept'] # "adem"
+        r_type = json['r_type'] # 3
         dao = RoomDAO()
         existing_room = dao.get_room(r_id)
         if not existing_room:

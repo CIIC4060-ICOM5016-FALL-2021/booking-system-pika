@@ -82,7 +82,7 @@ class AvailablePersonDAO:
         cursor = self.conn.cursor()
         query = 'select person_id, is_there_conflict, st_dt, et_dt from ( select person_id, st_dt, et_dt, tsrange(st_dt, ' \
                 'et_dt) && tsrange(%s, %s) as is_there_conflict from (select person_id, st_dt, et_dt from availableperson where ' \
-                'person_id = %s UNION select host_id as person_id, st_dt, et_dt from booking where host_id = %s) as ' \
+                'person_id = %s UNION select invited_id as person_id, st_dt, et_dt from booking where invited_id = %s) as ' \
                 'hisdedpisded ) t; '
         cursor.execute(query, (st_dt, et_dt, p_id, p_id))
         result = []

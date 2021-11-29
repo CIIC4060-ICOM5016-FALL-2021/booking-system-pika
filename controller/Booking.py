@@ -48,7 +48,7 @@ class Booking:
     def create_new_booking(self, json):
         st_dt = json['st_dt']
         et_dt = json['et_dt']
-        invited_id = json['invited_id']
+        invited_id = json['invited_id'] # list or int
         host_id = json['host_id']
         room_id = json['room_id']
 
@@ -81,6 +81,7 @@ class Booking:
         # Checks if the Host exists
         host = person_dao.get_dict_person_by_id(host_id)
         htr = host["p_role"]  # We will use this to check the host role
+        print(host)
         print(room)
         rty = room[2]  # the room's type, ie, what kind of room is
         if not host:
@@ -129,29 +130,51 @@ class Booking:
 
             # Is there a conflict with the invited? If not, then generate the booking, we done boys
             if type(invited_id) == list:
-                b_id = []
-                for i in AvailablePersonDAO().verify_conflict_at_timeframe(invited_id, st_dt, et_dt):
-                    if True in i:
-                        return jsonify("I'm sorry, but it seems there's a schedule conflict with one or more than "
-                                       "your invitees in your booking"), 404
 
+                b_id = []
                 for inv in invited_id:
-                    if not (AvailablePersonDAO().verify_conflict_at_timeframe(inv, st_dt, et_dt)):
+                    p = AvailablePersonDAO().verify_conflict_at_timeframe(inv, st_dt, et_dt)
+                    print(inv)
+                    if True in p[1]:
+                        userdict = person_dao.get_dict_person_by_id(inv)
+                        print("User has a conflict: ")
+                        print(userdict)
+
+                    else:
                         b_id.append(booking_dao.create_new_booking(st_dt, et_dt, inv, host_id, room_id))
+                        # TODO use create_unavailable_room_dt with room_id,st_dt,et_dt
+                        # TODO code create_unavailable_person_dt
+                        # TODO use create_unavailable_person_dt with each person_id,st_dt,et_dt
+
+
+
+                # for inv in invited_id:
+                #     print(inv)
+                #     if not (AvailablePersonDAO().verify_conflict_at_timeframe(inv, st_dt, et_dt)):
+                #     else:
+                #         print("There is a conflict")
 
                 mega_map = {}
                 print(b_id, "This is the BID")
                 for i, b in enumerate(b_id):
                     mega_map[i] = self.build_booking_attr_dict(b, st_dt, et_dt, invited_id, host_id, room_id)
+                print(mega_map)
+
+                
                 return jsonify(mega_map)
 
             elif type(invited_id) == int:
-                for i in AvailablePersonDAO().verify_conflict_at_timeframe(invited_id, st_dt, et_dt):
-                    if True in i:
-                        return jsonify("I'm sorry, but it seems that there's a schedule conflict with your invitee in "
-                                       "your booking"), 404
+
+                conflict = AvailablePersonDAO().verify_conflict_at_timeframe(invited_id, st_dt, et_dt)
+                if True in conflict:
+                    return jsonify("I'm sorry, but it seems that there's a schedule conflict with your invitee in "
+                                   "your booking"), 404
                 print("There's no conflicts, yay")
                 b_id = booking_dao.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
+                # TODO use create_unavailable_room_dt with room_id,st_dt,et_dt
+                # TODO code create_unavailable_person_dt
+                # TODO use create_unavailable_person_dt with the person_id,st_dt,et_dt
+
                 return jsonify(self.build_booking_attr_dict(b_id, st_dt, et_dt, invited_id, host_id, room_id))
         else:
             return jsonify("I'm sorry, but that host cannot book for this particular room")
@@ -178,6 +201,21 @@ class Booking:
         else:
             result = self.build_booking_map_dict(booking_tuple)
             return jsonify(result), 200
+
+    def get_host_at_dt(self, json):
+        room_id = json['room_id']
+        st_dt = json['st_dt']
+        et_dt = json['et_dt']
+        method = BookingDAO()
+        host_id = method.get_host_at_dt(room_id, st_dt, et_dt)
+
+        if not host_id:
+            return jsonify("Not Found"), 404
+        else:
+            result = {}
+            result['host_id'] = host_id
+            return jsonify(result),200
+
 
     # updates a booking entry
     def update_booking(self, b_id, json):

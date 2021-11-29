@@ -37,7 +37,7 @@ class AvailableRoomDAO:
     def get_unavailable_time_of_room_by_id(self, r_id):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt ' \
-                'from "booking" ' \
+                'from booking ' \
                 'where room_id = %s; '
         cursor.execute(query, (r_id,))
         result = cursor.fetchone()

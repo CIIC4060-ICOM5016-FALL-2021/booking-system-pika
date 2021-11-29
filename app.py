@@ -50,14 +50,7 @@ def handle_rooms():
         else:
             return Room().get_all_rooms()
     elif request.method == 'PUT':
-        if args:
-            args_dict = {}
-            if "room" in args:
-                return Room().update_room(args["room"], request.json)
-            else:
-                return jsonify("Parameter Doesn't match with query!"), 200
-        else:
-            return jsonify("Parameter Doesn't match with query!"), 200
+        return Room().update_room(request.json)
     elif request.method == 'DELETE':
         if args:
             if "room" in args:
