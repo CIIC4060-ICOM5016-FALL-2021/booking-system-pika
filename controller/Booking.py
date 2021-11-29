@@ -32,14 +32,6 @@ class Booking:
 
             return self.build_booking_map_dict([b_id, st_dt, et_dt, invited_id, host_id, room_id])
 
-    def build_busy_times_map_dict(self, row):
-        result = {'st_dt': row[0], 'et_dt': row[1], 'times_booked': row[2]}
-        return result
-
-    def build_most_booked_users_map_dict(self, row):
-        result = {'p_id': row[0], 'times_booked': row[1]}
-        return result
-
     """
     This method, as the name says, communicates with the model, which then creates a new booking entry
     To do this, the controller side first checks if:
@@ -148,6 +140,7 @@ class Booking:
                         b_id.append(booking_dao.create_new_booking(st_dt, et_dt, inv, host_id, room_id))
 
                 mega_map = {}
+                print(b_id, "This is the BID")
                 for i, b in enumerate(b_id):
                     mega_map[i] = self.build_booking_attr_dict(b, st_dt, et_dt, invited_id, host_id, room_id)
                 return jsonify(mega_map)
@@ -209,3 +202,6 @@ class Booking:
             return jsonify("DELETED")
         else:
             return jsonify("NOT FOUND"), 404
+
+
+    # TODO -> Finish statistics

@@ -125,3 +125,16 @@ class AvailablePersonDAO:
         deleted_rows = cursor.rowcount
         self.conn.commit()
         return deleted_rows != 0
+
+    # Returns the timeframe for any person (all_day)
+    def get_all_day_schedule(self, p_id, date):
+
+        cursor = self.conn.cursor()
+        query = 'select st_dt,et_dt ' \
+                'from availableroom ' \
+                'where room_id = %s AND (st_dt::date <= date %s AND et_dt::date >= date %s) ;'
+        cursor.execute(query, (p_id, date, date,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
