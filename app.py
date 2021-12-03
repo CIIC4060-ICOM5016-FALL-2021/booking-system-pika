@@ -137,7 +137,16 @@ def get_available_rooms_at_timeframe():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/room/available', methods=['GET'])
+# ============================================== #
+# ===-| U N A V A I L A B L E  P E R S O N |-=== #
+# ============================================== #
+@app.route('/pika-booking/rooms/most-booked', methods=['GET'])
+def handle_unavailable_person():
+    if request.method == 'GET':
+        
+
+# TODO FIX THIS
+@app.route('/pika-booking/person/all-day-schedule', methods=['GET'])
 def get_all_day_schedule():
     if request.method == 'GET':
         return AvailablePerson().get_all_schedule(request.json)

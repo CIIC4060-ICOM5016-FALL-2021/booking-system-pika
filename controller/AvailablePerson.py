@@ -20,7 +20,7 @@ class AvailablePerson:
                   'et_dt': et_dt, 'person_id': p_id}
         return result
 
-####################
+    ####################
     def create_unavailable_time_schedule(self, json):
         method = Person()
         person_id = json['person_id']
@@ -90,26 +90,30 @@ class AvailablePerson:
         else:
             return jsonify("NOT FOUND")
 
-   # Returns the timeframe for a room (all day)
+    # Returns the timeframe for a room (all day)
     def get_all_schedule(self, json: dict):
         person_id = json['person_id']
-        date = json['st_dt']
+        date = json['date']
 
         dao = AvailablePersonDAO()
         person_dao = PersonDAO()
+        print(person_id, "HEH")
         existing_person = person_dao.get_person_by_id(person_id)
+        print(existing_person)
 
         if not existing_person:
             return jsonify("Room Not Found"), 404
-        else:
-            res = dao.get_all_day_schedule(person_id, date)
-            result_st_dt = []
-            result_et_dt = []
-            for st_dt, et_dt in res:
-                result_et_dt.append(et_dt)
-                result_st_dt.append(st_dt)
-            result = {
-                "st_dt": result_st_dt,
-                "et_dt": result_et_dt
-            }
-            return jsonify(result), 200
+
+        res = dao.get_all_day_schedule(person_id, date)
+        print(res, "WOW")
+        result_st_dt = []
+        result_et_dt = []
+        for st_dt, et_dt in res:
+            print(st_dt, "REEEEEEEEEEEEEE")
+            result_et_dt.append(et_dt)
+            result_st_dt.append(st_dt)
+        result = {
+            "st_dt": result_st_dt,
+            "et_dt": result_et_dt
+        }
+        return jsonify(result), 200

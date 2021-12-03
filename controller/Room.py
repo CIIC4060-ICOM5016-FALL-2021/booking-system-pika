@@ -26,13 +26,6 @@ class Room:
         }
         return result
 
-    def build_most_booked_room(self, row: tuple):
-        result = {
-            "r_id": row[0],
-            "timed_booked": row[1]
-        }
-        return result
-
     def build_timeslot_attr_dict(self, r_id, st_dt, et_dt):
         return self.build_timeslot((r_id, st_dt, et_dt))
 
@@ -61,7 +54,10 @@ class Room:
         else:
             result = []
             for row in booked_rooms:
-                a = self.build_most_booked_room(row)
+                result.append({
+                    "r_id": row[0],
+                    "timed_booked": row[1]
+                })
             return jsonify(result), 200
 
     # Create

@@ -136,5 +136,6 @@ class AvailablePersonDAO:
         cursor.execute(query, (p_id, date, date,))
         result = []
         for row in cursor:
+            print(row, "ROW")
             result.append(row)
         return result
