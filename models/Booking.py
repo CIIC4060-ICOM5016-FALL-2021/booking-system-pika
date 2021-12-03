@@ -80,10 +80,10 @@ class BookingDAO:
         return result
 
     # returns a query of all hosts who have booked inside the given timeframe
-    def get_host_at_dt(self, st_dt, et_dt: int):
+    def get_host_at_dt(self, room_id, st_dt, et_dt: int):
         cursor = self.conn.cursor()
-        query = 'select host_id, room_id from booking where tsrange(st_dt, et_dt) && tsrange(%s, %s);'
-        cursor.execute(query, (st_dt, et_dt,))
+        query = 'select host_id from booking where booking.room_id = %s && tsrange(st_dt, et_dt) && tsrange(%s, %s);'
+        cursor.execute(query, (room_id, st_dt, et_dt,))
         result = cursor.fetchone()
         return result
 

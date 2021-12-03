@@ -82,7 +82,7 @@ class AvailablePersonDAO:
         cursor = self.conn.cursor()
         query = 'select person_id, is_there_conflict, st_dt, et_dt from ( select person_id, st_dt, et_dt, tsrange(st_dt, ' \
                 'et_dt) && tsrange(%s, %s) as is_there_conflict from (select person_id, st_dt, et_dt from availableperson where ' \
-                'person_id = %s UNION select host_id as person_id, st_dt, et_dt from booking where host_id = %s) as ' \
+                'person_id = %s UNION select invited_id as person_id, st_dt, et_dt from booking where invited_id = %s) as ' \
                 'hisdedpisded ) t; '
         cursor.execute(query, (st_dt, et_dt, p_id, p_id))
         result = []
@@ -125,3 +125,17 @@ class AvailablePersonDAO:
         deleted_rows = cursor.rowcount
         self.conn.commit()
         return deleted_rows != 0
+
+    # Returns the timeframe for any person (all_day)
+    def get_all_day_schedule(self, p_id, date):
+
+        cursor = self.conn.cursor()
+        query = 'select st_dt,et_dt ' \
+                'from availableroom ' \
+                'where room_id = %s AND (st_dt::date <= date %s AND et_dt::date >= date %s) ;'
+        cursor.execute(query, (p_id, date, date,))
+        result = []
+        for row in cursor:
+            print(row, "ROW")
+            result.append(row)
+        return result
