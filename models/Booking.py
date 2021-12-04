@@ -41,6 +41,22 @@ class BookingDAO:
         self.conn.commit()
         return b_id
 
+
+    def get_meetings_by_id(self,b_id):
+        cursor = self.conn.cursor()
+        query = 'with bomeeting as ' \
+                '(select booking.b_id,booking.st_dt,booking.et_dt,booking.invited_id,booking.host_id,booking. room_id, subt.meeting ' \
+                'from booking inner join ' \
+                '(select b.host_id,b.st_dt,b.et_dt, row_number() over (order by st_dt) as meeting ' \
+                'from booking as b group by  (b.host_id,b.st_dt,b.et_dt)) as subt on subt.host_id=booking.host_id ' \
+                'and subt.st_dt=booking.st_dt and subt.et_dt=booking.et_dt) ' \
+                'select bomeeting.b_id,bomeeting.st_dt,bomeeting.et_dt,bomeeting.invited_id,bomeeting.host_id,bomeeting.room_id ' \
+                'from bomeeting where bomeeting.meeting = (select bomeeting.meeting from bomeeting where b_id= %s); '
+        cursor.execute(query, (b_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
     # Updates existing entry
     def update_booking(self, b_id, st_dt, et_dt, invited_id, host_id, room_id):
         cursor = self.conn.cursor()

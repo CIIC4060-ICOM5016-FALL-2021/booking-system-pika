@@ -74,13 +74,12 @@ class RoomDAO:
     # Deletes an entry
     def delete_room(self, r_id):
         cursor = self.conn.cursor()
-        query = "deleting room %s..."
+        query = 'delete from room ' \
+                'where r_id = %s;'
         cursor.execute(query, (r_id,))
-        affected_rows = cursor.rowcount
+        deleted_rows = cursor.rowcount
         self.conn.commit()
-        # if affected rows == 0, the part was not found and hence not deleted
-        # otherwise, it was deleted, so check if affected_rows != 0
-        return affected_rows != 0
+        return deleted_rows != 0
 
     # Returns a query which is the most booked room
     def get_most_booked_rooms(self):
@@ -93,5 +92,14 @@ class RoomDAO:
         for row in cursor:
             result.append(row)
         return result
+
+    # def get_most_booked_room(self):
+    #     cursor = self.conn.cursor()
+    #     query = 'select r_id, count(booking.room_id) as timed_booked ' \
+    #             'from booking inner join room on booking.room_id = room.r_id ' \
+    #             'GROUP BY r_id order by timed_booked desc limit 1; '
+    #     cursor.execute(query)
+    #     result = cursor.fetchone()
+    #     return result
 
 

@@ -39,11 +39,9 @@ class AvailablePerson:
 
         method = AvailablePersonDAO()
         available_users_list = method.verify_available_person_at_timeframe(p_id, st_dt, et_dt)
-        result_list = []
-        for row in available_users_list:
-            obj = self.build_available_time_person_map(row)
-            result_list.append(obj)
-        return jsonify(result_list)
+        result = {"Unavailable": available_users_list[0]}
+
+        return jsonify(result)
 
     def get_all_unavailable_persons(self):
         method = AvailablePersonDAO()

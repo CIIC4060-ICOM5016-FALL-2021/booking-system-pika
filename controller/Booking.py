@@ -45,6 +45,8 @@ class Booking:
     Breaking each part...
     """
 
+
+
     def create_new_booking(self, json):
         st_dt = json['st_dt']
         et_dt = json['et_dt']
@@ -193,6 +195,22 @@ class Booking:
         return jsonify(result_list)
 
     # Returns a single booking entry according to its id
+
+    def get_meetings_by_id(self, json):
+
+        booking_id = json['b_id']
+        booking_dao = BookingDAO()
+        meeting_by_id = booking_dao.get_meetings_by_id(booking_id)
+
+        if not meeting_by_id:
+            return jsonify("There's no meetings by such booking id!"), 404
+        else:
+            mega_map = {}
+            for i, meet in enumerate(meeting_by_id):
+                mega_map[i] = self.build_booking_map_dict(meet)
+            print(mega_map)
+
+            return jsonify(mega_map)
     def get_booking_by_id(self, b_id):
         method = BookingDAO()
         booking_tuple = method.get_booking_by_id(b_id)
@@ -233,6 +251,56 @@ class Booking:
             return jsonify('Not found person')
 
     # deletes a booking entry (sort of)
+    def get_shared_free_timeslot(self,json):
+        booking_dao = BookingDAO()
+        booking_id = json['b_id']
+        date = json['date']
+        existent_booking = self.get_meetings_by_id(booking_id).json
+        person_dao = PersonDAO()
+        result = []
+        for value in existent_booking.value():
+            person = person_dao.get_person_by_id(value['invited_id'])
+
+            if not person:
+                return jsonify("Person not found"), 404
+
+            hours = AvailablePersonDAO().get_all_day_schedule(value['invited_id'], date)
+
+            for hour in hours:
+
+                result.append(hour)
+
+
+
+#### WIP query for the funcion above D O N O T T O U C H
+'''
+
+with bomeeting as (select booking.b_id,booking.st_dt,booking.et_dt,booking.invited_id,booking.host_id,booking. room_id, subt.meeting
+from booking
+inner join
+(select b.host_id,b.st_dt,b.et_dt, row_number() over (order by st_dt) as meeting
+from booking as b group by  (b.host_id,b.st_dt,b.et_dt)) as subt on subt.host_id=booking.host_id and subt.st_dt=booking.st_dt and subt.et_dt=booking.et_dt)
+
+select count(*)
+from(select booking.invited_id, booking.st_dt, booking.et_dt
+from booking
+where (tsrange(booking.st_dt, booking.et_dt) && tsrange(timestamp '2021-11-24 00:00:00-04',timestamp '2021-11-24 23:59:59-04'))  and (booking.invited_id in (40,5))
+union
+select availableperson.person_id, availableperson.st_dt, availableperson.et_dt
+from availableperson
+where (tsrange(st_dt, et_dt) && tsrange(timestamp '2021-11-24 00:00:00-04', timestamp '2021-11-24 23:59:59-04')) and person_id in (40,5)) as inter;
+
+
+
+
+
+'''
+
+
+
+
+
+
     def delete_booking(self, b_id):
         method = BookingDAO()
         result = method.delete_booking(b_id)

@@ -71,10 +71,15 @@ class AvailablePersonDAO:
     def verify_available_person_at_timeframe(self, p_id, st_dt, et_dt):
         # time.mktime(datetime.datetime.strptime(string2, "%Y-%m-%d %H:%M:%S").timetuple())
         cursor = self.conn.cursor()
-        query = "select p_id " \
-                "from person as p, booking as b, availableperson as a " \
-                "where b.st_dt != %s and b.et_dt != %s and %s != b.invited_id and a.person_id != %s; "
-        cursor.execute(query, (st_dt, et_dt, p_id, p_id))
+        query = "select exists(select booking.invited_id, booking.host_id, booking.st_dt, booking.et_dt " \
+                "from booking " \
+                "where (tsrange(booking.st_dt, booking.et_dt) && tsrange(%s, %s)) and (booking.invited_id=%s or booking.host_id=%s)" \
+                "union " \
+                "select availableperson.person_id, availableperson.st_dt, availableperson.et_dt " \
+                "from availableperson " \
+                "where (tsrange(availableperson.st_dt, availableperson.et_dt) && tsrange(%s, %s)) and availableperson.person_id=%s)  " \
+                "as booleanresult;"
+        cursor.execute(query, (st_dt, et_dt, p_id, p_id,st_dt, et_dt, p_id,))
         result = cursor.fetchone()
         return result
 
@@ -130,10 +135,13 @@ class AvailablePersonDAO:
     def get_all_day_schedule(self, p_id, date):
 
         cursor = self.conn.cursor()
-        query = 'select st_dt,et_dt ' \
-                'from availableroom ' \
-                'where room_id = %s AND (st_dt::date <= date %s AND et_dt::date >= date %s) ;'
-        cursor.execute(query, (p_id, date, date,))
+        query = "select st_dt, et_dt from availableperson " \
+                "where (person_id = %s) " \
+                "and (availableperson.st_dt::date <= date %s AND availableperson.et_dt::date >= date %s) " \
+                "UNION select st_dt, et_dt " \
+                "from booking where (host_id = %s or invited_id = %s) " \
+                "and (booking.st_dt::date <= date %s AND booking.et_dt::date >= date %s) ;"
+        cursor.execute(query, (p_id, date, date,p_id,p_id,date,date,))
         result = []
         for row in cursor:
             print(row, "ROW")

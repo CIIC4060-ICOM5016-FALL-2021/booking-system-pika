@@ -31,19 +31,25 @@ class AvailableRoom:
         room_id = json['room_id']
         start_time = json['st_dt']
         end_time = json['et_dt']
+        unavailablecreator = json['person_id']
 
         # Checks if the room exists
-        room_dao = Room()
+        room_dao = RoomDAO()
+        person_dao = PersonDAO()
         exist = room_dao.get_room_by_id(room_id)
-        if not exist:
-            return jsonify("Oops! Seems this room doesn't exist"), 404
+        validhost = person_dao.get_person_role_by_id(unavailablecreator)
+        if ((not exist)):
+            return jsonify("Oops! Seems this room doesn't exist "), 404
 
+        if not validhost:
+            return jsonify("I'm sorry, but this person does not exists in our database"), 200
+        elif (not(validhost == person_dao.R_STAFF)):
+            return jsonify("I'm sorry, but this person is not a staff! Only staff members can modify the availability of rooms"), 200
         # add entry and return back
         a_room_dao = AvailableRoomDAO()
-        unavailable_dt = a_room_dao.create_unavailable_room_time(room_id, start_time, end_time)
-        if unavailable_dt:
-            result = {}
-            return jsonify(result)
+        ra_id = a_room_dao.create_unavailable_room_time(room_id, start_time, end_time)
+        result = self.build_available_time_room_map(ra_id, start_time, end_time, room_id)
+        return jsonify(result)
 
     # Wrapper, updates target room entry according to the person's role (STAFF ONLY)
     # False -> unnavailable
@@ -73,11 +79,8 @@ class AvailableRoom:
     def verify_available_room_at_timeframe(self, r_id, st_dt, et_dt):
         method = AvailableRoomDAO()
         available_room_list = method.verify_available_room_at_timeframe(r_id, st_dt, et_dt)
-        result_list = []
-        for row in available_room_list:
-            obj = self.build_available_time_room_map(row)
-            result_list.append(obj)
-        return jsonify(result_list)
+        result = {"Unavailable": available_room_list[0]}
+        return jsonify(result)
 
     # returns the entire available rooms query
     def get_all_unavailable_rooms(self):

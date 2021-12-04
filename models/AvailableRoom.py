@@ -15,19 +15,23 @@ class AvailableRoomDAO:
     def create_unavailable_room_time(self, r_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'insert into "availableroom" ' \
-                '(st_dt, et_dt, room_id) values (%s, %s, %s);'
+                '(st_dt, et_dt, room_id) values (%s, %s, %s) returning ra_id;'
         cursor.execute(query, (st_dt, et_dt, r_id,))
+        pa_id = cursor.fetchone()[0]
         self.conn.commit()
-        return True
+        return pa_id
 
     # Returns the timeframe for a room (all day)
     def get_all_day_schedule(self, r_id, date):
         
         cursor = self.conn.cursor()
-        query = 'select st_dt,et_dt ' \
-                'from availableroom ' \
-                'where room_id = %s AND (st_dt::date <= date %s AND et_dt::date >= date %s) ;'
-        cursor.execute(query, (r_id, date, date,))
+        query = "select st_dt, et_dt from availableroom " \
+                "where (availableroom.room_id = %s) " \
+                "and (availableroom.st_dt::date <= date %s AND availableroom.et_dt::date >= date %s) " \
+                "UNION select st_dt, et_dt " \
+                "from booking where (booking.room_id = %s) " \
+                "and (booking.st_dt::date <= date %s AND booking.et_dt::date >= date %s) ;"
+        cursor.execute(query, (r_id, date, date, r_id, date, date,))
         result = []
         for row in cursor:
             result.append(row)
@@ -46,10 +50,15 @@ class AvailableRoomDAO:
     def verify_available_room_at_timeframe(self, r_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         # select host_id, st_dt, et_dt from booking where host_id =41 UNION select pa_id, st_dt, et_dt from availableperson where pa_id =41;
-        query = "select r_id " \
-                "from room as r, booking as b, availableroom as a " \
-                "where b.st_dt != %s and b.et_dt != %s and r.r_id != b.room_id and a.room_id != r.r_id;"
-        cursor.execute(query, (st_dt, et_dt,))
+        query = "select exists(select booking.room_id, booking.st_dt, booking.et_dt " \
+                "from booking " \
+                "where (tsrange(booking.st_dt, booking.et_dt) && tsrange(%s, %s)) and booking.room_id=%s " \
+                "union " \
+                "select availableroom.room_id, availableroom.st_dt, availableroom.et_dt " \
+                "from availableroom " \
+                "where (tsrange(st_dt, et_dt) && tsrange(%s, %s)) and room_id=%s)  " \
+                "as booleanresult;"
+        cursor.execute(query, (st_dt, et_dt,r_id,st_dt, et_dt,r_id,))
         result = cursor.fetchone()
         return result
 
@@ -64,6 +73,8 @@ class AvailableRoomDAO:
         for row in cursor:
             result.append(row)
         return result
+
+
 
     def get_all_unavailable_room(self):
         cursor = self.conn.cursor()
