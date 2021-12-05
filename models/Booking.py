@@ -34,15 +34,14 @@ class BookingDAO:
     # creates a new booking entry, no checks here btw
     def create_new_booking(self, st_dt, et_dt, invited_id, host_id, room_id):
         cursor = self.conn.cursor()
-        query = 'insert into "booking" (st_dt, et_dt, invited_id, host_id, room_id) values (%s,%s,%s,%s,%s) returning ' \
-                'b_id; '
+        query = 'insert into "booking" (st_dt, et_dt, invited_id, host_id, room_id) ' \
+                'values (%s,%s,%s,%s,%s) returning b_id; '
         cursor.execute(query, (st_dt, et_dt, invited_id, host_id, room_id,))
         b_id = cursor.fetchone()[0]
         self.conn.commit()
         return b_id
 
-
-    def get_meetings_by_id(self,b_id):
+    def get_meetings_by_id(self, b_id):
         cursor = self.conn.cursor()
         query = 'with bomeeting as ' \
                 '(select booking.b_id,booking.st_dt,booking.et_dt,booking.invited_id,booking.host_id,booking. room_id, subt.meeting ' \
@@ -57,6 +56,7 @@ class BookingDAO:
         for row in cursor:
             result.append(row)
         return result
+
     # Updates existing entry
     def update_booking(self, b_id, st_dt, et_dt, invited_id, host_id, room_id):
         cursor = self.conn.cursor()

@@ -69,15 +69,16 @@ class AvailablePersonDAO:
         return result
 
     def verify_available_person_at_timeframe(self, p_id, st_dt, et_dt):
-        # time.mktime(datetime.datetime.strptime(string2, "%Y-%m-%d %H:%M:%S").timetuple())
         cursor = self.conn.cursor()
-        query = "select exists(select booking.invited_id, booking.host_id, booking.st_dt, booking.et_dt " \
+        query = "select exists(select booking.invited_id, booking.st_dt, booking.et_dt " \
                 "from booking " \
-                "where (tsrange(booking.st_dt, booking.et_dt) && tsrange(%s, %s)) and (booking.invited_id=%s or booking.host_id=%s)" \
+                "where (tsrange(booking.st_dt, booking.et_dt) && tsrange(%s, %s)) " \
+                "and (booking.invited_id=%s or booking.host_id=%s)" \
                 "union " \
                 "select availableperson.person_id, availableperson.st_dt, availableperson.et_dt " \
                 "from availableperson " \
-                "where (tsrange(availableperson.st_dt, availableperson.et_dt) && tsrange(%s, %s)) and availableperson.person_id=%s)  " \
+                "where (tsrange(availableperson.st_dt, availableperson.et_dt) && tsrange(%s, %s)) " \
+                "and availableperson.person_id=%s)  " \
                 "as booleanresult;"
         cursor.execute(query, (st_dt, et_dt, p_id, p_id,st_dt, et_dt, p_id,))
         result = cursor.fetchone()
@@ -85,10 +86,12 @@ class AvailablePersonDAO:
 
     def verify_conflict_at_timeframe(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
-        query = 'select person_id, is_there_conflict, st_dt, et_dt from ( select person_id, st_dt, et_dt, tsrange(st_dt, ' \
-                'et_dt) && tsrange(%s, %s) as is_there_conflict from (select person_id, st_dt, et_dt from availableperson where ' \
-                'person_id = %s UNION select invited_id as person_id, st_dt, et_dt from booking where invited_id = %s) as ' \
-                'hisdedpisded ) t; '
+        query = 'select person_id, is_there_conflict, st_dt, et_dt ' \
+                'from ( select person_id, st_dt, et_dt, tsrange(st_dt, ' \
+                'et_dt) && tsrange(%s, %s) as is_there_conflict ' \
+                'from (select person_id, st_dt, et_dt ' \
+                'from availableperson where person_id = %s UNION select invited_id as person_id, st_dt, et_dt ' \
+                'from booking where invited_id = %s) as hisdedpisded ) t; '
         cursor.execute(query, (st_dt, et_dt, p_id, p_id))
         result = []
         for row in cursor:

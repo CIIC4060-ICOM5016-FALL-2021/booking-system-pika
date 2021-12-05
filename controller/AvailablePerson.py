@@ -2,7 +2,6 @@ from flask import jsonify
 from controller.Person import Person
 from models.AvailablePerson import AvailablePersonDAO
 from models.Person import PersonDAO
-from models.Room import RoomDAO
 
 
 class AvailablePerson:
@@ -103,11 +102,9 @@ class AvailablePerson:
             return jsonify("Room Not Found"), 404
 
         res = dao.get_all_day_schedule(person_id, date)
-        print(res, "WOW")
         result_st_dt = []
         result_et_dt = []
         for st_dt, et_dt in res:
-            print(st_dt, "REEEEEEEEEEEEEE")
             result_et_dt.append(et_dt)
             result_st_dt.append(st_dt)
         result = {

@@ -45,12 +45,10 @@ class Booking:
     Breaking each part...
     """
 
-
-
     def create_new_booking(self, json):
         st_dt = json['st_dt']
         et_dt = json['et_dt']
-        invited_id = json['invited_id'] # list or int
+        invited_id = json['invited_id']  # list or int
         host_id = json['host_id']
         room_id = json['room_id']
 
@@ -148,8 +146,6 @@ class Booking:
                         # TODO code create_unavailable_person_dt
                         # TODO use create_unavailable_person_dt with each person_id,st_dt,et_dt
 
-
-
                 # for inv in invited_id:
                 #     print(inv)
                 #     if not (AvailablePersonDAO().verify_conflict_at_timeframe(inv, st_dt, et_dt)):
@@ -162,7 +158,6 @@ class Booking:
                     mega_map[i] = self.build_booking_attr_dict(b, st_dt, et_dt, invited_id, host_id, room_id)
                 print(mega_map)
 
-                
                 return jsonify(mega_map)
 
             elif type(invited_id) == int:
@@ -211,6 +206,7 @@ class Booking:
             print(mega_map)
 
             return jsonify(mega_map)
+
     def get_booking_by_id(self, b_id):
         method = BookingDAO()
         booking_tuple = method.get_booking_by_id(b_id)
@@ -232,8 +228,7 @@ class Booking:
         else:
             result = {}
             result['host_id'] = host_id
-            return jsonify(result),200
-
+            return jsonify(result), 200
 
     # updates a booking entry
     def update_booking(self, b_id, json):
@@ -250,8 +245,18 @@ class Booking:
         else:
             return jsonify('Not found person')
 
+    def delete_booking(self, b_id):
+        method = BookingDAO()
+        result = method.delete_booking(b_id)
+        if result:
+            return jsonify("DELETED")
+        else:
+            return jsonify("NOT FOUND"), 404
+
+    # TODO -> Finish statistics
+
     # deletes a booking entry (sort of)
-    def get_shared_free_timeslot(self,json):
+    def get_shared_free_timeslot(self, json):
         booking_dao = BookingDAO()
         booking_id = json['b_id']
         date = json['date']
@@ -267,9 +272,7 @@ class Booking:
             hours = AvailablePersonDAO().get_all_day_schedule(value['invited_id'], date)
 
             for hour in hours:
-
                 result.append(hour)
-
 
 
 #### WIP query for the funcion above D O N O T T O U C H
@@ -291,23 +294,4 @@ from availableperson
 where (tsrange(st_dt, et_dt) && tsrange(timestamp '2021-11-24 00:00:00-04', timestamp '2021-11-24 23:59:59-04')) and person_id in (40,5)) as inter;
 
 
-
-
-
 '''
-
-
-
-
-
-
-    def delete_booking(self, b_id):
-        method = BookingDAO()
-        result = method.delete_booking(b_id)
-        if result:
-            return jsonify("DELETED")
-        else:
-            return jsonify("NOT FOUND"), 404
-
-
-    # TODO -> Finish statistics

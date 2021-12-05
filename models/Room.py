@@ -92,14 +92,3 @@ class RoomDAO:
         for row in cursor:
             result.append(row)
         return result
-
-    # def get_most_booked_room(self):
-    #     cursor = self.conn.cursor()
-    #     query = 'select r_id, count(booking.room_id) as timed_booked ' \
-    #             'from booking inner join room on booking.room_id = room.r_id ' \
-    #             'GROUP BY r_id order by timed_booked desc limit 1; '
-    #     cursor.execute(query)
-    #     result = cursor.fetchone()
-    #     return result
-
-
