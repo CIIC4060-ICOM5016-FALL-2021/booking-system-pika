@@ -143,6 +143,7 @@ def get_available_rooms_at_timeframe():
 @app.route('/pika-booking/rooms/most-booked', methods=['GET'])
 def handle_unavailable_person():
     if request.method == 'GET':
+        return Room().get_most_booked_rooms()
         
 
 # TODO FIX THIS

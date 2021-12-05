@@ -1,4 +1,5 @@
 from flask import jsonify
+from controller.Person import Person
 from controller.Room import Room
 from models.AvailableRoom import AvailableRoomDAO
 from models.Person import PersonDAO
@@ -31,6 +32,17 @@ class AvailableRoom:
         room_id = json['room_id']
         start_time = json['st_dt']
         end_time = json['et_dt']
+        person_id = json['person_id']
+
+        person_controller = Person()
+
+        htr = person_controller.get_person_role_by_id(person_id)
+        if not htr:
+            return jsonify("I'm sorry, but this person does not exists in our database"), 200
+
+        elif htr != PersonDAO.R_STAFF:
+            return jsonify(
+                "I'm sorry, but this person is not a staff! Only staff members can modify the availability of rooms"), 200
 
         # Checks if the room exists
         room_dao = Room()
@@ -121,5 +133,3 @@ class AvailableRoom:
                 "et_dt": result_et_dt
             }
             return jsonify(result), 200
-
-
