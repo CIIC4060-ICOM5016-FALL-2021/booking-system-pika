@@ -80,10 +80,12 @@ class AvailablePersonDAO:
 
     def verify_conflict_at_timeframe(self, p_id, st_dt, et_dt):
         cursor = self.conn.cursor()
-        query = 'select person_id, is_there_conflict, st_dt, et_dt from ( select person_id, st_dt, et_dt, tsrange(st_dt, ' \
-                'et_dt) && tsrange(%s, %s) as is_there_conflict from (select person_id, st_dt, et_dt from availableperson where ' \
-                'person_id = %s UNION select invited_id as person_id, st_dt, et_dt from booking where invited_id = %s) as ' \
-                'hisdedpisded ) t; '
+        query = 'select person_id, is_there_conflict, st_dt, et_dt ' \
+                'from ( select person_id, st_dt, et_dt, tsrange(st_dt, et_dt) && tsrange(%s, %s) ' \
+                'as is_there_conflict ' \
+                'from (select person_id, st_dt, et_dt from availableperson ' \
+                'where person_id = %s UNION select invited_id as person_id, st_dt, et_dt ' \
+                'from booking where invited_id = %s) as hisdedpisded ) t; '
         cursor.execute(query, (st_dt, et_dt, p_id, p_id))
         result = []
         for row in cursor:
@@ -98,15 +100,6 @@ class AvailablePersonDAO:
         cursor.execute(query, (st_dt, et_dt, person_id, pa_id))
         self.conn.commit()
         return True
-
-    def delete_all_unavailable_person_schedule(self, person_id):
-        cursor = self.conn.cursor()
-        query = 'delete from "availableperson"' \
-                ' where person_id = %s;'
-        cursor.execute(query, (person_id,))
-        deleted_rows = cursor.rowcount
-        self.conn.commit()
-        return deleted_rows != 0
 
     def delete_unavailable_person_schedule(self, pa_id):
         cursor = self.conn.cursor()

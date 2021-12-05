@@ -37,15 +37,19 @@ class Person:
         result = {'pa_id': row[0], 'st_dt': row[1],
                   'et_dt': row[2], 'person_id': row[3]}
         return result
-    def build_mostusedroom_attrdict(self,row):
+
+    def build_mostusedroom_attrdict(self, row):
         result = {'start_time': row[0], 'finish_time': row[1], 'activebooking': row[2]}
         return result
+
     def build_timeslot_attrdict(self, row):
         result = {'start_time': row[0], 'finish_time': row[1], 'activebooking': row[2]}
         return result
-    def build_mostbookedperson_attrdict(self,row):
+
+    def build_mostbookedperson_attrdict(self, row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'count': row[3]}
         return result
+
     # ok
     def create_new_person(self, json):
         p_fname = json['p_fname']
@@ -108,7 +112,7 @@ class Person:
         else:
             result_list = []
             for row in bookedperson_tuple:
-                obj = self. build_mostbookedperson_attrdict(row)
+                obj = self.build_mostbookedperson_attrdict(row)
                 result_list.append(obj)
             return jsonify(result_list)
 
@@ -134,7 +138,7 @@ class Person:
             result_list = []
             for row in busiest:
                 print(row)
-                #dk
+                # dk
                 obj = self.build_timeslot_attrdict(row)
                 result_list.append(obj)
             return jsonify(result_list)
@@ -189,7 +193,7 @@ class Person:
         result = method.delete_person(p_id)
         if result:
             method2 = AvailablePersonDAO()
-            method2.delete_unavailable_person(p_id)
+            method2.delete_unavailable_person_schedule(p_id)
             return jsonify("DELETED")
         else:
             return jsonify("NOT FOUND"), 404
