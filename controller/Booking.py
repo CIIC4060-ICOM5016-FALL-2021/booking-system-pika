@@ -262,17 +262,35 @@ class Booking:
         date = json['date']
         existent_booking = self.get_meetings_by_id(booking_id).json
         person_dao = PersonDAO()
-        result = []
+        person_tupple = []
         for value in existent_booking.value():
             person = person_dao.get_person_by_id(value['invited_id'])
 
             if not person:
                 return jsonify("Person not found"), 404
 
-            hours = AvailablePersonDAO().get_all_day_schedule(value['invited_id'], date)
+            # hours = AvailablePersonDAO().get_all_day_schedule(value['invited_id'], date)
 
-            for hour in hours:
-                result.append(hour)
+
+            person_tupple.append(value['invited_id'])
+
+        free_time = booking_dao.get_free_time_of_day(person_tupple,date)
+
+        mega_map = {}
+        print(free_time, "This is the free time")
+        for i, b in enumerate(free_time):
+            mega_map[i] = {'free_start': b[0], 'free_end': b[1], 'delta_time': b[2]}
+        print(mega_map)
+
+        return jsonify(mega_map)
+
+
+
+
+
+
+
+
 
 
 #### WIP query for the funcion above D O N O T T O U C H

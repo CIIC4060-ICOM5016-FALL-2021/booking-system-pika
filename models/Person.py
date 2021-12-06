@@ -155,6 +155,17 @@ class PersonDAO:
             result.append(row)
         return result
 
+    def get_most_used_room(self,p_id):
+        cursor = self.conn.cursor()
+        query = 'select room_id,count(invited_id) ' \
+                'from booking where invited_id = %s ' \
+                'group by room_id order by count(invited_id) ' \
+                'desc limit 1;'
+        cursor.execute(query,(p_id,))
+        result = cursor.fetchone()
+        return result
+
+
 
 
     # TODO -> Make more complex

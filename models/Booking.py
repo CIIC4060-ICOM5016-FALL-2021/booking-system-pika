@@ -128,6 +128,31 @@ class BookingDAO:
         result = cursor.fetchone()
         return result
 
+    def get_free_time_of_day(self,p_id,date):
+        cursor = self.conn.cursor()
+        query = "with allday as " \
+                "(select booking.invited_id, booking.st_dt, booking.et_dt " \
+                "from booking " \
+                "where (tsrange(booking.st_dt, booking.et_dt) && tsrange(timestamp %s::date,timestamp %s::date  + interval '1 day - 1 second'))  " \
+                "and (booking.invited_id in %s) " \
+                "union " \
+                "select availableperson.person_id, availableperson.st_dt, availableperson.et_dt " \
+                "from availableperson " \
+                "where (tsrange(st_dt, et_dt) && tsrange(timestamp %s::date, timestamp %s::date  + interval '1 day - 1 second')) and person_id in %s) " \
+                "select gaps.free_start,gaps.free_end,gaps.delta_time " \
+                "from (select  coalesce((lag(allday2.et_dt,1) " \
+                "over (order by allday2.et_dt)), (allday2.st_dt::date::timestamp)) as free_start,allday2.st_dt as free_end, allday2.st_dt - (coalesce((lag(allday2.et_dt,1) over (order by allday2.et_dt)), (allday2.st_dt::date::timestamp))) as delta_time, " \
+                "(allday2.st_dt - (coalesce((lag(allday2.et_dt,1) over (order by allday2.et_dt)), (allday2.st_dt::date::timestamp)))> interval '1 second') as ValidGap " \
+                "from (select allday.invited_id, allday.st_dt, allday.et_dt " \
+                "from allday " \
+                "union select null as invited_id, allday.st_dt::date + interval '1 day - 1 second' as st_dt, allday.st_dt::date + interval '1 day - 1 second' as et_dt from allday) as allday2) as gaps " \
+                "where gaps.ValidGap=true ; "
+        cursor.execute(query,(date,date,p_id,date,date,p_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
     # returns a single row who would be the most booked room
     def get_most_booked_rooms(self):
         cursor = self.conn.cursor()

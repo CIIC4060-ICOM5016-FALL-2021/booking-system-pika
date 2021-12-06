@@ -120,7 +120,7 @@ class Person:
             return jsonify("Not Found"), 404
         else:
             room = Room()
-            most_used_room = room.get_room_by_id(most_used[0])
+            most_used_room = method2.get_room(most_used[0])
             result = room.build_room_attr_dict(most_used_room[0], most_used_room[1], most_used_room[2],
                                                most_used_room[3])
             return jsonify(result), 200
