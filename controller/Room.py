@@ -130,12 +130,3 @@ class Room:
                 obj = self.build_room(row[1:])
                 result_list.append(obj)
             return jsonify(result_list)
-
-    def room_by_d_exist(self, p_id):
-        method = RoomDAO()
-        room_tuple = method.get_room(p_id)
-        if not room_tuple:
-            return False
-        else:
-            return True
-

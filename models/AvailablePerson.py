@@ -65,7 +65,9 @@ class AvailablePersonDAO:
                 'from "availableperson" ' \
                 'where person_id = %s ;'
         cursor.execute(query, (p_id,))
-        result = cursor.fetchone()
+        result = []
+        for row in cursor:
+            result.append(row)
         return result
 
     def verify_available_person_at_timeframe(self, p_id, st_dt, et_dt):

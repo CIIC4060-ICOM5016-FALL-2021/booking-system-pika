@@ -8,12 +8,11 @@ from models.Room import RoomDAO
 from models.AvailablePerson import AvailablePersonDAO
 from models.AvailableRoom import AvailableRoomDAO
 
-from controller.Room import Room
-from controller.Person import Person
-from controller.AvailablePerson import AvailablePerson
-
-
 class Booking:
+
+    def build_timeframe_attrdict(self, row):
+        result = {'start_time': row[0], 'finish_time': row[1], 'activebooking': row[2]}
+        return result
 
     def build_booking_map_dict(self, row):
         result = {'b_id': row[0], 'st_dt': row[1], 'et_dt': row[2], 'invited_id': row[3],
@@ -271,7 +270,6 @@ class Booking:
 
             # hours = AvailablePersonDAO().get_all_day_schedule(value['invited_id'], date)
 
-
             person_tupple.append(value['invited_id'])
 
         free_time = booking_dao.get_free_time_of_day(person_tupple,date)
@@ -281,14 +279,20 @@ class Booking:
         for i, b in enumerate(free_time):
             mega_map[i] = {'free_start': b[0], 'free_end': b[1], 'delta_time': b[2]}
         print(mega_map)
-
         return jsonify(mega_map)
 
-
-
-
-
-
+    # TODO FIX NOW!!!!!!
+    def get_busiest_hours(self):
+        method = BookingDAO()
+        busiest = method.get_busiest_hours()
+        if not busiest:
+            return jsonify("Not Found"), 404
+        else:
+            result_list = []
+            for row in busiest:
+                obj = self.build_timeframe_attrdict(row)
+                result_list.append(obj)
+            return jsonify(result_list)
 
 
 
