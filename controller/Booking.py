@@ -230,7 +230,8 @@ class Booking:
             return jsonify(result), 200
 
     # updates a booking entry
-    def update_booking(self, b_id, json):
+    def update_booking(self, json):
+        b_id = json['b_id']
         st_dt = json['st_dt']
         et_dt = json['et_dt']
         invited_id = json['invited_id']
