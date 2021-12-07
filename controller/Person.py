@@ -45,9 +45,11 @@ class Person:
     def build_mostbookedperson_attrdict(self,row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'count': row[3]}
         return result
+
     def build_mostsharedperson_attrdict(self,row):
         result = {'p_id': row[0]}
         return result
+
     def create_new_person(self, json):
         p_fname = json['p_fname']
         p_lname = json['p_lname']
