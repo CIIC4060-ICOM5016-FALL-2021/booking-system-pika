@@ -1,7 +1,7 @@
 import datetime as dt
 from flask import jsonify
 
-from controller.Booking import Booking
+
 from models.Person import PersonDAO
 from controller.Room import Room
 from models.Room import RoomDAO
@@ -44,6 +44,10 @@ class Person:
 
     def build_mostbookedperson_attrdict(self,row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'count': row[3]}
+        return result
+
+    def build_mostsharedperson_attrdict(self,row):
+        result = {'p_id': row[0]}
         return result
 
     def create_new_person(self, json):
@@ -121,6 +125,16 @@ class Person:
             result = room.build_room_attr_dict(most_used[0], most_used_room[0], most_used_room[1],
                                                most_used_room[2])
             return jsonify(result), 200
+
+    def get_person_that_most_share_with_person(self, json):
+        method = PersonDAO()
+        p_id = json['p_id']
+        mostshared = method.get_person_that_most_share_with_person(p_id)
+        if not mostshared:
+            return jsonify("you don't share class with anyone")
+
+        result = self.build_mostsharedperson_attrdict(mostshared)
+        return jsonify(result)
 
     def update_person(self, json):
         p_id = json['p_id']

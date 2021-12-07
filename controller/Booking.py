@@ -121,9 +121,9 @@ class Booking:
 
             # Is there a conflict with the room?
             print(AvailableRoomDAO().verify_conflict_at_timeframe(room_id, st_dt, et_dt), "A list of conflicts...")
-            for i in AvailableRoomDAO().verify_conflict_at_timeframe(room_id, st_dt, et_dt):
-                if True in i:
-                    return jsonify("I'm sorry, but there's a schedule conflict with this room in your booking"), 404
+            r =AvailableRoomDAO().verify_conflict_at_timeframe(room_id, st_dt, et_dt)
+            if bool(r[0]):
+                return jsonify("I'm sorry, but there's a schedule conflict with this room in your booking"), 404
 
             print("No conflicts yay!")
 
@@ -134,7 +134,8 @@ class Booking:
                 for inv in invited_id:
                     p = AvailablePersonDAO().verify_conflict_at_timeframe(inv, st_dt, et_dt)
                     print(inv)
-                    if True in p[1]:
+                    print(p)
+                    if bool(p[0]):
                         userdict = person_dao.get_dict_person_by_id(inv)
                         print("User has a conflict: ")
                         print(userdict)
@@ -230,7 +231,8 @@ class Booking:
             return jsonify(result), 200
 
     # updates a booking entry
-    def update_booking(self, b_id, json):
+    def update_booking(self, json):
+        b_id = json['b_id']
         st_dt = json['st_dt']
         et_dt = json['et_dt']
         invited_id = json['invited_id']
