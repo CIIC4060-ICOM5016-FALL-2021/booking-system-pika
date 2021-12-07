@@ -150,6 +150,16 @@ def get_role_access():
     else:
         return jsonify("Method Not Allowed"), 405
 
+@app.route('/pika-booking/persons/person/shared', methods=['GET'])
+def get_shared_user():
+    args = request.json
+    if request.method == 'GET':
+        if args and args["p_id"] is not None:
+            return Person().get_person_that_most_share_with_person(args["p_id"])
+        else:
+            return jsonify("Args not found: p_id"), 405
+    else:
+        return jsonify("Method Not Allowed"), 40
 
 # ============================================== #
 # ===-| U N A V A I L A B L E  P E R S O N |-=== #
@@ -247,6 +257,12 @@ def handle_bookings():
     else:
         return jsonify("Method Not Allowed"), 405
 
+@app.route('/pika-booking/booking/busiesthour', methods=['GET'])
+def get_busiest_hours():
+     if request.method == 'GET':
+         return Booking().get_busiest_hours()
+     else:
+         return jsonify("Method Not Allowed"), 405
 
 # =============================== #
 # ===-| S T A T I S T I C S |-=== #
