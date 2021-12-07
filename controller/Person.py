@@ -46,6 +46,10 @@ class Person:
     def build_mostbookedperson_attrdict(self,row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'count': row[3]}
         return result
+
+    def build_mostsharedperson_attrdict(self,row):
+        result = {'p_id': row[0]}
+        return result
     # ok
     def create_new_person(self, json):
         p_fname = json['p_fname']
@@ -138,6 +142,16 @@ class Person:
                 obj = self.build_timeslot_attrdict(row)
                 result_list.append(obj)
             return jsonify(result_list)
+
+    def get_person_that_most_share_with_person(self,json):
+        method = PersonDAO()
+        p_id = json['p_id']
+        mostshared = method.get_person_that_most_share_with_person(p_id)
+        if not mostshared:
+            return jsonify("you don't share class with anyone")
+
+        result = self.build_mostsharedperson_attrdict(mostshared)
+        return jsonify(result)
 
     def get_all_day_schedule_of_person(self, json):
         method = PersonDAO()
