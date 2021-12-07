@@ -7,7 +7,6 @@ from controller.Room import Room
 from models.Room import RoomDAO
 from models.AvailablePerson import AvailablePersonDAO
 
-
 class Person:
 
     def build_person_map(self, row):
@@ -48,6 +47,19 @@ class Person:
 
     def build_mostsharedperson_attrdict(self,row):
         result = {'p_id': row[0]}
+        return result
+
+    def build_student_info_attrdict(self, row):
+        result = {'start_time': row[0], 'finish_time': row[1], 'room_id': row[2], 'host_id':row[3]}
+        return result
+
+    def build_prof_info_attrdict(self, row):
+        result = {'start_time': row[0], 'finish_time': row[1], 'room_id': row[2], 'host_id': row[3], 'invite_id': row[4]}
+        return result
+
+    def build_staff_info_attrdict(self, row):
+        result = {'b_id': row[0], 'start_time': row[1], 'finish_time': row[2], 'invited_id': row[3],
+                  'host_id': row[4], 'room_id': row[5]}
         return result
 
     def create_new_person(self, json):
@@ -162,16 +174,29 @@ class Person:
         else:
             return jsonify("NOT FOUND"), 404
 
-    def role_to_get_access_to_room_info(self, p_id):
+    def role_to_get_access_to_room_info(self, json):
         method = PersonDAO()
+        p_id = json['p_id']
         role = method.get_person_role_by_id(p_id)
 
         if role == "0":
-            result = method.get_info_for_student()
-            return jsonify(result)
+            info = method.get_info_for_student()
+            result_list = []
+            for row in info:
+                obj = self.build_student_info_attrdict(row)
+                result_list.append(obj)
+            return jsonify(result_list)
         elif role == "1":
-            result = method.get_info_for_professor()
-            return jsonify(result)
+            info = method.get_info_for_professor()
+            result_list = []
+            for row in info:
+                obj = self.build_prof_info_attrdict(row)
+                result_list.append(obj)
+            return jsonify(result_list)
         elif role == "2":
-            result = method.get_info_for_staff()
-            return jsonify(result)
+            info = method.get_info_for_staff()
+            result_list = []
+            for row in info:
+                obj = self.build_staff_info_attrdict(row)
+                result_list.append(obj)
+            return jsonify(result_list)
