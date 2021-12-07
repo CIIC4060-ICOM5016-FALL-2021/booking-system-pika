@@ -1,6 +1,7 @@
 import datetime as dt
 from flask import jsonify
 
+from controller.Booking import Booking
 from models.Person import PersonDAO
 from controller.Room import Room
 from models.Room import RoomDAO
@@ -40,17 +41,11 @@ class Person:
     def build_mostusedroom_attrdict(self,row):
         result = {'start_time': row[0], 'finish_time': row[1], 'activebooking': row[2]}
         return result
-    def build_timeslot_attrdict(self, row):
-        result = {'start_time': row[0], 'finish_time': row[1], 'activebooking': row[2]}
-        return result
+
     def build_mostbookedperson_attrdict(self,row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'count': row[3]}
         return result
 
-    def build_mostsharedperson_attrdict(self,row):
-        result = {'p_id': row[0]}
-        return result
-    # ok
     def create_new_person(self, json):
         p_fname = json['p_fname']
         p_lname = json['p_lname']
@@ -95,11 +90,9 @@ class Person:
     def get_person_role_by_id(self, p_id):
         dao = PersonDAO()
         person_role = dao.get_person_role_by_id(p_id)
-        print(person_role, "PERSON ROLE IN CONTROLLER")
-        if not person_role:  #
+        if not person_role:
             return jsonify("Person Not Found"), 404
         else:
-            print(person_role, "PERSON ROLE IN CONTROLLER ELSE")
             result = self.build_role_map_dict(person_role)
             print(result)
             return result
@@ -112,7 +105,7 @@ class Person:
         else:
             result_list = []
             for row in bookedperson_tuple:
-                obj = self. build_mostbookedperson_attrdict(row)
+                obj = self.build_mostbookedperson_attrdict(row)
                 result_list.append(obj)
             return jsonify(result_list)
 
@@ -125,65 +118,12 @@ class Person:
         else:
             room = Room()
             most_used_room = method2.get_room(most_used[0])
-            result = room.build_room_attr_dict(most_used_room[0], most_used_room[1], most_used_room[2],
-                                               most_used_room[3])
+            result = room.build_room_attr_dict(most_used[0], most_used_room[0], most_used_room[1],
+                                               most_used_room[2])
             return jsonify(result), 200
 
-    def get_busiest_hours(self):
-        method = PersonDAO()
-        busiest = method.get_busiest_hours()
-        if not busiest:
-            return jsonify("Not Found"), 404
-        else:
-            result_list = []
-            for row in busiest:
-                print(row)
-                #dk
-                obj = self.build_timeslot_attrdict(row)
-                result_list.append(obj)
-            return jsonify(result_list)
-
-    def get_person_that_most_share_with_person(self,json):
-        method = PersonDAO()
+    def update_person(self, json):
         p_id = json['p_id']
-        mostshared = method.get_person_that_most_share_with_person(p_id)
-        if not mostshared:
-            return jsonify("you don't share class with anyone")
-
-        result = self.build_mostsharedperson_attrdict(mostshared)
-        return jsonify(result)
-
-    def get_all_day_schedule_of_person(self, json):
-        method = PersonDAO()
-        date = json['date']
-        p_id = json['p_id']
-        person = method.get_person_by_id(p_id)
-
-        if not person:
-            return jsonify("Person Not Found"), 404
-
-        method2 = AvailablePersonDAO()
-        person_unavailable_time_slots = method2.get_unavailable_time_of_person_by_person_id(p_id)
-        if not person_unavailable_time_slots:
-            return jsonify("Person has no schedule "), 200
-        else:
-            result_list = []
-            start_date = date + " 0:00"
-            start_time = dt.datetime.strptime(start_date, '%Y-%m-%d %H:%M')
-            finish_date = date + " 23:59"
-            finish_date = dt.datetime.strptime(finish_date, '%Y-%m-%d %H:%M')
-        for row in person_unavailable_time_slots:
-            if row[1] > start_time and row[2] < finish_date:
-                finish_time = row[1]
-                obj = self.build_timeslot_attrdict(start_time, finish_time)
-                result_list.append(obj)
-                start_time = row[2]
-        finish_time = finish_date
-        result_list.append(self.build_timeslot_attrdict(start_time, finish_time))
-        print(result_list)
-        return jsonify("Person is unavailable at the following time frames", result_list), 200
-
-    def update_person(self, p_id, json):
         p_fname = json['p_fname']
         p_lname = json['p_lname']
         p_email = json['p_email']
@@ -203,7 +143,7 @@ class Person:
         result = method.delete_person(p_id)
         if result:
             method2 = AvailablePersonDAO()
-            method2.delete_unavailable_person(p_id)
+            method2.delete_unavailable_person_schedule(p_id)
             return jsonify("DELETED")
         else:
             return jsonify("NOT FOUND"), 404

@@ -1,3 +1,66 @@
+# Booking Frontend
+
+Designed with React
+
+The way user performs a booking is the following:
+
+- Login -> enter user credentials
+- User Dashboard
+
+In this dashboard there's a bunch of things the person can see. There's an option to create a new booking,
+manage current bookings, statistics, and a simple search engine.
+
+The first thing the user sees are statistics of the bookings that has done, the most frequent booked rooms, any upcomming
+meeting this user may have, the people who this person books most things, and any other required statistics.
+
+On the create new booking section you'll see it follows a linear-step-by-step form for the sake of simplicity for both
+the person who may be using this, and most importantly, the ones maintaining this. 
+
+Here's a step-by-step process of how the person would book a room:
+
+1. select the people you want to invite.You get a panel of the people around (kinda like boxes), you select the ones you
+want in the booking.
+2. Then You select the day, the hour and the duration of this booking. If any of the invited have either a conflict
+because they have a another meeting on that time OR they selected the option of being unavailable at that time
+or near it (hours collide). Then you cannot continue. For the person's sake, the app will show in green light in
+a calendar the time where everyone is available, and red hues where there's a conflict. 
+3. Once you've picked the time, you find a room selection. All rooms shown are those that are available within the specified
+time. 
+4. Finally, you can add a message, file or image that could either lead to the details of the booking for the invitees
+or that the invitees would be aware of.
+
+### Stuff
+
+Just like you have Models and Controllers in the backend (flask), in ReactJS you have components, which are kinda like
+headers.
+
+Since react is very very large, we used a bunch of UI libraries because our mental health comes first, the client's
+stupidity second :)
+
+The first library we used was ```react big calendar```
+
+
+```Rechart```
+
+### How we handle passowrds
+
+Because this is a college project, we didn't messed around with outh. So prolly afterwards one of the team members would
+make a branch or something and maybe add it on its free time on vacations or something. For now, we used a password query
+as was adviced to keep things simple.
+
+
+
+Usa react big calendar (DOCUMENTATION)
+
+
+
+
+
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

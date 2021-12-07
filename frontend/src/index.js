@@ -12,8 +12,10 @@ ReactDOM.render(
     <BrowserRouter>
         <Routes>
             <Route exact path="/Home" element={<HomePage/>} />
+          <Route exact path="/" element={<HomePage/>} />
             <Route exact path="/UserView" element={<UserView/>} />
             <Route exact path="/Dashboard" element={<Dashboard/>} />
+          <Route exact path="/BookMeeting" element={<BookMeeting/>} />
         </Routes>
     </BrowserRouter>,
     document.getElementById('root')

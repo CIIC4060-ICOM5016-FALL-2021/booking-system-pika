@@ -165,22 +165,6 @@ class PersonDAO:
         result = cursor.fetchone()
         return result
 
-
-
-
-    # TODO -> Make more complex
-    def get_busiest_hours(self):
-        cursor = self.conn.cursor()
-        query = 'select st_dt, et_dt, count(*) as activeinthehour' \
-                ' from booking  ' \
-                ' group by st_dt, et_dt ' \
-                'order by activeinthehour desc limit 5;'
-        cursor.execute(query, )
-        result = []
-        for row in cursor:
-            result.append(row)
-        return result
-
     def get_info_for_student(self):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt, room_id, host_id' \

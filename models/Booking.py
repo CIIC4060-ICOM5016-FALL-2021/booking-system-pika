@@ -166,3 +166,17 @@ class BookingDAO:
         for row in cursor:
             result.append(row)
         return result
+
+    # Returns the timeframe of the most busiest hour around
+    # TODO FIX NOW!!!!!!!!!!
+    def get_busiest_hours(self):
+        cursor = self.conn.cursor()
+        query = 'select st_dt, et_dt, count(*) as activeinthehour' \
+                ' from booking  ' \
+                ' group by st_dt, et_dt ' \
+                'order by activeinthehour desc limit 5;'
+        cursor.execute(query, )
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result

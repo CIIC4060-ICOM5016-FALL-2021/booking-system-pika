@@ -40,6 +40,7 @@
     ]
   },
   "devDependencies": {
+    "prettier": "^2.5.0",
     "react-router-dom": "^6.0.2",
     "semantic-ui-react": "^2.0.4"
   }
