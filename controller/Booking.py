@@ -120,9 +120,9 @@ class Booking:
             booking_dao = BookingDAO()
 
             # Is there a conflict with the room?
-            print(AvailableRoomDAO().verify_conflict_at_timeframe(room_id, st_dt, et_dt), "A list of conflicts...")
-            r =AvailableRoomDAO().verify_conflict_at_timeframe(room_id, st_dt, et_dt)
-            if bool(r[0]):
+            print(AvailableRoomDAO().verify_available_room_at_timeframe(room_id, st_dt, et_dt), "A list of conflicts...")
+            r =AvailableRoomDAO().verify_available_room_at_timeframe(room_id, st_dt, et_dt)
+            if True in r:
                 return jsonify("I'm sorry, but there's a schedule conflict with this room in your booking"), 404
 
             print("No conflicts yay!")
@@ -132,10 +132,10 @@ class Booking:
 
                 b_id = []
                 for inv in invited_id:
-                    p = AvailablePersonDAO().verify_conflict_at_timeframe(inv, st_dt, et_dt)
+                    p = AvailablePersonDAO().verify_available_person_at_timeframe(inv, st_dt, et_dt)
                     print(inv)
                     print(p)
-                    if bool(p[0]):
+                    if True in p:
                         userdict = person_dao.get_dict_person_by_id(inv)
                         print("User has a conflict: ")
                         print(userdict)
@@ -155,14 +155,14 @@ class Booking:
                 mega_map = {}
                 print(b_id, "This is the BID")
                 for i, b in enumerate(b_id):
-                    mega_map[i] = self.build_booking_attr_dict(b, st_dt, et_dt, invited_id, host_id, room_id)
+                    mega_map[i] = self.build_booking_attr_dict(b, st_dt, et_dt, invited_id[i], host_id, room_id)
                 print(mega_map)
 
                 return jsonify(mega_map)
 
             elif type(invited_id) == int:
 
-                conflict = AvailablePersonDAO().verify_conflict_at_timeframe(invited_id, st_dt, et_dt)
+                conflict = AvailablePersonDAO().verify_available_person_at_timeframe(invited_id, st_dt, et_dt)
                 if True in conflict:
                     return jsonify("I'm sorry, but it seems that there's a schedule conflict with your invitee in "
                                    "your booking"), 404
@@ -203,7 +203,6 @@ class Booking:
             mega_map = {}
             for i, meet in enumerate(meeting_by_id):
                 mega_map[i] = self.build_booking_map_dict(meet)
-            print(mega_map)
 
             return jsonify(mega_map)
 
@@ -247,6 +246,11 @@ class Booking:
             return jsonify('Not found person')
 
     def delete_booking(self, b_id):
+        if type(b_id) == int:
+            b_id = (b_id,)
+
+        else:
+            b_id = tuple(b_id)
         method = BookingDAO()
         result = method.delete_booking(b_id)
         if result:
@@ -256,15 +260,15 @@ class Booking:
 
     # TODO -> Finish statistics
 
-    # deletes a booking entry (sort of)
     def get_shared_free_timeslot(self, json):
         booking_dao = BookingDAO()
         booking_id = json['b_id']
         date = json['date']
-        existent_booking = self.get_meetings_by_id(booking_id).json
+        existent_booking = self.get_meetings_by_id(json).json
+        print(existent_booking)
         person_dao = PersonDAO()
         person_tupple = []
-        for value in existent_booking.value():
+        for value in existent_booking.values():
             person = person_dao.get_person_by_id(value['invited_id'])
 
             if not person:
@@ -274,12 +278,13 @@ class Booking:
 
             person_tupple.append(value['invited_id'])
 
-        free_time = booking_dao.get_free_time_of_day(person_tupple,date)
+        free_time = booking_dao.get_free_time_of_day(tuple(person_tupple),date)
 
         mega_map = {}
         print(free_time, "This is the free time")
         for i, b in enumerate(free_time):
-            mega_map[i] = {'free_start': b[0], 'free_end': b[1], 'delta_time': b[2]}
+            print(b)
+            mega_map[i] = {'free_start': str(b[0]), 'free_end': str(b[1]), 'delta_time': str(b[2])}
         print(mega_map)
         return jsonify(mega_map)
 
