@@ -5,7 +5,7 @@ import moment from 'moment';
 import {Button, Card, Container, Modal, Tab} from "semantic-ui-react";
 import BookMeeting from "./BookMeeting";
 import Schedule from "./Schedule";
-
+import UserStatistics from "./UserStatistics";
 function UserView(){
     const [isAuth, setIsAuth] = useState(false)
     const panes = [
@@ -14,6 +14,9 @@ function UserView(){
         },
         {
             menuItem: 'Schedule', render: () => <Schedule/>
+        },
+        {
+            menuItem: 'UserStatistics', render: () => <UserStatistics/>
         },
         {
             menuItem: 'Room Management', render: () => <Tab.Pane active={isAuth}><BookMeeting/></Tab.Pane>
