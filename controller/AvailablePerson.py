@@ -64,7 +64,8 @@ class AvailablePerson:
         return jsonify(result)
 
     # def update_unavailable_schedule(self):
-    def update_unavailable_schedule(self, pa_id, json):
+    def update_unavailable_schedule(self, json):
+        pa_id = json['pa_id']
         person_id = json['person_id']
         st_dt = json['st_dt']
         et_dt = json['et_dt']
@@ -79,7 +80,7 @@ class AvailablePerson:
         else:
             return jsonify('Not found person')
 
-    def delete_unavailable_schedule(self, pa_id):
+    def delete_unavailable_schedule(self, pa_id: int):
         method = AvailablePersonDAO()
         result = method.delete_unavailable_person_schedule(pa_id)
         if result:
@@ -87,16 +88,35 @@ class AvailablePerson:
         else:
             return jsonify("NOT FOUND")
 
+    # Deletes an entry where person is unavailable if given the exact timeframe
+    def delete_unavailable_person_schedule_at_certain_time(self, json: dict):
+        p_id = json["p_id"]
+        st_dt = json["st_dt"]
+        et_dt = json["et_dt"]
+
+        dao = AvailablePersonDAO()
+        person_dao = PersonDAO()
+
+        existing_person = person_dao.get_person_by_id(p_id)
+
+        if not existing_person:
+            return jsonify("Room Not Found"), 404
+
+        res = dao.delete_unavailable_person_schedule_at_certain_time(p_id, st_dt, et_dt)
+        if res:
+            return jsonify("DELETED")
+        else:
+            return jsonify("NOT FOUND")
+
     # Returns the timeframe for a room (all day)
-    def get_all_schedule(self, json: dict):
-        person_id = json['person_id']
+    def get_all_day_schedule(self, json: dict):
+        person_id = json['p_id']
         date = json['date']
 
         dao = AvailablePersonDAO()
         person_dao = PersonDAO()
-        print(person_id, "HEH")
+
         existing_person = person_dao.get_person_by_id(person_id)
-        print(existing_person)
 
         if not existing_person:
             return jsonify("Room Not Found"), 404
@@ -112,3 +132,18 @@ class AvailablePerson:
             "et_dt": result_et_dt
         }
         return jsonify(result), 200
+
+    def delete_all_unavailable_person_schedule(self, json: dict):
+        p_id = json["p_id"]
+
+        dao = AvailablePersonDAO()
+        person_dao = PersonDAO()
+
+        if not person_dao.get_person_by_id(p_id):
+            return jsonify("Room Not Found"), 404
+
+        res = dao.delete_all_unavailable_person_schedule(p_id)
+        if res:
+            return jsonify("DELETED")
+        else:
+            return jsonify("NOT FOUND")

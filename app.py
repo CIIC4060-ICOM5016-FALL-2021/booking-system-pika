@@ -10,7 +10,7 @@ from controller.AvailablePerson import AvailablePerson
 
 app = Flask(__name__, instance_relative_config=True)
 
-CORS(app, origins=["*"])  # allow it from todos los lugares
+CORS(app, origins=["*"])  # allow it from all places
 
 # ensure the instance folder exists
 try:
@@ -80,17 +80,14 @@ def find_available_rooms():
 # ========================================== #
 # ===-| U N A V A I L A B L E  R O O M |-=== #
 # ========================================== #
-
-# @app.route('/pika-booking/rooms/available-room/timeframe', methods=['GET'])
+@app.route('/pika-booking/rooms/available', methods=['GET', 'POST', 'DELETE', 'PUT'])
+def get_available_rooms_at_timeframe():
+    return
 
 
 # ========================= #
 # ===-| P E R S O N S |-=== #
 # ========================= #
-
-
-
-
 @app.route('/pika-booking/persons', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def handle_persons():
     args = request.json
@@ -114,7 +111,7 @@ def handle_persons():
         if args and args["p_id"] is not None:
             return Person().delete_person(args["p_id"])
         else:
-            jsonify("Missing Arguments"), 405
+            return jsonify("Missing Arguments"), 405
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -157,24 +154,62 @@ def get_role_access():
 # ===-| U N A V A I L A B L E  P E R S O N |-=== #
 # ============================================== #
 
-@app.route('/pika-booking/room/available', methods=['GET', 'POST', 'DELETE'])
-def get_available_rooms_at_timeframe():
+@app.route('/pika-booking/persons/available', methods=['GET', 'POST', 'DELETE', 'PUT'])
+def handle_unavailable_person():
+    args = request.json
     if request.method == 'GET':
-        # Find an available room (lab, classroom, study space, etc.) at a time frame
-        return Room().get_available_rooms(request.json)
+        if args:
+            return
+        else:
+            return AvailablePerson().get_all_unavailable_persons()
+    elif request.method == 'POST':
+        if args:
+            return AvailablePerson().create_unavailable_time_schedule(args)
+        else:
+            return jsonify("Missing Arguments"), 405
+    elif request.method == 'DELETE':
+        if args:
+            if "pa_id" in args:
+                return AvailablePerson().delete_unavailable_schedule(args["pa_id"])
+            else:
+                return jsonify("Missing Arguments"), 405
+    elif request.method == 'PUT':
+        if args:
+            return AvailablePerson().update_unavailable_schedule(args)
+        else:
+            return jsonify("Missing Arguments"), 405
     else:
         return jsonify("Method Not Allowed"), 405
 
-# @app.route('/pika-booking/persons/person/all-day-schedule', methods=['GET'])
-# def get_all_day_schedule_person():
-#     args = request.json
-#     if request.method == 'GET':
-#         if args:
-#             return Person().get_all_day_schedule_of_person(args)
-#         else:
-#             return jsonify("Missing Arguments")
-#     else:
-#         return jsonify("Method Not Allowed"), 405
+
+@app.route('/pika-booking/persons/available/person', methods=['DELETE'])
+def handle_unavailable_person_by_p_id():
+    args = request.json
+    if request.method == 'DELETE':
+        if args and "p_id" in args:
+            return AvailablePerson().delete_all_unavailable_person_schedule(args)
+        else:
+            return jsonify("Missing Arguments"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/persons/available/timeframe', methods=['DELETE', 'GET'])
+def handle_unavailable_person_at_timeframe():
+    args = request.json
+    if request.method == 'DELETE':
+        if args and "p_id" in args and "st_dt" in args and "et_dt" in args:
+            return AvailablePerson().delete_unavailable_person_schedule_at_certain_time(args)
+        else:
+            return jsonify("Missing Arguments"), 405
+    elif request.method == 'GET':
+        if args and "p_id" in args and "date" in args:
+            return AvailablePerson().get_all_day_schedule(args)
+        else:
+            return jsonify("Missing Arguments"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
+
 
 # ========================= #
 # ===-| B O O K I N G |-=== #
@@ -227,19 +262,6 @@ def get_most_booked_room():
     else:
         return jsonify("Method Not Allowed"), 405
 
-
-# TODO FIX THIS
-@app.route('/pika-booking/persons/all-day-schedule', methods=['GET'])
-def get_all_day_schedule():
-    if request.method == 'GET':
-        return AvailablePerson().get_all_schedule(request.json)
-    else:
-        return jsonify("Method Not Allowed"), 405
-
-
-# @app.route('/pika-booking/room/busiest-hours', methods=['GET'])
-# def get_busiest_hours():
-# This returns a query of the timeframes with most hours booked
 
 
 if __name__ == "__main__":
