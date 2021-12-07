@@ -70,8 +70,8 @@ class BookingDAO:
     # deletes an entry
     def delete_booking(self, b_id):
         cursor = self.conn.cursor()
-        query = 'delete from "booking" where b_id = %s;'
-        cursor.execute(query, (b_id,))
+        query = 'delete from "booking" where b_id in %s;'
+        cursor.execute(query, (tuple(b_id),))
         deleted_rows = cursor.rowcount
         self.conn.commit()
         return deleted_rows != 0

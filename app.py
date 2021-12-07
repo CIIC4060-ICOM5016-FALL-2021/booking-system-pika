@@ -236,8 +236,9 @@ def handle_bookings():
             return jsonify("Missing Arguments"), 405
 
     elif request.method == 'DELETE':
+        print(args)
         if args:
-            if "b_id" in args:
+            if "b_id" in args.keys():
                 return Booking().delete_booking(args["b_id"])
             else:
                 return jsonify("Args not found: b_id"), 405
@@ -257,7 +258,22 @@ def get_most_booked_room():
         return Room().get_most_booked_rooms()
     else:
         return jsonify("Method Not Allowed"), 405
+@app.route('/pika-booking/persons/shared-user', methods=['GET'])
+def get_shared_person_for_id():
+    # This gets the most booked room in general
+    if request.method == 'GET':
+        return Person().get_person_that_most_share_with_person(request.json)
+    else:
+        return jsonify("Method Not Allowed"), 405
 
+
+@app.route('/pika-booking/bookings/shared-time', methods=['GET'])
+def get_free_time_for_meeting_users():
+    # This gets the most booked room in general
+    if request.method == 'GET':
+        return Booking().get_shared_free_timeslot(request.json)
+    else:
+        return jsonify("Method Not Allowed"), 405
 
 if __name__ == "__main__":
     app.debug = True
