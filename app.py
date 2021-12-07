@@ -111,10 +111,13 @@ def handle_persons():
         else:
             return jsonify("Missing Arguments"), 405
     elif request.method == 'DELETE':
-        if args and args["p_id"] is not None:
-            return Person().delete_person(args["p_id"])
+        if args:
+            if "p_id" in args:
+                return Person().delete_person(args["p_id"])
+            else:
+                return jsonify("Args not found: p_id"), 405
         else:
-            jsonify("Missing Arguments"), 405
+            return jsonify("Args not found: p_id"), 405
     else:
         return jsonify("Method Not Allowed"), 405
 
