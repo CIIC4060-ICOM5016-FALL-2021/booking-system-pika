@@ -105,7 +105,7 @@ class Person:
         else:
             result_list = []
             for row in bookedperson_tuple:
-                obj = self. build_mostbookedperson_attrdict(row)
+                obj = self.build_mostbookedperson_attrdict(row)
                 result_list.append(obj)
             return jsonify(result_list)
 

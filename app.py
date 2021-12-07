@@ -87,24 +87,32 @@ def find_available_rooms():
 # ========================= #
 # ===-| P E R S O N S |-=== #
 # ========================= #
+
+
+
+
 @app.route('/pika-booking/persons', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def handle_persons():
     args = request.json
     if request.method == 'POST':
-        if args:
-            return Person().get_persons_by_id(args["p_id"])
-        else:
-            return Person().create_new_person(args)
+        return Person().create_new_person(args)
+
     elif request.method == 'GET':
-        return Person().get_all_persons()
+        if args:
+            if "p_id" in args:
+                return Person().get_persons_by_id(args["p_id"])
+            else:
+                return jsonify("Parameter Doesn't match with query!"), 200
+        else:
+            return Person().get_all_persons()
     if request.method == 'PUT':
         if args:
             return Person().update_person(args)
         else:
             return jsonify("Missing Arguments"), 405
     elif request.method == 'DELETE':
-        if args and args["r_id"] is not None:
-            return Person().delete_person(args["r_id"])
+        if args and args["p_id"] is not None:
+            return Person().delete_person(args["p_id"])
         else:
             jsonify("Missing Arguments"), 405
     else:
@@ -221,7 +229,7 @@ def get_most_booked_room():
 
 
 # TODO FIX THIS
-@app.route('/pika-booking/person/all-day-schedule', methods=['GET'])
+@app.route('/pika-booking/persons/all-day-schedule', methods=['GET'])
 def get_all_day_schedule():
     if request.method == 'GET':
         return AvailablePerson().get_all_schedule(request.json)
