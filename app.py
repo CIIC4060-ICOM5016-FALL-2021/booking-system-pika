@@ -139,14 +139,10 @@ def get_person_most_used_room():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/persons/person/role-access', methods=['GET'])
-def get_role_access():
-    args = request.json
+@app.route('/pika-booking/persons/person/role-access/<int:p_id>', methods=['GET'])
+def get_role_access(p_id):
     if request.method == 'GET':
-        if args and args["p_id"] is not None:
-            return Person().role_to_get_access_to_room_info(args["p_id"])
-        else:
-            return jsonify("Args not found: p_id"), 405
+        return Person().role_to_get_access_to_room_info(p_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
