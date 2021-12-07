@@ -184,37 +184,32 @@ def get_available_rooms_at_timeframe():
 # ========================= #
 @app.route('/pika-booking/booking', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def handle_bookings():
+    args =request.json
     if request.method == 'POST':
         return Booking().create_new_booking(request.json)
     elif request.method == 'GET':
-        args = request.args
         if args:
-            if "b" in args.keys():
-                return Booking().get_booking_by_id(args["b"])
+            if "b_id" in args:
+                return Booking().get_booking_by_id(args["b_id"])
             else:
                 return jsonify("Sorry, but this query parameter does not exists"), 200
         else:
             return Booking().get_all_booking()
 
     elif request.method == 'PUT':
-        args = request.args
         if args:
-            if "b" in args.keys():
-                return Booking().update_booking(args["b"], request.json)
-            else:
-                return jsonify("Sorry, but this query parameter does not exists"), 200
+            return Booking().update_booking(args)
         else:
-            return jsonify("Sorry, but this request requires more information"), 200
+            return jsonify("Missing Arguments"), 405
 
     elif request.method == 'DELETE':
-        args = request.args
         if args:
-            if "b" in args.keys():
-                return Booking().delete_booking(args["b"])
+            if "b_id" in args:
+                return Booking().delete_booking(args["b_id"])
             else:
-                return jsonify("Sorry, but this query parameter does not exists"), 200
+                return jsonify("Args not found: b_id"), 405
         else:
-            return jsonify("Sorry, but this request requires more information"), 200
+            return jsonify("Args not found: b_id"), 405
     else:
         return jsonify("Method Not Allowed"), 405
 
