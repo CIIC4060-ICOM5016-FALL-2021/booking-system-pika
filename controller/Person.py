@@ -178,21 +178,21 @@ class Person:
         p_id = json['p_id']
         role = method.get_person_role_by_id(p_id)
 
-        if role == "0":
+        if role == 0:
             info = method.get_info_for_student()
             result_list = []
             for row in info:
                 obj = self.build_student_info_attrdict(row)
                 result_list.append(obj)
             return jsonify(result_list)
-        elif role == "1":
+        elif role == 1:
             info = method.get_info_for_professor()
             result_list = []
             for row in info:
                 obj = self.build_prof_info_attrdict(row)
                 result_list.append(obj)
             return jsonify(result_list)
-        elif role == "2":
+        elif role == 2:
             info = method.get_info_for_staff()
             result_list = []
             for row in info:

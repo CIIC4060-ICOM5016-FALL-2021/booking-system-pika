@@ -1,5 +1,4 @@
 from flask import jsonify
-from controller.Room import Room
 from models.AvailableRoom import AvailableRoomDAO
 from models.Person import PersonDAO
 from models.Room import RoomDAO
@@ -36,25 +35,32 @@ class AvailableRoom:
         # Checks if the room exists
         room_dao = RoomDAO()
         person_dao = PersonDAO()
-        exist = room_dao.get_room_by_id(room_id)
+        exist = room_dao.get_room(room_id)
         validhost = person_dao.get_person_role_by_id(unavailablecreator)
-        if ((not exist)):
+        if not exist:
             return jsonify("Oops! Seems this room doesn't exist "), 404
 
         if not validhost:
             return jsonify("I'm sorry, but this person does not exists in our database"), 200
-        elif (not(validhost == person_dao.R_STAFF)):
-            return jsonify("I'm sorry, but this person is not a staff! Only staff members can modify the availability of rooms"), 200
+        elif not(validhost == person_dao.R_STAFF):
+            return jsonify("I'm sorry, but this person is not a staff! "
+                           "Only staff members can modify the availability of rooms"), 200
         # add entry and return back
         a_room_dao = AvailableRoomDAO()
         ra_id = a_room_dao.create_unavailable_room_time(room_id, start_time, end_time)
-        result = self.build_available_time_room_map(ra_id, start_time, end_time, room_id)
+        result = self.build_available_time_room_map([ra_id, start_time, end_time, room_id])
         return jsonify(result)
 
     # Wrapper, updates target room entry according to the person's role (STAFF ONLY)
     # False -> unnavailable
     # True -> Available
-    def update_room_availability(self, p_id: int, r_id: int, st_dt, et_dt, state: bool = False):
+    def update_room_availability(self, json):
+        p_id = json["p_id"]
+        r_id = json["r_id"]
+        st_dt = json["st_dt"]
+        et_dt = json["et_dt"]
+        state = json["state"]
+
         person_dao = PersonDAO()
         room_dao = RoomDAO()
         a_room_dao = AvailableRoomDAO()
@@ -76,7 +82,11 @@ class AvailableRoom:
                            "to change the availability of this room")
 
     # Check if the the room is unavailable at the given timeframe
-    def verify_available_room_at_timeframe(self, r_id, st_dt, et_dt):
+    def verify_available_room_at_timeframe(self, json):
+        r_id = json["r_id"]
+        st_dt = json["st_dt"]
+        et_dt = json["et_dt"]
+
         method = AvailableRoomDAO()
         available_room_list = method.verify_available_room_at_timeframe(r_id, st_dt, et_dt)
         result = {"Unavailable": available_room_list[0]}
@@ -93,7 +103,11 @@ class AvailableRoom:
         return jsonify(result_list)
 
     # deletes the timeframe of a room who cannot be accessed given that it matches its id and the exact timeframe given
-    def delete_unavailable_room(self, r_id, st_dt, et_dt):
+    def delete_unavailable_room(self, json):
+        r_id = json['r_id']
+        st_dt = json['st_dt']
+        et_dt = json['et_dt']
+
         method = AvailableRoomDAO()
         result = method.delete_unavailable_room_schedule(r_id, st_dt, et_dt)
         if result:
