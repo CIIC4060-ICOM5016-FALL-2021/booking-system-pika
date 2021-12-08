@@ -8,7 +8,7 @@ import 'semantic-ui-css/semantic.min.css'
 import UserView from "./UserView";
 import Dashboard from "./Dashboard";
 import SignUp from "./components/Registering/SignUp";
-import Register from "./components/Registering/Register";
+
 import Rooms from "./components/Rooms";
 import Person from "./components/Person";
 import Room from "./components/Rooms";
@@ -23,7 +23,7 @@ ReactDOM.render(
             <Route exact path="/person" element={<Person/>} />
             <Route exact path="/room" element={<Room/>} />
           <Route exact path="/signup" element={<SignUp/>} />
-          <Route exact path="/signup_2" element={<Register/>} />
+
           <Route exact path="/rooms" element={<Rooms/>} />
         </Routes>
     </BrowserRouter>,
