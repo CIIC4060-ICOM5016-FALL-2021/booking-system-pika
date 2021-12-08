@@ -1,6 +1,5 @@
 from flask import jsonify
 
-from controller.AvailableRoom import AvailableRoom
 from models.Booking import BookingDAO
 from models.Person import PersonDAO
 from models.Room import RoomDAO
@@ -206,13 +205,16 @@ class Booking:
 
             return jsonify(mega_map)
 
-    def get_booking_by_id(self, b_id):
+    def get_booking_by_id(self, json):
+        b_id = json["b_id"]
+
         method = BookingDAO()
         booking_tuple = method.get_booking_by_id(b_id)
         if not booking_tuple:
             return jsonify("Not Found"), 404
         else:
-            result = self.build_booking_map_dict(booking_tuple)
+            result = self.build_booking_map_dict([b_id, booking_tuple[0], booking_tuple[1], booking_tuple[2],
+                                                  booking_tuple[3], booking_tuple[4]])
             return jsonify(result), 200
 
     def get_host_at_dt(self, json):
@@ -245,7 +247,8 @@ class Booking:
         else:
             return jsonify('Not found person')
 
-    def delete_booking(self, b_id):
+    def delete_booking(self, json):
+        b_id = json["b_id"]
         if type(b_id) == int:
             b_id = (b_id,)
 
@@ -286,7 +289,6 @@ class Booking:
         print(mega_map)
         return jsonify(mega_map)
 
-    # TODO FIX NOW!!!!!!
     def get_busiest_hours(self):
         method = BookingDAO()
         busiest = method.get_busiest_hours()
@@ -298,27 +300,3 @@ class Booking:
                 obj = self.build_timeframe_attrdict(row)
                 result_list.append(obj)
             return jsonify(result_list)
-
-
-
-
-#### WIP query for the funcion above D O N O T T O U C H
-'''
-
-with bomeeting as (select booking.b_id,booking.st_dt,booking.et_dt,booking.invited_id,booking.host_id,booking. room_id, subt.meeting
-from booking
-inner join
-(select b.host_id,b.st_dt,b.et_dt, row_number() over (order by st_dt) as meeting
-from booking as b group by  (b.host_id,b.st_dt,b.et_dt)) as subt on subt.host_id=booking.host_id and subt.st_dt=booking.st_dt and subt.et_dt=booking.et_dt)
-
-select count(*)
-from(select booking.invited_id, booking.st_dt, booking.et_dt
-from booking
-where (tsrange(booking.st_dt, booking.et_dt) && tsrange(timestamp '2021-11-24 00:00:00-04',timestamp '2021-11-24 23:59:59-04'))  and (booking.invited_id in (40,5))
-union
-select availableperson.person_id, availableperson.st_dt, availableperson.et_dt
-from availableperson
-where (tsrange(st_dt, et_dt) && tsrange(timestamp '2021-11-24 00:00:00-04', timestamp '2021-11-24 23:59:59-04')) and person_id in (40,5)) as inter;
-
-
-'''
