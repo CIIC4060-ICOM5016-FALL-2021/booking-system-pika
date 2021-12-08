@@ -13,6 +13,14 @@ class Room:
         }
         return result
 
+    def build_room1(self, row: tuple):
+        result = {
+            "r_id": row[0],
+            "r_building": row[1],
+            "r_dept": row[2],
+            "r_type": row[3]
+        }
+        return result
     # Overloading
     def build_room_attr_dict(self, r_id, r_building, r_dept, r_type):
         return self.build_room((r_id, r_building, r_dept, r_type))
@@ -41,7 +49,7 @@ class Room:
         else:
             result = []
             for row in all_rooms:
-                result.append(self.build_room(row))
+                result.append(self.build_room1(row))
             return jsonify(result)
 
     # Returns a query of most booked rooms

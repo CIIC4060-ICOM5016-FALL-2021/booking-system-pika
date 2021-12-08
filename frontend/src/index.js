@@ -9,7 +9,7 @@ import UserView from "./UserView";
 import Dashboard from "./Dashboard";
 import SignUp from "./components/SignUp";
 import Person from "./components/Person";
-
+import Room from "./components/Rooms";
 ReactDOM.render(
     <BrowserRouter>
         <Routes>
@@ -19,6 +19,7 @@ ReactDOM.render(
             <Route exact path="/Dashboard" element={<Dashboard/>} />
           <Route exact path="/BookMeeting" element={<BookMeeting/>} />
             <Route exact path="/person" element={<Person/>} />
+            <Route exact path="/room" element={<Room/>} />
           <Route exact path="/signup" element={<SignUp/>} />
         </Routes>
     </BrowserRouter>,
