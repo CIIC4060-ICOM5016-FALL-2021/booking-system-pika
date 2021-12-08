@@ -5,7 +5,7 @@ class UserStatistics extends React.Component {
         super(props);
         this.state = {
             MostUsedRooms: [],
-            BookedRooms: []
+            SharedUser: []
                  }
     }
 
@@ -17,7 +17,11 @@ class UserStatistics extends React.Component {
             this.setState({MostUsedRooms: MostUsed});
             console.log(MostUsed);
         })
-
+        axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/shared', {header:{"p_id": '5'}}).then(res => {
+            let SharedUsed = res.data;
+            this.setState({SharedUser: SharedUsed});
+            console.log(MostUsed);
+        })
     }
 
     render(){
