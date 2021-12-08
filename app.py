@@ -124,7 +124,7 @@ def handle_get_all_schedule_getter_post():
 
 
 @app.route('/pika-booking/rooms/available/schedule', methods=['POST'])
-def handle_get_all_schedule_getter_post():
+def handle_verify_available_room_getter_post():
     args = request.json
     if request.method == 'POST':
         if args:
