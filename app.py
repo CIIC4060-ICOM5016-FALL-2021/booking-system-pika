@@ -9,8 +9,6 @@ from controller.Room import Room
 from controller.Booking import Booking
 from controller.AvailablePerson import AvailablePerson
 
-from account.controller import Account
-
 app = Flask(__name__, instance_relative_config=True)
 
 CORS(app, origins=["*"])  # allow it from all places
@@ -29,8 +27,6 @@ except OSError:
 def main():
     return "Hey! Welcome to Pika Booking, a cute lil booking App! ❤"
 
-
-# ################################################
 
 # =================== #
 # ===-| R O O M |-=== #
@@ -233,16 +229,6 @@ def get_role_access(p_id):
     else:
         return jsonify("Method Not Allowed"), 405
 
-@app.route('/pika-booking/persons/person/shared', methods=['GET'])
-def get_shared_user():
-    args = request.json
-    if request.method == 'GET':
-        if args and args["p_id"] is not None:
-            return Person().get_person_that_most_share_with_person(args["p_id"])
-        else:
-            return jsonify("Args not found: p_id"), 405
-    else:
-        return jsonify("Method Not Allowed"), 40
 
 # ============================================== #
 # ===-| U N A V A I L A B L E  P E R S O N |-=== #
@@ -342,10 +328,11 @@ def handle_person_id_getter_post():
 
 @app.route('/pika-booking/booking/busiesthour', methods=['GET'])
 def get_busiest_hours():
-     if request.method == 'GET':
-         return Booking().get_busiest_hours()
-     else:
-         return jsonify("Method Not Allowed"), 405
+    if request.method == 'GET':
+        return Booking().get_busiest_hours()
+    else:
+        return jsonify("Method Not Allowed"), 405
+
 
 # =============================== #
 # ===-| S T A T I S T I C S |-=== #
@@ -359,7 +346,7 @@ def get_most_booked_room():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/persons/shared-user', methods=['GET'])
+@app.route('/pika-booking/persons/shared', methods=['GET'])
 def get_shared_person_for_id():
     # This gets the most booked room in general
     if request.method == 'GET':

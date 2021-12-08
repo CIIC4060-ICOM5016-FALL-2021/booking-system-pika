@@ -41,11 +41,11 @@ class PersonDAO:
         query = "select p_id,p_fname,p_role, p_email, p_password from person where p_email = %s and p_password=%s;"
 
         # Execute commands n close
-        cursor.execute(query, (p_email,p_password,))
+        cursor.execute(query, (p_email, p_password,))
         result = cursor.fetchone()
         return result
 
-    def get_account_by_email_and_password(self, p_email):
+    def get_account_by_email(self, p_email):
         cursor = self.conn.cursor()
 
         query = "select p_id,p_fname,p_role, p_email from person where p_email = %s;"
@@ -135,10 +135,10 @@ class PersonDAO:
     # Retrieves the most used room
     def get_most_logged_person(self):
         cursor = self.conn.cursor()
-        query = 'select p_id, count(booking.invited_id) as logged ' \
+        query = 'select person.p_id, count(booking.invited_id) as logged ' \
                 'from booking inner join person on person.p_id = booking.invited_id inner join person on ' \
                 'booking.invited_id = person.p_id ' \
-                'group by p_id ' \
+                'group by person.p_id' \
                 ' order by logged desc limit 1; '
         cursor.execute(query,)
         result = []
