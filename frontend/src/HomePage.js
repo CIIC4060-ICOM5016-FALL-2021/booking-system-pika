@@ -1,5 +1,5 @@
 
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import React, {Component, useState} from 'react';
 import {
     Button,
@@ -14,7 +14,7 @@ import {
 import './themes/Navbar.css';
 import Navbar from "./components/Navbar/Navbar";
 import axios from "axios";
-
+import Person from "./components/Person";
 
 const api = axios.create({
     baseURL: 'https://booking-system-pika.herokuapp.com/pika-booking'
@@ -22,14 +22,21 @@ const api = axios.create({
 
 function HomePage() {
     const [open, setOpen] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
     console.log(open);
     const handleChange = (event, newValue) => {
         setOpen(true);
     }
-
+    const errors = {
+        email: "invalid email",
+        password: "invalid password"
+    };
     const navigate = useNavigate();
-
+ axios.post('/pika-booking/persons/accounts',{"p_email":email,"p_password":password })
     return (
+
       <>
           <Navbar/>
           <Segment>
@@ -56,18 +63,24 @@ function HomePage() {
                       <Grid.Column>
                           <Form>
                               <Form.Input
-                                icon='user'
+                                icon='email'
                                 iconPosition='left'
-                                label='Username'
-                                placeholder='Username'
+                                label='Email'
+                                placeholder='Email'
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
                               />
                               <Form.Input
                                 icon='lock'
                                 iconPosition='left'
                                 label='Password'
                                 type='password'
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
                               />
-                              <Button content='Login' primary onClick='{handleChange}'/>
+                              <Link to = "/Dashboard" >
+                                  <Button content='Login' primary onClick={handleChange}/>
+                              </Link>
                           </Form>
                       </Grid.Column>
                       <Grid.Column verticalAlign='middle'>

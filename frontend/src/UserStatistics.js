@@ -1,12 +1,30 @@
 import React, {Component, useState} from 'react';
-import { Button, Card, Grid, Image,Header } from 'semantic-ui-react';
+import {Calendar, momentLocalizer, Views } from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import moment from 'moment';
+import {Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis} from "recharts";
 import axios, {Axios} from "axios";
-import {Link} from "react-router-dom";
+import {Button,
+    Divider,
+    Grid,
+    Header,
+    Icon,
+    Search,
+    Segment,
+    Dimmer,
+    Loader,
+    Label,
+    Input
+} from 'semantic-ui-react'
+import {Link, Route} from "react-router-dom";
+import bookMeeting from "./BookMeeting";
+import Navbar from "./components/Navbar/Navbar";
+import UserView from "./UserView";
 class UserStatistics extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            UsedRooms: [],
+            UsedRooms: '',
             SharedUser: []
                  }
     }
@@ -15,27 +33,33 @@ class UserStatistics extends React.Component {
 
         axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/most-booked-room', {"p_id": '5'}).then(res => {
             let MostUsed = res.data;
-            this.setState({UsedRooms: MostUsed});
+            this.setUSEDRoom(MostUsed);
             console.log(MostUsed);
+
+
         })
         axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/shared',{"p_id": '5'}).then(res => {
             let SharedUsed = res.data;
-            this.setState({SharedUser: SharedUsed});
             console.log(SharedUsed)
         })
-        {this.state.UsedRooms.map(MostUsed=>(MostUsed.r_id) )}
+
         {this.state.SharedUser.map(SharedUsed=>(SharedUsed.p_id))}
+    }
+    setUSEDRoom(MostUsed){
+        return this.state.UsedRooms = MostUsed
     }
 
     render(){
+        function getUSEDRoom()
+        {
+            let t = this.state.UsedRooms;
+            return t;
+        }
         return <>
                 <h1>  Most Used Room By You:
-                 </h1>  )
+                </h1>
             <h1>User most booked with You:</h1>
-            <div>
-
-            </div>
-            <Link to = "/Dashboard" > <button>
+                        <Link to = "/Dashboard" > <button>
                 Go to Dashboard
             </button>
             </Link>

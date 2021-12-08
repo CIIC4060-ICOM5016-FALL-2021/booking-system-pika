@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Button, Checkbox, Form, Grid, Segment, Header, Header as SemanticHeader } from "semantic-ui-react";
 import Navbar from "../Navbar/Navbar";
+import axios from "axios";
 
 
 
@@ -50,20 +51,26 @@ import Navbar from "../Navbar/Navbar";
 function SignUp(props) {
 
   // States for registration
-  const [fname, setFName] = useState("");
+  const [fname, setFName] = useState('');
   const [lname, setLName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
-
+  const [phone, setphone] = useState("");
+  const [gender, setgender] = useState("");
 
   const options = [
-    { key: "m", text: "Male", value: "male" },
-    { key: "f", text: "Female", value: "female" },
-    { key: "o", text: "Other", value: "other" }
+    { key: "1", text: "Male", value: "male" },
+    { key: "2", text: "Female", value: "female" },
   ];
 
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  };
+
+axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons', {"p_fname":fname,"p_lname": lname,"p_role": role,"p_email":email,"p_phone:": phone, "p_gender"
+:gender,"p_password":password})
   return (
     <>
       <Navbar />
