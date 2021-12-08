@@ -11,6 +11,10 @@ import {Button,
     Icon,
     Search,
     Segment,
+    Dimmer,
+    Loader,
+    Label,
+    Input
 } from 'semantic-ui-react'
 import bookMeeting from "./BookMeeting";
 export default
@@ -46,42 +50,40 @@ class Dashboard extends React.Component{
 
         return <>
             <Segment>
-
                 <Segment placeholder>
                     <Grid columns={3}stackable textAlign='center'>
                         <Divider></Divider>
-
+                        <button> Create new Booking</button>
+                        <button> Manage Booking</button>
+                        <div>
+                            <Input action='Search' placeholder='Search...' />
+                        </div>
                         <Grid.Row verticalAlign='middle'>
                             <Grid.Column>
-                                <h1> Most Booked Person: <ul>   {this.state.BookedPersons.map(BookedPerson=>
+                                <h5> Most Booked Person:    {this.state.BookedPersons.map(BookedPerson=>
                                     <li>
                                         Bookings:{BookedPerson.count},
                                          {BookedPerson.p_fname }  _
-                                         {BookedPerson.p_lname },
-                                        id: {BookedPerson.p_id}</li>)} </ul> </h1>
-
-
-
+                                         {BookedPerson.p_lname }</li>)}  </h5>
                             </Grid.Column>
-                            <h1> Busiest Hours: <ul>{this.state.BusiestHours.map(Busiest=>
+                            <h5> Busiest Hours: <ul>{this.state.BusiestHours.map(Busiest=>
                                 <li>
                                     activebooking: {Busiest.activebooking},
                                     start_time: {Busiest.start_time},
                                     end_time: {Busiest.finish_time}
-                                </li>)} </ul>  </h1>
+                                </li>)} </ul>  </h5>
                             <Grid.Column>
-                                <h1>Most Booked Room: <ul>{this.state.BookedRooms.map(BookedRoom=>
+                                <h5>Most Booked Room: <ul>{this.state.BookedRooms.map(BookedRoom=>
                                     <li>
                                         r_id:{BookedRoom.r_id},
                                         number of bookings: {BookedRoom.timed_booked}
-                                    </li>)} </ul> </h1>
+                                    </li>)} </ul> </h5>
 
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
                 </Segment>
             </Segment>
-            <button> Back to main menu  </button>
         </>
     }
 }
