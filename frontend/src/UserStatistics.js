@@ -20,7 +20,7 @@ class UserStatistics extends React.Component {
         axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/shared', {header:{"p_id": '5'}}).then(res => {
             let SharedUsed = res.data;
             this.setState({SharedUser: SharedUsed});
-            console.log(MostUsed);
+            console.log(SharedUsed);
         })
     }
 
