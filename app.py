@@ -224,7 +224,7 @@ def get_person_most_used_room():
 
 
 @app.route('/pika-booking/persons/person/role-access', methods=['POST'])
-def get_role_access(p_id):
+def get_role_access():
     args = request.json
     if request.method == 'POST':
         if args:
@@ -253,7 +253,7 @@ def handle_unavailable_person():
         if args and "pa_id" in args:
             return AvailablePerson().delete_unavailable_schedule(args["pa_id"])
         else:
-            return jsonify("Args not found  "), 405
+            return jsonify("Args not found"), 405
     elif request.method == 'PUT':
         if args:
             return AvailablePerson().update_unavailable_schedule(args)
@@ -312,7 +312,7 @@ def handle_bookings():
             return jsonify("Missing Arguments"), 405
     elif request.method == 'DELETE':
         if args and "b_id" in args:
-            return Booking().delete_booking(args["b_id"])
+            return Booking().delete_booking(args)
         else:
             return jsonify("Args not found: b_id"), 405
     else:
@@ -320,11 +320,11 @@ def handle_bookings():
 
 
 @app.route('/pika-booking/booking/id', methods=['POST'])
-def handle_person_id_getter_post():
+def handle_booking_id_getter_post():
     args = request.json
     if request.method == 'POST':
         if args and "b_id" in args:
-            return Booking().get_booking_by_id(args["b_id"])
+            return Booking().get_booking_by_id(args)
         else:
             return jsonify("Args not found: b_id"), 405
     else:
