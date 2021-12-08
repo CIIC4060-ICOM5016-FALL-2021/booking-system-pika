@@ -33,7 +33,4 @@ class UserStatistics extends React.Component {
     }
 }
 
-function GetMostBookedPersonWithUser(props){
-    return
-}
 export default UserStatistics;
