@@ -30,23 +30,21 @@ class SignUp extends Component {
 
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value }, () => {
-    const { fname, lname, email, role, phone, gender, password } = this.state
 
   })
 
   handleSubmit = () => {
-    const { fname, lname, email, role, phone, gender, password } = this.state
 
-    this.setState({
-      submittedfname: fname,
-      submittedlname: lname,
-      submittedrole: role,
-      submittedphone: phone,
-      submittedgender: gender,
-      submittedpassword: password,
-      submittedemail: email
-    });
-    console.log(this.state.submittedfname)
+    setTimeout(this.setState({
+      submittedfname: this.state.fname,
+      submittedlname: this.state.lname,
+      submittedrole: this.state.role,
+      submittedphone: this.state.phone,
+      submittedgender: this.state.gender,
+      submittedpassword: this.state.password,
+      submittedemail: this.state.email
+    }),3000);
+    console.log(this.state.fname)
 
 
     let config = {
@@ -166,8 +164,9 @@ handleQuery = () => {
           <Grid.Column style={{ maxWidth: 550, marginTop: 20 }}>
             <SemanticHeader>Signup Here</SemanticHeader>
 
-            <Segment>
+
               <Form onSubmit={this.handleSubmit}>
+                <Segment>
                 <Form.Field>
                   <Form.Input
                     fluid
@@ -248,11 +247,11 @@ handleQuery = () => {
                   />
                 </Form.Field>
                 <Form.Button type='submit'>Submit</Form.Button>
+                </Segment>
               </Form>
-            </Segment>
 
-            <pre>{JSON.stringify({ fname, email, gender }, )}</pre>
-            <pre>{JSON.stringify({ submittedfname, submittedemail }, )}</pre>
+
+
           </Grid.Column>
         </Grid>
       </>
