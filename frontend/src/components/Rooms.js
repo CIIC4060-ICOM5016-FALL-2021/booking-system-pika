@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 import {Button, Card} from "semantic-ui-react";
+import Navbar from "./Navbar/Navbar";
+import {Link} from "react-router-dom";
 export default
 class Room extends React.Component{
   constructor(props) {
@@ -20,7 +22,7 @@ class Room extends React.Component{
 
   render() {
     return <>
-
+      <Navbar />
       {this.state.Room.map(Per=>
           <Card>
             <label>
@@ -34,7 +36,19 @@ class Room extends React.Component{
             </Button>
           </Card>
       )}
+      <Link to = "/Dashboard" > <button>
+        Go to Dashboard
+      </button>
+      </Link>
+      <Link to = "/UserView" > <button>
+        Go to Userview
+      </button>
+      </Link>
 
+      <Link to = "/person" > <button>
+        Go to Person list
+      </button>
+      </Link>
     </>
 
   }

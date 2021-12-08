@@ -1,6 +1,8 @@
 import React,{Component, useState}  from "react";
 import { Button, Card, Grid, Image,Header } from 'semantic-ui-react';
 import axios from "axios";
+import Navbar from "./Navbar/Navbar";
+import {Link} from "react-router-dom";
 export default
 class Person extends React.Component{
     constructor(props) {
@@ -15,7 +17,19 @@ axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons').then
     this.setState({person: Per});
 })
     }
+    getemail(){
 
+      let email =this.state.person.map(Per=> (Per.p_email))
+        return email
+    }
+    getpassword(){
+       let password= this.state.person.map(Per=> (Per.p_password))
+        return password
+    }
+    getid(){
+        let id= this.state.person.map(Per=> (Per.p_id))
+        return id
+    }
     gender(parameter){
         switch(parameter) {
             case 1:
@@ -40,7 +54,7 @@ axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons').then
     }
     render() {
         return <>
-
+            <Navbar />
      {this.state.person.map(Per=>
                 <Card>
             <label>{Per.p_fname} _ {Per.p_lname},
@@ -53,7 +67,18 @@ axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons').then
                     </Button>
                 </Card>
           )}
-
+            <Link to = "/Dashboard" > <button>
+                Go to Dashboard
+            </button>
+            </Link>
+            <Link to = "/UserView" > <button>
+                Go to Userview
+            </button>
+            </Link>
+            <Link to = "/rooms" > <button>
+                Go to room list
+            </button>
+            </Link>
             </>
 
     }
