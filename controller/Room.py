@@ -121,7 +121,7 @@ class Room:
             return jsonify("There's no rooms!"), 404
         else:
             print(rooms_by_id)
-            result = self.build_room(rooms_by_id[0])
+            result = self.build_room(rooms_by_id)
             return jsonify(result), 200
 
     # Retrieves all available rooms
