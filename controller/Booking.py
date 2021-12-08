@@ -258,8 +258,6 @@ class Booking:
         else:
             return jsonify("NOT FOUND"), 404
 
-    # TODO -> Finish statistics
-
     def get_shared_free_timeslot(self, json):
         booking_dao = BookingDAO()
         booking_id = json['b_id']

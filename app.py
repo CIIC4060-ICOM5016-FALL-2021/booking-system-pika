@@ -75,7 +75,10 @@ def handle_room_getter_post():
 def find_available_rooms():
     args = request.json
     if request.method == 'POST':
-        return Room().get_available_rooms(args)
+        if args:
+            return Room().get_available_rooms(args)
+        else:
+            return jsonify("Args not found"), 405
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -148,14 +151,16 @@ def handle_room__unavailable_getter_post():
 # ========================= #
 
 # NOTE: this is not part of the schema. this is just as a replacement of auth to handle accounts
-@app.route('/booking/account', methods=['GET', 'POST', 'DELETE'])
+@app.route('/booking/account', methods=['POST'])
 def handle_account():
     args = request.json
-    if request.method == 'GET':
-        return Account()
-    elif request.method == 'POST':
-        return
-
+    if request.method == 'POST':
+        if args:
+            return Person().get_account_by_email_and_password(args)
+        else:
+            return jsonify("Args not found"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
 
 # ========================= #
 # ===-| P E R S O N S |-=== #
@@ -355,11 +360,15 @@ def get_shared_person_for_id():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/bookings/shared-time', methods=['GET'])
+@app.route('/pika-booking/bookings/shared-time', methods=['POST'])
 def get_free_time_for_meeting_users():
     # This gets the most booked room in general
-    if request.method == 'GET':
-        return Booking().get_shared_free_timeslot(request.json)
+    args = request.json
+    if request.method == 'POST':
+        if args:
+            return Booking().get_shared_free_timeslot(request.json)
+        else:
+            return jsonify("Args not found"), 405
     else:
         return jsonify("Method Not Allowed"), 405
 
