@@ -17,23 +17,44 @@ class PersonDAO:
                                                                             db_root_config['host'])
         self.conn = psycopg2.connect(connection_url)
 
-    def create_new_person(self, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
+    def create_new_person(self, p_fname, p_lname, p_role, p_email, p_phone, p_gender,p_password):
         cursor = self.conn.cursor()
-        query = 'insert into "person" (p_fname, p_lname, p_role, p_email, p_phone,p_gender) values (%s,%s,%s,%s,%s,' \
-                '%s) returning p_id; '
-        cursor.execute(query, (p_fname, p_lname, p_role, p_email, p_phone, p_gender,))
+        query = 'insert into "person" (p_fname, p_lname, p_role, p_email, p_phone,p_gender,p_password) values (%s,%s,%s,%s,%s,' \
+                '%s,%s) returning p_id; '
+        cursor.execute(query, (p_fname, p_lname, p_role, p_email, p_phone, p_gender,p_password,))
         p_id = cursor.fetchone()[0]
         self.conn.commit()
         return p_id
 
-    def update_person(self, p_id, p_fname, p_lname, p_email, p_phone, p_gender):
+    def update_person(self, p_id, p_fname, p_lname, p_email, p_phone, p_gender,p_password):
         cursor = self.conn.cursor()
         query = 'update "person" ' \
-                'set p_fname = %s, p_lname= %s, p_email= %s , p_phone = %s ,p_gender= %s ' \
+                'set p_fname = %s, p_lname= %s, p_email= %s , p_phone = %s ,p_gender= %s,p_password = %s ' \
                 'where p_id = %s '
-        cursor.execute(query, (p_fname, p_lname, p_email, p_phone, p_gender, p_id))
+        cursor.execute(query, (p_fname, p_lname, p_email, p_phone, p_gender, p_id,p_password))
         self.conn.commit()
         return True
+
+    def get_account_by_email_and_password(self, p_email,p_password):
+        cursor = self.conn.cursor()
+
+        query = "select p_id,p_fname,p_role, p_email, p_password from person where p_email = %s and p_password=%s;"
+
+        # Execute commands n close
+        cursor.execute(query, (p_email,p_password,))
+        result = cursor.fetchone()
+        return result
+
+    def get_account_by_email_and_password(self, p_email):
+        cursor = self.conn.cursor()
+
+        query = "select p_id,p_fname,p_role, p_email from person where p_email = %s;"
+
+        # Execute commands n close
+        cursor.execute(query, (p_email,))
+        result = cursor.fetchone()
+        return result
+
 
     def delete_person(self, p_id):
         cursor = self.conn.cursor()
@@ -46,7 +67,7 @@ class PersonDAO:
 
     def get_all_person(self):
         cursor = self.conn.cursor()
-        query = 'select p_id, p_fname, p_lname, p_role, p_email, p_phone ,p_gender ' \
+        query = 'select p_id, p_fname, p_lname, p_role, p_email, p_phone ,p_gender,p_password ' \
                 'from "person";'
         cursor.execute(query)
         result = []
@@ -56,7 +77,7 @@ class PersonDAO:
 
     def get_person_by_id(self, p_id: int):
         cursor = self.conn.cursor()
-        query = 'select p_fname, p_lname, p_role, p_email, p_phone, p_gender ' \
+        query = 'select p_fname, p_lname, p_role, p_email, p_phone, p_gender,p_password ' \
                 'from "person" where p_id = %s;'
         cursor.execute(query, (p_id,))
         result = cursor.fetchone()
@@ -64,11 +85,11 @@ class PersonDAO:
 
     def get_dict_person_by_id(self, p_id: int):
         cursor = self.conn.cursor()
-        query = 'select p_fname, p_lname, p_role, p_email, p_phone, p_gender ' \
+        query = 'select p_fname, p_lname, p_role, p_email, p_phone, p_gender,p_password ' \
                 'from "person" where p_id = %s;'
         cursor.execute(query, (p_id,))
 
-        columnsnames = ["p_fname", "p_lname", "p_role", "p_email", "p_phone", "p_gender"]
+        columnsnames = ["p_fname", "p_lname", "p_role", "p_email", "p_phone", "p_gender","p_password"]
         result = cursor.fetchone()
 
         dictionary = {}

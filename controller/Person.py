@@ -11,22 +11,22 @@ class Person:
 
     def build_person_map(self, row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'p_role': row[3], 'p_email': row[4],
-                  'p_phone': row[5], 'p_gender': row[6]}
+                  'p_phone': row[5], 'p_gender': row[6],'p_password': row[7]}
         return result
 
     def build_person_map_info(self, row):
         result = {'p_fname': row[0], 'p_lname': row[1], 'p_role': row[2],
-                  'p_email': row[3], 'p_phone': row[4], 'p_gender': row[5]}
+                  'p_email': row[3], 'p_phone': row[4], 'p_gender': row[5],'p_password': row[6]}
         return result
 
-    def build_person_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender):
+    def build_person_attr_dict(self, p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender,p_password):
         result = {'p_id': p_id, 'p_fname': p_fname, 'p_lname': p_lname, 'p_role': p_role, 'p_email': p_email,
-                  'p_phone': p_phone, 'p_gender': p_gender}
+                  'p_phone': p_phone, 'p_gender': p_gender,'p_password': p_password}
         return result
 
-    def build_person_update_attr_dict(self, p_fname, p_lname, p_email, p_phone, p_gender):
+    def build_person_update_attr_dict(self, p_fname, p_lname, p_email, p_phone, p_gender,p_password):
         result = {'p_fname': p_fname, 'p_lname': p_lname, 'p_email': p_email,
-                  'p_phone': p_phone, 'p_gender': p_gender}
+                  'p_phone': p_phone, 'p_gender': p_gender,'p_password': p_password}
         return result
 
     def build_role_map_dict(self, row):
@@ -69,9 +69,10 @@ class Person:
         p_email = json['p_email']
         p_phone = json['p_phone']
         p_gender = json['p_gender']
+        p_password = json['p_password']
         method = PersonDAO()
-        p_id = method.create_new_person(p_fname, p_lname, p_role, p_email, p_phone, p_gender)
-        result = self.build_person_attr_dict(p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender)
+        p_id = method.create_new_person(p_fname, p_lname, p_role, p_email, p_phone, p_gender,p_password)
+        result = self.build_person_attr_dict(p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender,p_password)
         return jsonify(result)
 
     def get_all_persons(self):
@@ -146,7 +147,6 @@ class Person:
 
         result = self.build_mostsharedperson_attrdict(mostshared)
         return jsonify(result)
-
     def update_person(self, json):
         p_id = json['p_id']
         p_fname = json['p_fname']
@@ -154,14 +154,28 @@ class Person:
         p_email = json['p_email']
         p_phone = json['p_phone']
         p_gender = json['p_gender']
+        p_password = json['p_password']
         method = PersonDAO()
         exist = self.persons_by_id_exist(p_id)
-        updated_info = method.update_person(p_id, p_fname, p_lname, p_email, p_phone, p_gender)
+        updated_info = method.update_person(p_id, p_fname, p_lname, p_email, p_phone, p_gender,p_password)
         if updated_info and exist:
-            result = self.build_person_update_attr_dict(p_fname, p_lname, p_email, p_phone, p_gender)
+            result = self.build_person_update_attr_dict(p_fname, p_lname, p_email, p_phone, p_gender,p_password)
             return jsonify(result)
         else:
             return jsonify('Not found person')
+
+    def get_account_by_email_and_password(self,json):
+        p_email = json['p_email']
+        p_password = json['p_password']
+        method = PersonDAO()
+        person_tuple = method.get_account_by_email_and_password(p_email,p_password)
+        if not person_tuple:
+            return jsonify("Not Found"), 404
+        else:
+            result = self.build_person_map_info(person_tuple)
+            return jsonify(result), 200
+
+
 
     def delete_person(self, p_id):
         method = PersonDAO()
