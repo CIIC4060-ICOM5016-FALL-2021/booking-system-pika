@@ -329,7 +329,7 @@ def handle_bookings():
 
 
 @app.route('/pika-booking/booking/id', methods=['POST'])
-def handle_person_getter_post():
+def handle_person_id_getter_post():
     args = request.json
     if request.method == 'POST':
         if args and "b_id" in args:
@@ -338,6 +338,7 @@ def handle_person_getter_post():
             return jsonify("Args not found: b_id"), 405
     else:
         return jsonify("Method Not Allowed"), 405
+
 
 @app.route('/pika-booking/booking/busiesthour', methods=['GET'])
 def get_busiest_hours():
