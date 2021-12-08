@@ -63,7 +63,7 @@ class Dashboard extends React.Component{
                                 <h5> Most Booked Person:    {this.state.BookedPersons.map(BookedPerson=>
                                     <li>
                                         Bookings:{BookedPerson.count},
-                                         {BookedPerson.p_fname }  _
+                                       {BookedPerson.p_fname }  _
                                          {BookedPerson.p_lname }</li>)}  </h5>
                             </Grid.Column>
                             <h5> Busiest Hours: <ul>{this.state.BusiestHours.map(Busiest=>

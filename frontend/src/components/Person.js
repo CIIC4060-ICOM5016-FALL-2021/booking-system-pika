@@ -1,5 +1,7 @@
 import React,{Component, useState}  from "react";
-import { Button, Card, Image,Header } from 'semantic-ui-react';
+import { Button, Card, Grid, Image,Header } from 'semantic-ui-react';
+import axios from "axios";
+export default
 class Person extends React.Component{
     constructor(props) {
         super(props);
@@ -8,24 +10,28 @@ class Person extends React.Component{
         };
     }
     componentDidMount() {
-
+axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons').then(res=>{
+    let Per=res.data
+    this.setState({person: Per});
+})
     }
     render() {
-        return(
-        <Card.Group>
-            <Card>
-     ]{this.state.person.map(Per=>
-          <Header> {Per.fname} _ {Per.lname} </Header>,
-                <p> {Per.email}</p>,
-                <p> {Per.gender}</p>
+        return <>
 
+     {this.state.person.map(Per=>
+                <Card>
+            <label>{Per.p_fname} _ {Per.p_lname},
+                <p>Role: {Per.p_role}</p>
+                <p> Email: {Per.p_email}</p>
+               Gender: {Per.p_gender}
+             </label>
+                    <Button basic color='green'>
+                        Invite
+                    </Button>
+                </Card>
           )}
-                <Button basic color='green'>
-                    Invite
-                </Button>
-            </Card>
-    </Card.Group>
-        )
+
+            </>
+
     }
 }
-export default  Person;
