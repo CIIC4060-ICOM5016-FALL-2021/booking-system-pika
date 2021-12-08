@@ -1,34 +1,52 @@
 import React, {Component, useState} from 'react';
+import { Button, Card, Grid, Image,Header } from 'semantic-ui-react';
 import axios, {Axios} from "axios";
+import {Link} from "react-router-dom";
 class UserStatistics extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            MostUsedRooms: [],
+            UsedRooms: [],
             SharedUser: []
                  }
     }
 
     componentDidMount() {
 
-
-        axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/most-booked-room', {header:{"p_id": '5'}}).then(res => {
+        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/most-booked-room', {"p_id": '5'}).then(res => {
             let MostUsed = res.data;
-            this.setState({MostUsedRooms: MostUsed});
+            this.setState({UsedRooms: MostUsed});
             console.log(MostUsed);
         })
-        axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/shared', {header:{"p_id": '5'}}).then(res => {
+        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/shared',{"p_id": '5'}).then(res => {
             let SharedUsed = res.data;
             this.setState({SharedUser: SharedUsed});
-            console.log(SharedUsed);
+            console.log(SharedUsed)
         })
+        {this.state.UsedRooms.map(MostUsed=>(MostUsed.r_id) )}
+        {this.state.SharedUser.map(SharedUsed=>(SharedUsed.p_id))}
     }
 
     render(){
         return <>
-            <h1>Most Used Room By You: { this.state.MostUsedRooms.map(MostUsed=>  <li>( {MostUsed.r_id})</li>
-                )} </h1>
+                <h1>  Most Used Room By You:
+                 </h1>  )
             <h1>User most booked with You:</h1>
+            <div>
+
+            </div>
+            <Link to = "/Dashboard" > <button>
+                Go to Dashboard
+            </button>
+            </Link>
+            <Link to = "/rooms" > <button>
+                Go to room list
+            </button>
+            </Link>
+            <Link to = "/person" > <button>
+                Go to Person list
+            </button>
+            </Link>
         </>
     }
 }

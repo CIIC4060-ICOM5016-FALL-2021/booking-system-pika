@@ -9,6 +9,7 @@ import UserStatistics from "./UserStatistics";
 function UserView(){
     const [isAuth, setIsAuth] = useState(false)
     const panes = [
+
         {
             menuItem: 'Booking', render: () => <BookMeeting/>
         },

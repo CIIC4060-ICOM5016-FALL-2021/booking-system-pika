@@ -16,7 +16,10 @@ import {Button,
     Label,
     Input
 } from 'semantic-ui-react'
+import {Link, Route} from "react-router-dom";
 import bookMeeting from "./BookMeeting";
+import Navbar from "./components/Navbar/Navbar";
+import UserView from "./UserView";
 export default
 class Dashboard extends React.Component{
     constructor(props) {
@@ -43,18 +46,20 @@ class Dashboard extends React.Component{
         axios.get( 'https://booking-system-pika.herokuapp.com/pika-booking/booking/busiesthour').then(res=>{
             let  Busiest = res.data
             this.setState({ BusiestHours :Busiest });
-            console.log(Busiest)
+            console.log(Busiest);
         })
     }
     render(){
 
         return <>
+            <Navbar />
             <Segment>
                 <Segment placeholder>
                     <Grid columns={3}stackable textAlign='center'>
                         <Divider></Divider>
+                        <Link to = "/BookMeeting" >
                         <button> Create new Booking</button>
-                        <button> Manage Booking</button>
+                        </Link>
                         <div>
                             <Input action='Search' placeholder='Search...' />
                         </div>
@@ -78,7 +83,18 @@ class Dashboard extends React.Component{
                                         r_id:{BookedRoom.r_id},
                                         number of bookings: {BookedRoom.timed_booked}
                                     </li>)} </ul> </h5>
-
+                                <Link to = "/UserView" > <button>
+                                    Go to Userview
+                                </button>
+                                    </Link>
+                                <Link to = "/person" > <button>
+                                    Go to Person list
+                                </button>
+                                </Link>
+                                <Link to = "/rooms" > <button>
+                                    Go to room list
+                                </button>
+                                </Link>
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>

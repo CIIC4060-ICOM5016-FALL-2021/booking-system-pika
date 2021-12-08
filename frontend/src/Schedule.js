@@ -2,7 +2,8 @@ import React, {Component, useState} from 'react';
 import {Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import {Button, Card, Container, Modal} from "semantic-ui-react";
+import {Button, Card, Container, Modal, Segment} from "semantic-ui-react";
+import {Link} from "react-router-dom";
 
 
 // Event {
@@ -24,7 +25,8 @@ function Schedule(){
     const [open, setOpen] = useState(false);
     const localizer = momentLocalizer(moment)
 
-    return <Container style={{ height: 800 }}><Calendar
+    return <>
+    <Container style={{ height: 800 }}><Calendar
         localizer={localizer}
         startAccessor="start"
         events={dates}
@@ -35,7 +37,21 @@ function Schedule(){
 
     </Calendar>
     </Container>
-
+        <Segment>
+        <Link to = "/Dashboard" > <button>
+            Go to Dashboard
+        </button>
+        </Link>
+        <Link to = "/rooms" > <button>
+            Go to room list
+        </button>
+        </Link>
+        <Link to = "/person" > <button>
+            Go to Person list
+        </button>
+        </Link>
+    </Segment>
+</>
 
 }
 export default Schedule;

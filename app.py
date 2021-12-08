@@ -234,6 +234,16 @@ def get_role_access():
     else:
         return jsonify("Method Not Allowed"), 405
 
+@app.route('/pika-booking/persons/accounts', methods=['POST'])
+def get_account_by_email_and_password():
+    args = request.json
+    if request.method == 'POST':
+        if args:
+            return Person().get_account_by_email_and_password(args)
+        else:
+            return jsonify("Args not found: email or password"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
 
 # ============================================== #
 # ===-| U N A V A I L A B L E  P E R S O N |-=== #

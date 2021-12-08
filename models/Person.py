@@ -188,8 +188,16 @@ class PersonDAO:
 
     def get_info_for_student(self):
         cursor = self.conn.cursor()
-        query = 'select st_dt, et_dt, room_id, host_id' \
-                'from booking;  '
+        query = 'select * from room where r_type in (5)'
+        cursor.execute(query, )
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def get_info_for_instructor(self):
+        cursor = self.conn.cursor()
+        query = 'select * from room where r_type in (1,4,5)'
         cursor.execute(query, )
         result = []
         for row in cursor:
@@ -198,18 +206,25 @@ class PersonDAO:
 
     def get_info_for_professor(self):
         cursor = self.conn.cursor()
-        query = 'select st_dt, et_dt, room_id, host_id, invite_id' \
-                'from booking;  '
+        query = 'select * from room where r_type in (1,2,4,5)'
+        cursor.execute(query, )
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    def get_info_for_visitor(self):
+        cursor = self.conn.cursor()
+        query = 'select * from room where r_type in (5)'
         cursor.execute(query, )
         result = []
         for row in cursor:
             result.append(row)
         return result
 
+
     def get_info_for_staff(self):
         cursor = self.conn.cursor()
-        query = 'select *' \
-                'from booking;  '
+        query = 'select * from room'
         cursor.execute(query, )
         result = []
         for row in cursor:

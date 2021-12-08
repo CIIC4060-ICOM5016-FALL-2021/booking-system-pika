@@ -11,7 +11,6 @@ import SignUp from "./components/Registering/SignUp";
 
 import Rooms from "./components/Rooms";
 import Person from "./components/Person";
-import Room from "./components/Rooms";
 ReactDOM.render(
     <BrowserRouter>
         <Routes>
@@ -21,7 +20,7 @@ ReactDOM.render(
             <Route exact path="/Dashboard" element={<Dashboard/>} />
           <Route exact path="/BookMeeting" element={<BookMeeting/>} />
             <Route exact path="/person" element={<Person/>} />
-            <Route exact path="/room" element={<Room/>} />
+
           <Route exact path="/signup" element={<SignUp/>} />
 
           <Route exact path="/rooms" element={<Rooms/>} />
