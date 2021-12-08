@@ -24,6 +24,7 @@ class Room extends React.Component{
       {this.state.Room.map(Per=>
           <Card>
             <label>
+              Room_id: {Per.r_id}
               <p>Building: {Per.r_building}</p>
               <p> Department: {Per.r_dept}</p>
               Type: { Per.r_type}
