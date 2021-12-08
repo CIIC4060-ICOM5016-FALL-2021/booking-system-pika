@@ -351,10 +351,10 @@ def get_most_booked_room():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/persons/shared', methods=['GET'])
+@app.route('/pika-booking/persons/shared', methods=['POST'])
 def get_shared_person_for_id():
     # This gets the most booked room in general
-    if request.method == 'GET':
+    if request.method == 'POST':
         return Person().get_person_that_most_share_with_person(request.json)
     else:
         return jsonify("Method Not Allowed"), 405

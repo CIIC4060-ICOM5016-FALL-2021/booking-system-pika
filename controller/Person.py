@@ -139,7 +139,8 @@ class Person:
                                                most_used_room[2])
             return jsonify(result), 200
 
-    def get_person_that_most_share_with_person(self, p_id):
+    def get_person_that_most_share_with_person(self, json):
+        p_id = json["p_id"]
         method = PersonDAO()
         mostshared = method.get_person_that_most_share_with_person(p_id)
         if not mostshared:
@@ -147,6 +148,7 @@ class Person:
 
         result = self.build_mostsharedperson_attrdict(mostshared)
         return jsonify(result)
+
     def update_person(self, json):
         p_id = json['p_id']
         p_fname = json['p_fname']
