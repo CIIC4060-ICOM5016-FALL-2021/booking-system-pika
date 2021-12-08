@@ -194,24 +194,26 @@ class Person:
         p_id = json['p_id']
         role = method.get_person_role_by_id(p_id)
 
-        if role == 0:
+        if role == 1:
             info = method.get_info_for_student()
-            result_list = []
-            for row in info:
-                obj = self.build_student_info_attrdict(row)
-                result_list.append(obj)
-            return jsonify(result_list)
-        elif role == 1:
-            info = method.get_info_for_professor()
-            result_list = []
-            for row in info:
-                obj = self.build_prof_info_attrdict(row)
-                result_list.append(obj)
-            return jsonify(result_list)
+
         elif role == 2:
+            info = method.get_info_for_professor()
+
+        elif role == 3:
             info = method.get_info_for_staff()
-            result_list = []
-            for row in info:
-                obj = self.build_staff_info_attrdict(row)
-                result_list.append(obj)
-            return jsonify(result_list)
+
+        elif role == 4:
+            info = method.get_info_for_instructor()
+
+        elif role == 5:
+            info = method.get_info_for_visitor()
+
+        else:
+            return jsonify("Role Not found"), 404
+
+        result_list = []
+        for row in info:
+            obj = Room.build_room1(row)
+            result_list.append(obj)
+        return jsonify(result_list)
