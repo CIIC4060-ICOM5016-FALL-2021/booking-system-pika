@@ -5,12 +5,12 @@ import moment from 'moment';
 import {Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis} from "recharts";
 import axios, {Axios} from "axios";
 import {Button,
-        Divider,
-        Grid,
-        Header,
-        Icon,
-        Search,
-        Segment,
+    Divider,
+    Grid,
+    Header,
+    Icon,
+    Search,
+    Segment,
 } from 'semantic-ui-react'
 import bookMeeting from "./BookMeeting";
 export default
@@ -26,16 +26,16 @@ class Dashboard extends React.Component{
 
     componentDidMount() {
 
-  axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons/most-booked').then(res=>{
-      let BookedPerson = res.data;
-      this.setState({BookedPersons:BookedPerson});
-      console.log(BookedPerson );
-  })
-  axios.get('https://booking-system-pika.herokuapp.com/pika-booking/rooms/most-booked').then(res=>{
-      let  BookedRoom = res.data
-      this.setState({ BookedRooms :BookedRoom});
-      console.log(BookedRoom);
-  })
+        axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons/most-booked').then(res=>{
+            let BookedPerson = res.data;
+            this.setState({BookedPersons:BookedPerson});
+            console.log(BookedPerson );
+        })
+        axios.get('https://booking-system-pika.herokuapp.com/pika-booking/rooms/most-booked').then(res=>{
+            let  BookedRoom = res.data
+            this.setState({ BookedRooms :BookedRoom});
+            console.log(BookedRoom);
+        })
     }
     render(){
 
@@ -70,7 +70,7 @@ class Dashboard extends React.Component{
                         </Grid.Row>
                     </Grid>
                 </Segment>
-        </Segment>
+            </Segment>
             <button> Back to main menu  </button>
         </>
     }

@@ -1,5 +1,4 @@
 import React, {Component, useState} from 'react';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
 import axios, {Axios} from "axios";
 class UserStatistics extends React.Component {
     constructor(props) {
