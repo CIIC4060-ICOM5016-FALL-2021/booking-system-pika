@@ -2,7 +2,7 @@ import React, {Component, useState} from 'react';
 import {Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import {Button, Card, Container, Modal} from "semantic-ui-react";
+import {Button, Card, Container, Form, Modal} from "semantic-ui-react";
 
 
 // Event {
@@ -42,10 +42,49 @@ function BookMeeting(){
             onClose={() => setOpen(false)}
             onOpen={() => setOpen(true)}
         >
-            <Modal.Header>Needs changing!</Modal.Header>
+            <Modal.Header>When do you want to book?</Modal.Header>
             <Modal.Content>
                 <Modal.Description>
-                    This is a modal but it serves to show how buttons and functions can be implemented.
+                    <Form>
+                        <Form.Field>
+                            <Form.Input
+                                fluid
+                                name="Start time"
+                                placeholder="Insert Start time"
+                                label="Start time"
+
+                            />
+                        </Form.Field>
+                        <Form.Field>
+                            <Form.Input
+                                fluid
+                                name="End time"
+                                placeholder="Insert End time"
+                                label="End time"
+
+                            />
+                        </Form.Field>
+                        <Form.Field>
+                            <Form.Input
+                                fluid
+                                icon='r_id'
+                                name="r_id"
+                                placeholder=" Insert r_id"
+                                label="Room ID"
+
+                            />
+                        </Form.Field>
+                        <Form.Field>
+                            <Form.Input
+                                fluid
+                                icon='Invitee_id'
+                                name="Invitee_id"
+                                placeholder=" Insert Invitee_id"
+                                label="Invitee_id"
+
+                            />
+                        </Form.Field>
+                    </Form>
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
