@@ -36,6 +36,11 @@ class Dashboard extends React.Component{
             this.setState({ BookedRooms :BookedRoom});
             console.log(BookedRoom);
         })
+        axios.get( 'https://booking-system-pika.herokuapp.com/pika-booking/booking/busiesthour').then(res=>{
+            let  Busiest = res.data
+            this.setState({ BusiestHours :Busiest });
+            console.log(Busiest)
+        })
     }
     render(){
 
@@ -50,21 +55,26 @@ class Dashboard extends React.Component{
                             <Grid.Column>
                                 <h1> Most Booked Person: <ul>   {this.state.BookedPersons.map(BookedPerson=>
                                     <li>
-                                        count:{BookedPerson.count},
-                                        p_fname: {BookedPerson.p_fname},
-                                        p_lname: {BookedPerson.p_lname},
-                                        p_id: {BookedPerson.p_id}</li>)} </ul> </h1>
+                                        Bookings:{BookedPerson.count},
+                                         {BookedPerson.p_fname }  _
+                                         {BookedPerson.p_lname },
+                                        id: {BookedPerson.p_id}</li>)} </ul> </h1>
 
 
 
                             </Grid.Column>
-                            <h1> Most Booked Room: <ul>{this.state.BookedRooms.map(BookedRoom=>
+                            <h1> Busiest Hours: <ul>{this.state.BusiestHours.map(Busiest=>
                                 <li>
-                                    r_id:{BookedRoom.r_id},
-                                    number of bookings: {BookedRoom.timed_booked}
+                                    activebooking: {Busiest.activebooking},
+                                    start_time: {Busiest.start_time},
+                                    end_time: {Busiest.finish_time}
                                 </li>)} </ul>  </h1>
                             <Grid.Column>
-                                <h1>Busiest Hours:</h1>
+                                <h1>Most Booked Room: <ul>{this.state.BookedRooms.map(BookedRoom=>
+                                    <li>
+                                        r_id:{BookedRoom.r_id},
+                                        number of bookings: {BookedRoom.timed_booked}
+                                    </li>)} </ul> </h1>
 
                             </Grid.Column>
                         </Grid.Row>

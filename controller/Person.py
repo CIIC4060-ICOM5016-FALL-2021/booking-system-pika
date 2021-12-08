@@ -138,9 +138,8 @@ class Person:
                                                most_used_room[2])
             return jsonify(result), 200
 
-    def get_person_that_most_share_with_person(self, json):
+    def get_person_that_most_share_with_person(self, p_id):
         method = PersonDAO()
-        p_id = json['p_id']
         mostshared = method.get_person_that_most_share_with_person(p_id)
         if not mostshared:
             return jsonify("you don't share class with anyone")
