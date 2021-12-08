@@ -1,3 +1,5 @@
+
+import {useNavigate} from "react-router-dom";
 import React, {Component, useState} from 'react';
 import {
     Button,
@@ -13,6 +15,7 @@ import './themes/Navbar.css';
 import Navbar from "./components/Navbar/Navbar";
 import axios from "axios";
 
+
 const api = axios.create({
     baseURL: 'https://booking-system-pika.herokuapp.com/pika-booking'
 })
@@ -23,6 +26,8 @@ function HomePage() {
     const handleChange = (event, newValue) => {
         setOpen(true);
     }
+
+    const navigate = useNavigate();
 
     return (
       <>
@@ -62,11 +67,11 @@ function HomePage() {
                                 label='Password'
                                 type='password'
                               />
-                              <Button content='Login' primary onClick={handleChange}/>
+                              <Button content='Login' primary onClick='{handleChange}'/>
                           </Form>
                       </Grid.Column>
                       <Grid.Column verticalAlign='middle'>
-                          <Button content='Sign up' icon='signup' size='big' onClick={handleChange}/>
+                          <Button content='Sign up' icon='signup' size='big' onClick={() => {navigate("./signup")}}/>
                       </Grid.Column>
                   </Grid>
 

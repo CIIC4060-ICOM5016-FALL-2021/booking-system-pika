@@ -1,29 +1,3 @@
-// import React from "react";
-// import { Button, Image, Segment } from "semantic-ui-react";
-// import Logo from '../../assets/logo.svg';
-// import '../../themes/Navbar.css';
-// import MenuExampleInvertedSecondary from "./MenuItems";
-//
-// const ImageExampleRounded = () => (
-//   <Image src={Logo} size='mini' rounded />
-// )
-//
-// function Navbar(props) {
-//
-//   return (
-//     <Segment inverted color='blue'>
-//       <Button floated='right'>Sign Up</Button>
-//       <ImageExampleRounded/>
-//       <MenuExampleInvertedSecondary/>
-//     </Segment>
-//   );
-
-// <Image src={Logo} size='mini' rounded />
-
-// }
-
-
-
 import React, { Component } from 'react'
 import Logo from '../../assets/calendar.png';
 import {
@@ -34,7 +8,7 @@ import {
 
 } from "semantic-ui-react";
 
-export default class MenuExampleInvertedSecondary extends Component {
+export default class Navbar extends Component {
   state = { activeItem: 'home' }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
@@ -79,23 +53,3 @@ export default class MenuExampleInvertedSecondary extends Component {
     )
   }
 }
-
-
-
-
-// <Segment inverted>
-//   <Image src={Logo} size='mini' rounded />
-// </Segment>
-// <Segment inverted>
-//   <Menu>
-//     <Menu.Item
-//       name='Home'
-//     />
-//     <Menu.Item
-//       name='Home'
-//     />
-//     <Menu.Item
-//       name='Home'
-//     />
-//   </Menu>
-// </Segment>
