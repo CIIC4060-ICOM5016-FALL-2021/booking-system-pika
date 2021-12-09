@@ -61,7 +61,9 @@ class Person:
         result = {'b_id': row[0], 'start_time': row[1], 'finish_time': row[2], 'invited_id': row[3],
                   'host_id': row[4], 'room_id': row[5]}
         return result
-
+    def build_account_info(self, row):
+        result = { 'p_email': row[0], 'p_password': row[1]}
+        return result
     def create_new_person(self, json):
         p_fname = json['p_fname']
         p_lname = json['p_lname']
@@ -174,7 +176,7 @@ class Person:
         if not person_tuple:
             return jsonify("Not Found"), 404
         else:
-            result = self.build_person_map_info(person_tuple)
+            result = self.build_account_info(person_tuple)
             return jsonify(result), 200
 
 
