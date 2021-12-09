@@ -230,3 +230,13 @@ class PersonDAO:
         for row in cursor:
             result.append(row)
         return result
+
+    def get_all_person_but(self, p_id):
+        cursor = self.conn.cursor()
+        query = 'select p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender, p_password ' \
+                'from "person" where p_id != %s;'
+        cursor.execute(query, (p_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result

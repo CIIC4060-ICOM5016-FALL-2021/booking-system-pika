@@ -77,9 +77,14 @@ class Person:
         result = self.build_person_attr_dict(p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender,p_password)
         return jsonify(result)
 
-    def get_all_persons(self):
+    def get_all_persons(self, json=None):
+
         method = PersonDAO()
-        person_list = method.get_all_person()
+        if json and "p_id" in json:
+            person_list = method.get_all_person_but(json["p_id"])
+        else:
+            person_list = method.get_all_person()
+
         if not person_list:
             return jsonify("Nobody is on the list! It feels, lonely.."), 404
         else:
