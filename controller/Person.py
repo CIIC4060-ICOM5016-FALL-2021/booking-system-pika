@@ -172,10 +172,9 @@ class Person:
         method = PersonDAO()
         person_tuple = method.get_account_by_email_and_password(p_email,p_password)
         if not person_tuple:
-            return jsonify("Not Found"), 404
+            return False
         else:
-            result = self.build_person_map_info(person_tuple)
-            return jsonify(result), 200
+            return True
 
 
 
