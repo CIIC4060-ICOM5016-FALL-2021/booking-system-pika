@@ -18,7 +18,10 @@ function BookMeeting(){
     const [dates, setDates] = useState([]);
     const [open, setOpen] = useState(false);
     const localizer = momentLocalizer(moment)
-
+    const [st_dt, setst_dt] = useState("");
+    const [et_dt, setet_dt] = useState("");
+    const[room_id,setroom_id] = useState("");
+    const[invitee,setinvitee]=  useState([]);
     return <Container style={{ height: 800 }}><Calendar
         selectable
         localizer={localizer}
@@ -81,9 +84,12 @@ function BookMeeting(){
                                 name="Invitee_id"
                                 placeholder=" Insert Invitee_id"
                                 label="Invitee_id"
+                                value={invitee}
+                                onChange={e => setinvitee(e.target.value)}
 
                             />
                         </Form.Field>
+                        <Button content='Enter' icon='signup' size='big' />
                     </Form>
                 </Modal.Description>
             </Modal.Content>

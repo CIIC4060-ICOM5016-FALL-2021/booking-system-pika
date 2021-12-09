@@ -12,7 +12,7 @@ class Person extends React.Component{
         };
     }
     componentDidMount() {
-axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons').then(res=>{
+axios.post('https://booking-system-pika.herokuapp.com//pika-booking/persons/but-not',{"p_id": 5}).then(res=>{
     let Per=res.data
     this.setState({person: Per});
 })

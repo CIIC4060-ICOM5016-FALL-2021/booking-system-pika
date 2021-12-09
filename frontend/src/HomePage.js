@@ -25,11 +25,11 @@ function HomePage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     let [data,setdata] =  useState("");
-
        const handleChange = (event, newValue) => {
         setOpen(true);
     }
     const handleLogin = () => {
+        console.log(data.p_id);
       navigate("./Dashboard")
     }
 
@@ -38,7 +38,6 @@ function HomePage() {
         axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/accounts', {"p_email": email, "p_password": password}).then(res=>
         {
             setdata(res.data);
-            console.log(data);
         })
         if (data== ""){
             return true
