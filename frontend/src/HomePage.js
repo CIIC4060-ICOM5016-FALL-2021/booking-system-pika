@@ -24,7 +24,7 @@ function HomePage() {
     const [open, setOpen] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    let [data] =  useState("");
+    let [data,setdata] =  useState("");
 
        const handleChange = (event, newValue) => {
         setOpen(true);
@@ -36,12 +36,11 @@ function HomePage() {
     const navigate = useNavigate();
     function check() {
         axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/accounts', {"p_email": email, "p_password": password}).then(res=>
-        {console.log(res.data)
-            data = res.data
-            console.log(data)
+        {
+            setdata(res.data);
+            console.log(data);
         })
-        console.log(1)
-        if (data== "Not Found"){
+        if (data== ""){
             return true
         }
         return false
