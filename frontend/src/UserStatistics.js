@@ -20,45 +20,29 @@ import {Link, Route} from "react-router-dom";
 import bookMeeting from "./BookMeeting";
 import Navbar from "./components/Navbar/Navbar";
 import UserView from "./UserView";
-class UserStatistics extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            UsedRooms: '',
-            SharedUser: []
-                 }
-    }
+function UserStatistics (){
+    let [data,setdata] =  useState("");
+    let [d,setd] =  useState("");
 
-    componentDidMount() {
 
         axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/most-booked-room', {"p_id": '5'}).then(res => {
-            let MostUsed = res.data;
-            this.setUSEDRoom(MostUsed);
-            console.log(MostUsed);
-
+            setdata(res.data);
 
         })
         axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/shared',{"p_id": '5'}).then(res => {
-            let SharedUsed = res.data;
-            console.log(SharedUsed)
+            setd(res.data);
         })
 
-        {this.state.SharedUser.map(SharedUsed=>(SharedUsed.p_id))}
-    }
-    setUSEDRoom(MostUsed){
-        return this.state.UsedRooms = MostUsed
-    }
 
-    render(){
-        function getUSEDRoom()
-        {
-            let t = this.state.UsedRooms;
-            return t;
-        }
+
+
+
+
         return <>
                 <h1>  Most Used Room By You:
+                    {data.r_building}
                 </h1>
-            <h1>User most booked with You:</h1>
+            <h1>User most booked with You:    {d.p_id}</h1>
                         <Link to = "/Dashboard" > <button>
                 Go to Dashboard
             </button>
@@ -72,7 +56,7 @@ class UserStatistics extends React.Component {
             </button>
             </Link>
         </>
-    }
+
 }
 
 export default UserStatistics;
