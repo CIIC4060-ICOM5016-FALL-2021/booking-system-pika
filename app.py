@@ -189,6 +189,18 @@ def handle_persons():
         return jsonify("Method Not Allowed"), 405
 
 
+@app.route('/pika-booking/persons/but-not', methods=['POST'])
+def get_all_persons_but():
+    args = request.json
+    if request.method == 'POST':
+        if args:
+            return Person().get_all_persons(args)
+        else:
+            return jsonify("Args not found: p_id"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
 @app.route('/pika-booking/persons/id', methods=['POST'])
 def handle_person_getter_post():
     args = request.json
