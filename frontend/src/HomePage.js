@@ -24,17 +24,28 @@ function HomePage() {
     const [open, setOpen] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    let [data] =  useState("");
 
-    console.log(open);
-    const handleChange = (event, newValue) => {
+       const handleChange = (event, newValue) => {
         setOpen(true);
     }
-    const errors = {
-        email: "invalid email",
-        password: "invalid password"
-    };
+    const handleLogin = () => {
+      navigate("./Dashboard")
+    }
+
     const navigate = useNavigate();
- axios.post('/pika-booking/persons/accounts',{"p_email":email,"p_password":password })
+    function check() {
+        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/accounts', {"p_email": email, "p_password": password}).then(res=>
+        {console.log(res.data)
+            data = res.data
+            console.log(data)
+        })
+        console.log(1)
+        if (data== "Not Found"){
+            return true
+        }
+        return false
+    }
     return (
 
       <>
@@ -47,10 +58,10 @@ function HomePage() {
                 onClose={() => setOpen(false)}
                 onOpen={() => setOpen(true)}
               >
-                  <Modal.Header>Needs changing!</Modal.Header>
+                  <Modal.Header>Invalid!</Modal.Header>
                   <Modal.Content>
                       <Modal.Description>
-                          This is a modal but it serves to show how buttons and functions can be implemented.
+                          Your email or password is invalid please, try again.
                       </Modal.Description>
                   </Modal.Content>
                   <Modal.Actions>
@@ -78,9 +89,8 @@ function HomePage() {
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                               />
-                              <Link to = "/Dashboard" >
-                                  <Button content='Login' primary onClick={handleChange}/>
-                              </Link>
+                                  <Button content='Login' primary onClick={check()? handleChange:handleLogin}/>
+
                           </Form>
                       </Grid.Column>
                       <Grid.Column verticalAlign='middle'>
@@ -93,6 +103,7 @@ function HomePage() {
           </Segment>
       </>
     )
+
 }
 
 
