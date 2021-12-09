@@ -36,17 +36,17 @@ class Dashboard extends React.Component{
         axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons/most-booked').then(res=>{
             let BookedPerson = res.data;
             this.setState({BookedPersons:BookedPerson});
-            console.log(BookedPerson );
+
         })
         axios.get('https://booking-system-pika.herokuapp.com/pika-booking/rooms/most-booked').then(res=>{
             let  BookedRoom = res.data
             this.setState({ BookedRooms :BookedRoom});
-            console.log(BookedRoom);
+
         })
         axios.get( 'https://booking-system-pika.herokuapp.com/pika-booking/booking/busiesthour').then(res=>{
             let  Busiest = res.data
             this.setState({ BusiestHours :Busiest });
-            console.log(Busiest);
+
         })
     }
     render(){
