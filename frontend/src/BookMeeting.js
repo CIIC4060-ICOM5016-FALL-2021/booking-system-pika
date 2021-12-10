@@ -55,7 +55,8 @@ function BookMeeting(){
                                 name="Start time"
                                 placeholder="Insert Start time"
                                 label="Start time"
-
+                                value={st_dt}
+                                onChange={e => setst_dt(e.target.value)}
                             />
                         </Form.Field>
                         <Form.Field>
@@ -64,7 +65,8 @@ function BookMeeting(){
                                 name="End time"
                                 placeholder="Insert End time"
                                 label="End time"
-
+                                value={et_dt}
+                                onChange={e => setet_dt(e.target.value)}
                             />
                         </Form.Field>
                         <Form.Field>
@@ -74,7 +76,8 @@ function BookMeeting(){
                                 name="r_id"
                                 placeholder=" Insert r_id"
                                 label="Room ID"
-
+                                value={room_id}
+                                onChange={e => setroom_id(e.target.value)}
                             />
                         </Form.Field>
                         <Form.Field>
