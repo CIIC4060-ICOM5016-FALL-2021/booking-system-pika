@@ -2,13 +2,16 @@ import React,{Component, useState}  from "react";
 import { Button, Card, Grid, Image,Header } from 'semantic-ui-react';
 import axios from "axios";
 import Navbar from "./Navbar/Navbar";
+
+
 import {Link} from "react-router-dom";
 export default
 class Person extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            person: []
+            person: [] ,
+            List : []
         };
     }
     componentDidMount() {
@@ -17,19 +20,7 @@ axios.post('https://booking-system-pika.herokuapp.com//pika-booking/persons/but-
     this.setState({person: Per});
 })
     }
-    getemail(){
 
-      let email =this.state.person.map(Per=> (Per.p_email))
-        return email
-    }
-    getpassword(){
-       let password= this.state.person.map(Per=> (Per.p_password))
-        return password
-    }
-    getid(){
-        let id= this.state.person.map(Per=> (Per.p_id))
-        return id
-    }
     gender(parameter){
         switch(parameter) {
             case 1:
@@ -62,11 +53,13 @@ axios.post('https://booking-system-pika.herokuapp.com//pika-booking/persons/but-
                 <p> Email: {Per.p_email}</p>
                Gender: { this.gender(Per.p_gender)}
              </label>
-                    <Button basic color='green'>
-                        Invite
-                    </Button>
+                    <button onClick={()=>addlist(Per)}>Invite</button>
+                    <button onClick={()=>deletelist(Per)}>UnInvite</button>
                 </Card>
           )}
+            <h1>  These are the people you have invited:
+                </h1>
+            <div>{list} </div>
             <Link to = "/Dashboard" > <button>
                 Go to Dashboard
             </button>
@@ -81,5 +74,26 @@ axios.post('https://booking-system-pika.herokuapp.com//pika-booking/persons/but-
             </Link>
             </>
 
+    }
+
+}
+const list = []
+function addlist(Per){
+    if (list.includes(Per)){
+        return
+    }else {
+        list.push(Per)
+        console.log(list)
+    }
+}
+function deletelist(per){
+    if (list.length==1){
+       list.length =0
+    }else {
+        list.filter(el => el !== per).map(fil => {
+            list.splice(0, list.length)
+            list.push(fil)
+            console.log(list)
+        })
     }
 }
