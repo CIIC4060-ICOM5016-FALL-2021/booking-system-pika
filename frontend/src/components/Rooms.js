@@ -18,6 +18,11 @@ class Room extends React.Component{
     })
   }
 
+  ToggleButton() {
+    this.setState(
+        {textflag : !this.state.textflag}
+    );
+  }
 
 
   render() {
@@ -31,11 +36,11 @@ class Room extends React.Component{
               <p> Department: {Per.r_dept}</p>
               Type: { Per.r_type}
             </label>
-            <Button basic color='green'>
-              Book
-            </Button>
+            <button onClick={()=>addlist(Per)}>Book</button>
+            <button onClick={()=>deletelist(Per)}>Unbook</button>
           </Card>
       )}
+      <h1> You have booked: {list[0]}</h1>
       <Link to = "/Dashboard" > <button>
         Go to Dashboard
       </button>
@@ -52,4 +57,22 @@ class Room extends React.Component{
     </>
 
   }
+}
+const list = []
+function addlist(Per){
+  if (list.length==1){
+    return
+  }else {
+    list.push(Per)
+    console.log(list)
+  }
+}
+function deletelist(per){
+  if (list.length==1&& list.includes(per)){
+    list.length =0
+  }else
+  {
+    return "You have not booked a room "
+  }
+
 }
