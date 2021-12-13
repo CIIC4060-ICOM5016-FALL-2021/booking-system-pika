@@ -123,7 +123,7 @@ def handle_room_unavailable_getter_post():
         return jsonify("Method Not Allowed"), 405
 
 @app.route('/pika-booking/rooms/unavailable/raid', methods=['POST'])
-def handle_room_unavailable_getter_post():
+def handle_room_id_unavailable_getter_post():
     args = request.json
     if request.method == 'POST':
         if args and "room_id" in args:
@@ -180,7 +180,7 @@ def handle_person_unavailable_getter_post():
         return jsonify("Method Not Allowed"), 405
 
 @app.route('/pika-booking/person/unavailable/personid', methods=['POST'])
-def handle_person_unavailable_getter_post():
+def handle_person_id_unavailable_getter_post():
     args = request.json
     if request.method == 'POST':
         if args and "person_id" in args:
