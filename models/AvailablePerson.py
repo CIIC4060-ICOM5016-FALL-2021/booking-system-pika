@@ -41,7 +41,7 @@ class AvailablePersonDAO:
         return result
     def get_unavailable_person_by_person_id(self, person_id):
         cursor = self.conn.cursor()
-        query = 'select  st_dt, et_dt, person_id ' \
+        query = 'select  st_dt, et_dt ' \
                 'from "availableperson"' \
                 'where person_id = %s'
         cursor.execute(query, (person_id,))
