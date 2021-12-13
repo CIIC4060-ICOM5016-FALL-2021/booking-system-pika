@@ -39,6 +39,16 @@ class AvailablePersonDAO:
         cursor.execute(query, (pa_id,))
         result = cursor.fetchone()
         return result
+    def get_unavailable_person_by_person_id(self, person_id):
+        cursor = self.conn.cursor()
+        query = 'select  st_dt, et_dt, person_id ' \
+                'from "availableperson"' \
+                'where person_id = %s'
+        cursor.execute(query, (person_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
 
     def get_unavailable_time_of_person_by_id_in_booking(self, p_id):
         cursor = self.conn.cursor()

@@ -181,3 +181,24 @@ class AvailableRoom:
                 "et_dt": result_et_dt
             }
             return jsonify(result), 200
+
+    def get_unavailable_ra_by_id(self, json):
+        room_id = json['ra_id']
+        dao = AvailableRoomDAO()
+        room_dao = RoomDAO()
+
+        existing_room = room_dao.get_room(room_id)
+        if not existing_room:
+            return jsonify("Room Not Found"), 404
+        else:
+            res = dao.get_unavailable_room_by_raid(room_id)
+            result_st_dt = []
+            result_et_dt = []
+            for st_dt, et_dt in res:
+                result_et_dt.append(et_dt)
+                result_st_dt.append(st_dt)
+            result = {
+                "st_dt": result_st_dt,
+                "et_dt": result_et_dt
+            }
+            return jsonify(result), 200

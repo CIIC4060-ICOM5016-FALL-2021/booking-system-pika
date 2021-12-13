@@ -64,6 +64,28 @@ class AvailablePerson:
             result = self.build_unavailable_time_person_info(person)
         return jsonify(result)
 
+    def get_unavailable_person_by_id(self, json):
+        pa_id = json["person_id"]
+        method = AvailablePersonDAO()
+
+        person_dao = PersonDAO()
+        existing_person = person_dao.get_person_by_id(pa_id)
+
+        if not existing_person:
+            return jsonify("That person is available")
+        else:
+            res = method.get_unavailable_person_by_person_id(pa_id)
+            result_st_dt = []
+            result_et_dt = []
+            for st_dt, et_dt in res:
+                result_et_dt.append(et_dt)
+                result_st_dt.append(st_dt)
+            result = {
+                "st_dt": result_st_dt,
+                "et_dt": result_et_dt
+            }
+            return jsonify(result), 200
+
     # def update_unavailable_schedule(self):
     def update_unavailable_schedule(self, json):
         pa_id = json['pa_id']
