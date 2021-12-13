@@ -173,6 +173,7 @@ def handle_person_unavailable_getter_post():
     args = request.json
     if request.method == 'POST':
         if args and "pa_id" in args:
+
             return AvailablePerson().get_unavailable_person_by_id(args)
         else:
             return jsonify("Args not found: pa_id"), 405
@@ -184,7 +185,7 @@ def handle_person_id_unavailable_getter_post():
     args = request.json
     if request.method == 'POST':
         if args and "person_id" in args:
-            return AvailablePerson().get_unavailable_person_by_id(args)
+            return AvailablePerson().get_unavailable_person_by_person_id(args)
         else:
             return jsonify("Args not found: person_id"), 405
     else:

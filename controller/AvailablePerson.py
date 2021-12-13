@@ -64,7 +64,7 @@ class AvailablePerson:
             result = self.build_unavailable_time_person_info(person)
         return jsonify(result)
 
-    def get_unavailable_person_by_id(self, json):
+    def get_unavailable_person_by_person_id(self, json):
         pa_id = json["person_id"]
         method = AvailablePersonDAO()
 
