@@ -1,90 +1,65 @@
-import React, { Component } from "react";
+import React, {Component, useState} from "react";
 import axios from "axios";
-import { Button, Card, Form, Grid, Header as SemanticHeader, Segment } from "semantic-ui-react";
+import {Button, Card, Form, Grid, Header as SemanticHeader, Modal, Segment} from "semantic-ui-react";
 import Navbar from "../Navbar/Navbar";
+import {useNavigate} from "react-router-dom";
 
 
-class SignUp extends Component {
-  state = {
-    fname: '',
-    lname: '',
-    email: '',
-    role: '',
-    phone: '',
-    gender: '',
-    password: '',
-    submittedfname: '',
-    submittedlname: '',
-    submittedemail: '',
-    submittedrole: '',
-    submittedphone: '',
-    submittedgender: '',
-    submittedpassword: ''
-  }
+function SignUp () {
 
-  options = [
-    { key: 0, text: "Male", value: 0 },
-    { key: 1, text: "Female", value: 1 },
-    { key: 2, text: "Other", value: 2 }
+ const  options = [
+    { key: 1, text: "Male", value: 1 },
+    { key: 2, text: "Female", value: 2 },
+    { key: 3, text: "Other", value: 3 }
   ];
+  const [open, setOpen] = useState(false);
+    const [r, setr] = useState(false);
+  const [fname, setfname] = useState("");
+  const [lname, setlname] = useState("");
+  const [role, setrole] = useState("");
+  const [phone, setphone] = useState("");
+  const [gender, setgender] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  let [data,setdata] =  useState("");
+  const navigate = useNavigate();
+function handlesubmit(){
+  navigate("./Dashboard")
+}
+  const handleChange = () => {
+    setOpen(true);
+  }
+const y = ()=>{
+    setr(true)
+}
+    function first() {
+        if (fname == "" || lname == "" || role == "" || phone == "" || gender == "" || email == "" || password == "") {
+            return false
+        } else {
+        return true
+        }
+    }
+  function check() {
+    if (fname==""||lname==""||role==""||phone==""||gender==""||email==""||password==""||!y){
+      return false
+    }else {
+      axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons', {
+        "p_fname": fname,
+        "p_lname": lname,
+        "p_role": role,
+        "p_email": email,
+        "p_phone": phone,
+        "p_gender": gender,
+        "p_password": password
 
-
-  handleChange = (e, { name, value }) => this.setState({ [name]: value }, () => {
-
-  })
-
-  handleSubmit = () => {
-
-    setTimeout(this.setState({
-      submittedfname: this.state.fname,
-      submittedlname: this.state.lname,
-      submittedrole: this.state.role,
-      submittedphone: this.state.phone,
-      submittedgender: this.state.gender,
-      submittedpassword: this.state.password,
-      submittedemail: this.state.email
-    }),3000);
-    console.log(this.state.fname)
-
-
-    let config = {
-      method: 'post',
-      url: 'https://booking-system-pika.herokuapp.com/pika-booking/persons',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data : JSON.stringify({
-        p_fname: this.state.submittedfname,
-        p_lname: this.state.submittedlname,
-        p_role: this.state.submittedrole,
-        p_email: this.state.submittedemail,
-        p_password: this.state.submittedpassword,
-        p_phone: this.state.submittedphone,
-        p_gender: this.state.submittedgender
+      }).then(res=>
+      {
+        setdata(res.data);
       })
-    };
-
-    (async () => {
-      await axios(config)
-        .then(function (response) {
-          console.log("WHY");
-          console.log(response);
-          console.log(JSON.stringify(response.data));
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-
-    })();
-
-
+        handlesubmit()
+      return true
+    }
   }
-handleQuery = () => {
-
-
-
-  }
-
 
 
 
@@ -139,43 +114,57 @@ handleQuery = () => {
   // }
 
 
-  render() {
-    const {
-      fname,
-      lname,
-      email,
-      role,
-      phone,
-      gender,
-      password,
-      submittedfname,
-      submittedlname,
-      submittedemail,
-      submittedrole,
-      submittedphone,
-      submittedgender,
-      submittedpassword
-    } = this.state
-
-    return (
+ return  (
       <>
         <Navbar />
+        <Modal
+            centered={false}
+            open={open}
+            onClose={() => setOpen(false)}
+            onOpen={() => setOpen(true)}
+        >
+          <Modal.Header>Invalid!</Modal.Header>
+          <Modal.Content>
+            <Modal.Description>
+              You don't have not submitted all the asked information, please complete all parameters asked.
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button onClick={() => setOpen(false)}>OK</Button>
+          </Modal.Actions>
+        </Modal>
+          <Modal
+              centered={false}
+              open={r}
+              onClose={() => setr(false)}
+              onOpen={() => setr(true)}
+          >
+              <Modal.Header>Are you sure?</Modal.Header>
+              <Modal.Content>
+                  <Modal.Description>
+                  </Modal.Description>
+              </Modal.Content>
+              <Modal.Actions>
+                  <Button onClick={() => setr(false)}>No</Button>
+                  <Button onClick={() => check()}>Yes</Button>
+              </Modal.Actions>
+          </Modal>
         <Grid centered>
           <Grid.Column style={{ maxWidth: 550, marginTop: 20 }}>
             <SemanticHeader>Signup Here</SemanticHeader>
 
 
-              <Form onSubmit={this.handleSubmit}>
+              <Form>
                 <Segment>
                 <Form.Field>
                   <Form.Input
                     fluid
                     name="fname"
                     value={fname}
+                    onChange={e => setfname(e.target.value)}
                     icon='user'
                     placeholder="Insert First Name"
                     label="First Name"
-                    onChange={this.handleChange}
                   />
                 </Form.Field>
                 <Form.Field>
@@ -186,14 +175,14 @@ handleQuery = () => {
                     value={lname}
                     placeholder="Insert Last Name"
                     label="Last Name"
-                    onChange={this.handleChange}
+                    onChange={e => setlname(e.target.value)}
                   />
                 </Form.Field>
                 <Form.Field>
                   <Form.Input
                     fluid
-                    onChange={this.handleChange}
                     value={email}
+                    onChange={e => setEmail(e.target.value)}
                     icon='mail'
                     name="email"
                     placeholder="hello_there@ok.com"
@@ -204,8 +193,8 @@ handleQuery = () => {
                 <Form.Field>
                   <Form.Input
                     fluid
-                    onChange={this.handleChange}
                     value={phone}
+                    onChange={e => setphone(e.target.value)}
                     name="phone"
                     icon='phone'
                     placeholder="Insert Last Name"
@@ -216,8 +205,8 @@ handleQuery = () => {
                 <Form.Field>
                   <Form.Input
                     fluid
-                    onChange={this.handleChange}
                     value={role}
+                    onChange={e => setrole(e.target.value)}
                     name="role"
                     placeholder="Your role in School"
                     label="Role"
@@ -226,8 +215,8 @@ handleQuery = () => {
                 <Form.Field>
                   <Form.Input
                     fluid
-                    onChange={this.handleChange}
                     value={gender}
+                    onChange={e => setgender(e.target.value)}
                     name="gender"
                     icon='other gender'
                     placeholder="I Identify As"
@@ -238,15 +227,15 @@ handleQuery = () => {
                   <Form.Input
                     type="password"
                     fluid
-                    onChange={this.handleChange}
                     value={password}
+                    onChange={e => setPassword(e.target.value)}
                     name="password"
                     icon='asterisk'
                     placeholder="Type password"
                     label="Password"
                   />
                 </Form.Field>
-                <Form.Button type='submit'>Submit</Form.Button>
+                <Form.Button content= 'submit' primary onClick={ first()? y :handleChange}/>
                 </Segment>
               </Form>
 
@@ -255,8 +244,8 @@ handleQuery = () => {
           </Grid.Column>
         </Grid>
       </>
-    )
-  }
+ )
+
 }
 
 export default SignUp
