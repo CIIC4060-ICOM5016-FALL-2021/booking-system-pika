@@ -26,6 +26,7 @@ class PersonDAO:
         self.conn.commit()
         return p_id
 
+
     def update_person(self, p_id, p_fname, p_lname, p_email, p_phone, p_gender,p_password):
         cursor = self.conn.cursor()
         query = 'update "person" ' \

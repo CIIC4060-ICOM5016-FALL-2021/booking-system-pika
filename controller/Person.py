@@ -13,6 +13,14 @@ class Person:
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'p_role': row[3], 'p_email': row[4],
                   'p_phone': row[5], 'p_gender': row[6],'p_password': row[7]}
         return result
+    def build_room1(self, row: tuple):
+        result = {
+            "r_id": row[0],
+            "r_building": row[1],
+            "r_dept": row[2],
+            "r_type": row[3]
+        }
+        return result
 
     def build_person_map_info(self, row):
         result = {'p_fname': row[0], 'p_lname': row[1], 'p_role': row[2],
@@ -218,9 +226,9 @@ class Person:
 
         else:
             return jsonify("Role Not found"), 404
-
         result_list = []
         for row in info:
-            obj = Room.build_room1(row)
+
+            obj = self.build_room1(row=row)
             result_list.append(obj)
         return jsonify(result_list)
