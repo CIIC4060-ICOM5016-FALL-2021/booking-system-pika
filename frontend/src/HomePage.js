@@ -14,8 +14,6 @@ import {
 import './themes/Navbar.css';
 import Navbar from "./components/Navbar/Navbar";
 import axios from "axios";
-import Person from "./components/Person";
-import Dashboard from "./Dashboard";
 const api = axios.create({
     baseURL: 'https://booking-system-pika.herokuapp.com/pika-booking'
 })
@@ -30,9 +28,7 @@ function HomePage() {
         setOpen(true);
     }
     const handleLogin = () => {
-           localStorage.setItem('Login', data.pid)
-        console.log(localStorage.getItem('Login'))
-      navigate("./Dashboard")
+      navigate("/Dashboard")
     }
 
     const navigate = useNavigate();

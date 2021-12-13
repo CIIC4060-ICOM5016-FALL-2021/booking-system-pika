@@ -17,9 +17,7 @@ import {Button,
     Input
 } from 'semantic-ui-react'
 import {Link, Route} from "react-router-dom";
-import bookMeeting from "./BookMeeting";
 import Navbar from "./components/Navbar/Navbar";
-import UserView from "./UserView";
 export default
 class Dashboard extends React.Component{
     constructor(props) {
@@ -52,7 +50,7 @@ class Dashboard extends React.Component{
     render(){
 
         return <>
-            <Navbar />
+            <Navbar/>
             <Segment>
                 <Segment placeholder>
                     <Grid columns={3}stackable textAlign='center'>

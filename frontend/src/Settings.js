@@ -11,6 +11,7 @@ import {
     Tab
 } from 'semantic-ui-react';
 import axios from "axios";
+import Navbar from "./components/Navbar/Navbar";
 
 
 function Settings() {
@@ -75,6 +76,7 @@ function Settings() {
 
         return (
             <>
+                <Navbar />
                 <Modal
                     centered={false}
                     open={open}
