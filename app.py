@@ -111,7 +111,7 @@ def get_available_rooms_at_timeframe():
 
 
 @app.route('/pika-booking/rooms/available/all-day-schedule', methods=['POST'])
-def handle_get_all_schedule_getter_post():
+def handle_get_all_day_schedule_getter_post():
     args = request.json
     if request.method == 'POST':
         if args:
@@ -120,7 +120,16 @@ def handle_get_all_schedule_getter_post():
             return jsonify("Args not found"), 405
     else:
         return jsonify("Method Not Allowed"), 405
-
+@app.route('/pika-booking/rooms/available/all-schedule', methods=['POST'])
+def handle_get_all_schedule_getter_post():
+    args = request.json
+    if request.method == 'POST':
+        if args:
+            return AvailableRoom().get_schedule(args)
+        else:
+            return jsonify("Args not found"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
 
 @app.route('/pika-booking/rooms/available/schedule', methods=['POST'])
 def handle_verify_available_room_getter_post():
