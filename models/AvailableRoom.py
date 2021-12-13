@@ -37,6 +37,19 @@ class AvailableRoomDAO:
             result.append(row)
         return result
 
+    def get_all_schedule(self, r_id):
+
+        cursor = self.conn.cursor()
+        query = "select st_dt, et_dt from availableroom " \
+                "where (availableroom.room_id = %s) " \
+                "UNION select st_dt, et_dt " \
+                "from booking where (booking.room_id = %s); "
+        cursor.execute(query, (r_id, r_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
     # returns a single
     def get_unavailable_time_of_room_by_id(self, r_id):
         cursor = self.conn.cursor()
