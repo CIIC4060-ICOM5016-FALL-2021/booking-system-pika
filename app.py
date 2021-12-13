@@ -126,10 +126,10 @@ def handle_room_unavailable_getter_post():
 def handle_room_id_unavailable_getter_post():
     args = request.json
     if request.method == 'POST':
-        if args and "room_id" in args:
+        if args and "ra_id" in args:
             return AvailableRoom().get_unavailable_ra_by_id(args)
         else:
-            return jsonify("Args not found: room_id"), 405
+            return jsonify("Args not found: ra_id"), 405
     else:
         return jsonify("Method Not Allowed"), 405
 
