@@ -118,7 +118,7 @@ class AvailableRoom:
     # Returns the timeframe for a room (all day)
     def get_all_schedule(self, json):
         room_id = json['room_id']
-        date = json['st_dt']
+        date = json['date']
 
         dao = AvailableRoomDAO()
         room_dao = RoomDAO()

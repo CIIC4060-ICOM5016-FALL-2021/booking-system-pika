@@ -240,6 +240,17 @@ def get_role_access():
     args = request.json
     if request.method == 'POST':
         if args:
+            return Person().person_to_get_access_to_room_info(args)
+        else:
+            return jsonify("Args not found: p_id"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+@app.route('/pika-booking/persons/person/room-roles', methods=['POST'])
+def get_rooms_by_role():
+    args = request.json
+    if request.method == 'POST':
+        if args:
             return Person().role_to_get_access_to_room_info(args)
         else:
             return jsonify("Args not found: p_id"), 405
