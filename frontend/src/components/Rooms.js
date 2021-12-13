@@ -8,7 +8,8 @@ class Room extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      Room: []
+      Room: [],
+      textflag : false
     };
   }
   componentDidMount() {
@@ -29,18 +30,19 @@ class Room extends React.Component{
     return <>
       <Navbar />
       {this.state.Room.map(Per=>
-          <Card>
-            <label>
-              Room_id: {Per.r_id}
-              <p>Building: {Per.r_building}</p>
-              <p> Department: {Per.r_dept}</p>
-              Type: { Per.r_type}
-            </label>
-            <button onClick={()=>addlist(Per)}>Book</button>
-            <button onClick={()=>deletelist(Per)}>Unbook</button>
-          </Card>
+            <Card>
+              <label>
+                Room_id: {Per.r_id}
+                <p>Building: {Per.r_building}</p>
+                <p> Department: {Per.r_dept}</p>
+                Type: {Per.r_type}
+              </label>
+              <button onClick={() => this.ToggleButton()}>
+                {this.state.textflag === false ? "Book" : "Unbook"}
+              </button>
+                {check(this.state.textflag, Per)}
+            </Card>
       )}
-      <h1> You have booked: {list[0]}</h1>
       <Link to = "/Dashboard" > <button>
         Go to Dashboard
       </button>
@@ -58,21 +60,26 @@ class Room extends React.Component{
 
   }
 }
+function check(t,Per){
+  if (t == true){
+    return  addlist(Per)
+  }else
+  {return deletelist(Per)}
+}
 const list = []
 function addlist(Per){
   if (list.length==1){
     return
   }else {
     list.push(Per)
-    console.log(list)
+   return "You have Booked this room "
   }
 }
 function deletelist(per){
   if (list.length==1&& list.includes(per)){
     list.length =0
-  }else
-  {
+  }else {
     return "You have not booked a room "
-  }
 
+  }
 }

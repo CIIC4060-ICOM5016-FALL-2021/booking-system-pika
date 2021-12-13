@@ -4,6 +4,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import {Button, Card, Container, Modal, Segment} from "semantic-ui-react";
 import {Link} from "react-router-dom";
+import axios from "axios";
 
 
 // Event {
@@ -16,6 +17,7 @@ import {Link} from "react-router-dom";
 
 
 function Schedule(){
+    const [t,sett] = useState("")
     const [dates, setDates] = useState([{
         'title': 'Selection',
         'allDay': false,
@@ -24,7 +26,9 @@ function Schedule(){
     }]);
     const [open, setOpen] = useState(false);
     const localizer = momentLocalizer(moment)
+    axios.post(' https://booking-system-pika.herokuapp.com/pika-booking/persons/available/timeframe',{"pid": 5,"date": dates}).then(res=>{
 
+    })
     return <>
     <Container style={{ height: 800 }}><Calendar
         localizer={localizer}

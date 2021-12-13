@@ -27,7 +27,7 @@ class Dashboard extends React.Component{
         this.state = {
             BookedPersons: [],
             BookedRooms: [],
-            BusiestHours: []
+            BusiestHours: [], p_id: ""
         }
     }
 

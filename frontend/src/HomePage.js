@@ -1,6 +1,6 @@
 
 import {Link, useNavigate} from "react-router-dom";
-import React, {Component, useState} from 'react';
+import React, {Component, createContext, useState} from 'react';
 import {
     Button,
     Divider,
@@ -15,21 +15,23 @@ import './themes/Navbar.css';
 import Navbar from "./components/Navbar/Navbar";
 import axios from "axios";
 import Person from "./components/Person";
-
+import Dashboard from "./Dashboard";
 const api = axios.create({
     baseURL: 'https://booking-system-pika.herokuapp.com/pika-booking'
 })
 
 function HomePage() {
+
     const [open, setOpen] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    let [data,setdata] =  useState("");
-       const handleChange = (event, newValue) => {
+    const [data,setdata] =  useState("");
+       const handleChange = () => {
         setOpen(true);
     }
     const handleLogin = () => {
-        console.log(data.p_id);
+           localStorage.setItem('Login', data.pid)
+        console.log(localStorage.getItem('Login'))
       navigate("./Dashboard")
     }
 

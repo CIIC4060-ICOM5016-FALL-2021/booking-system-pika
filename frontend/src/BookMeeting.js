@@ -3,6 +3,7 @@ import {Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import {Button, Card, Container, Form, Modal} from "semantic-ui-react";
+import axios from "axios";
 
 
 // Event {
@@ -13,7 +14,6 @@ import {Button, Card, Container, Form, Modal} from "semantic-ui-react";
 //     resource?: any,
 // }
 
-
 function BookMeeting(){
     const [dates, setDates] = useState([]);
     const [open, setOpen] = useState(false);
@@ -22,6 +22,8 @@ function BookMeeting(){
     const [et_dt, setet_dt] = useState("");
     const[room_id,setroom_id] = useState("");
     const[invitee,setinvitee]=  useState([]);
+    axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', { "st_dt": st_dt, "et_dt": et_dt,"host_id": 41
+        ,"invited_id":  invitee,"room_id": room_id})
     return <Container style={{ height: 800 }}><Calendar
         selectable
         localizer={localizer}

@@ -11,7 +11,8 @@ class Person extends React.Component{
         super(props);
         this.state = {
             person: [] ,
-            List : []
+            List : [],
+            textflag : false
         };
     }
     componentDidMount() {
@@ -19,6 +20,11 @@ axios.post('https://booking-system-pika.herokuapp.com//pika-booking/persons/but-
     let Per=res.data
     this.setState({person: Per});
 })
+    }
+    ToggleButton() {
+        this.setState(
+            {textflag : !this.state.textflag}
+        );
     }
 
     gender(parameter){
@@ -78,6 +84,12 @@ axios.post('https://booking-system-pika.herokuapp.com//pika-booking/persons/but-
 
 }
 const list = []
+function check(t,Per){
+    if (t == true){
+        return  addlist(Per)
+    }else
+    {return deletelist(Per)}
+}
 function addlist(Per){
     if (list.includes(Per)){
         return
