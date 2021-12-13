@@ -204,7 +204,7 @@ class Person:
         else:
             return jsonify("NOT FOUND"), 404
 
-    def role_to_get_access_to_room_info(self, json):
+    def person_to_get_access_to_room_info(self, json):
         method = PersonDAO()
         p_id = json['p_id']
         role = method.get_person_role_by_id(p_id)
@@ -226,6 +226,30 @@ class Person:
 
         else:
             return jsonify("Role Not found"), 404
+        result_list = []
+        for row in info:
+
+            obj = self.build_room1(row=row)
+            result_list.append(obj)
+        return jsonify(result_list)
+
+
+    def role_to_get_access_to_room_info(self, json):
+        method = PersonDAO()
+        p_role = json['p_role']
+        role_access_dict = {
+            1 : (5),
+            2 : (1,2,4,5),
+            3 : tuple(range(1,6)),
+            4 : (1,4,5),
+            5: (5)
+        }
+
+
+        if p_role not in role_access_dict.keys():
+            return jsonify("Role Not found"), 404
+
+        info = method.get_rooms_for_role(role_access_dict[p_role])
         result_list = []
         for row in info:
 

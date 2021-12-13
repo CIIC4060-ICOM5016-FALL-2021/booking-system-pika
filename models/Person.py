@@ -196,6 +196,17 @@ class PersonDAO:
             result.append(row)
         return result
 
+
+    def get_rooms_for_role(self,role_id):
+        cursor = self.conn.cursor()
+        query = 'select * from room where r_type in %s'
+        cursor.execute(query, (role_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+
     def get_info_for_instructor(self):
         cursor = self.conn.cursor()
         query = 'select * from room where r_type in (1,4,5)'
