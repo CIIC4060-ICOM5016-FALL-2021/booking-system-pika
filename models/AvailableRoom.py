@@ -50,14 +50,16 @@ class AvailableRoomDAO:
             result.append(row)
         return result
 
-    # returns a single
-    def get_unavailable_time_of_room_by_id(self, r_id):
+    # retrieves the unavailable room according to room id
+    def get_unavailable_room_by_id(self, room_id):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt ' \
-                'from booking ' \
+                'from availableroom ' \
                 'where room_id = %s; '
-        cursor.execute(query, (r_id,))
-        result = cursor.fetchone()
+        cursor.execute(query, (room_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
         return result
 
     def verify_available_room_at_timeframe(self, r_id, st_dt, et_dt):
@@ -91,7 +93,7 @@ class AvailableRoomDAO:
 
     def get_all_unavailable_room(self):
         cursor = self.conn.cursor()
-        query = 'select  st_dt, et_dt, room_id ' \
+        query = 'select ra_id, st_dt, et_dt, room_id ' \
                 'from "availableroom";'
         cursor.execute(query)
         result = []

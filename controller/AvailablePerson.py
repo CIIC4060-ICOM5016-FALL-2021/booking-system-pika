@@ -54,7 +54,8 @@ class AvailablePerson:
                 result_list.append(obj)
         return jsonify(result_list)
 
-    def get_unavailable_person_by_id(self, pa_id):
+    def get_unavailable_person_by_id(self, json):
+        pa_id = json["pa_id"]
         method = AvailablePersonDAO()
         person = method.get_unavailable_person_by_id(pa_id)
         if not person:
