@@ -102,6 +102,23 @@ class Person:
             result_list.append(obj)
         return jsonify(result_list)
 
+
+
+    def get_all_persons_by_role(self, json=None):
+
+        method = PersonDAO()
+
+        person_list = method.get_all_person_by_role(json["p_role"])
+
+
+        if not person_list:
+            return jsonify("Nobody is on the list! It feels, lonely.."), 404
+        else:
+            result_list = []
+        for row in person_list:
+            obj = self.build_person_map(row)
+            result_list.append(obj)
+        return jsonify(result_list)
     def get_persons_by_id(self, p_id):
         method = PersonDAO()
         person_tuple = method.get_person_by_id(p_id)

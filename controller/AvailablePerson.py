@@ -132,6 +132,27 @@ class AvailablePerson:
             "et_dt": result_et_dt
         }
         return jsonify(result), 200
+    def get_schedule(self,json):
+        person_id = json['person_id']
+
+        dao = AvailablePersonDAO()
+        person_dao = PersonDAO()
+
+        existing_room = person_dao.get_person_by_id(person_id)
+        if not existing_room:
+            return jsonify("Person Not Found"), 404
+        else:
+            res = dao.get_all_schedule(person_id)
+            result_st_dt = []
+            result_et_dt = []
+            for st_dt, et_dt in res:
+                result_et_dt.append(et_dt)
+                result_st_dt.append(st_dt)
+            result = {
+                "st_dt": result_st_dt,
+                "et_dt": result_et_dt
+            }
+            return jsonify(result), 200
 
     def delete_all_unavailable_person_schedule(self, json: dict):
         p_id = json["p_id"]

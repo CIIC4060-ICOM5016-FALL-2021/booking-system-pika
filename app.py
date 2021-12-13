@@ -111,7 +111,7 @@ def get_available_rooms_at_timeframe():
 
 
 @app.route('/pika-booking/rooms/available/all-day-schedule', methods=['POST'])
-def handle_get_all_day_schedule_getter_post():
+def handle_get_room_all_day_schedule_getter_post():
     args = request.json
     if request.method == 'POST':
         if args:
@@ -120,8 +120,9 @@ def handle_get_all_day_schedule_getter_post():
             return jsonify("Args not found"), 405
     else:
         return jsonify("Method Not Allowed"), 405
+
 @app.route('/pika-booking/rooms/available/all-schedule', methods=['POST'])
-def handle_get_all_schedule_getter_post():
+def handle_get_room_all_schedule_getter_post():
     args = request.json
     if request.method == 'POST':
         if args:
@@ -210,6 +211,18 @@ def get_all_persons_but():
         return jsonify("Method Not Allowed"), 405
 
 
+@app.route('/pika-booking/persons/person-by-role', methods=['POST'])
+def get_all_persons_by_role():
+    args = request.json
+    if request.method == 'POST':
+        if args:
+            return Person().get_all_persons_by_role(args)
+        else:
+            return jsonify("Args not found: p_id"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
 @app.route('/pika-booking/persons/id', methods=['POST'])
 def handle_person_getter_post():
     args = request.json
@@ -277,6 +290,17 @@ def get_account_by_email_and_password():
     else:
         return jsonify("Method Not Allowed"), 405
 
+
+@app.route('/pika-booking/persons/person/all-schedule', methods=['POST'])
+def handle_get_all_person_schedule_getter_post():
+    args = request.json
+    if request.method == 'POST':
+        if args:
+            return AvailablePerson().get_schedule(args)
+        else:
+            return jsonify("Args not found"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
 # ============================================== #
 # ===-| U N A V A I L A B L E  P E R S O N |-=== #
 # ============================================== #

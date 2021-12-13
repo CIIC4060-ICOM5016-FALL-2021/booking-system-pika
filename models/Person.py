@@ -252,3 +252,12 @@ class PersonDAO:
         for row in cursor:
             result.append(row)
         return result
+    def get_all_person_by_role(self, p_role):
+        cursor = self.conn.cursor()
+        query = 'select p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender, p_password ' \
+                'from person where p_role= %s;'
+        cursor.execute(query, (p_role,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
