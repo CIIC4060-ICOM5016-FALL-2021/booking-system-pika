@@ -17,6 +17,8 @@ import axios from "axios";
 function BookMeeting(){
     const [dates, setDates] = useState([]);
     const [open, setOpen] = useState(false);
+    const [unavailable, setavailable] = useState(false);
+    const [mark,setmark] = useState(false);
     const localizer = momentLocalizer(moment)
     const [st_dt, setst_dt] = useState("");
     const [et_dt, setet_dt] = useState("");
@@ -102,6 +104,44 @@ function BookMeeting(){
                 <Button onClick={() => setOpen(false)}>OK</Button>
             </Modal.Actions>
         </Modal>
+        <Modal
+            centered={false}
+            open={mark}
+            onClose={() => setmark(false)}
+            onOpen={() => setmark(true)}
+        >
+            <Modal.Header>When do you want to be unavailable?</Modal.Header>
+            <Modal.Content>
+                <Modal.Description>
+                    <Form>
+                        <Form.Field>
+                            <Form.Input
+                                fluid
+                                name="Start time"
+                                placeholder="Insert Start time"
+                                label="Start time"
+                                value={st_dt}
+                                onChange={e => setst_dt(e.target.value)}
+                            />
+                        </Form.Field>
+                        <Form.Field>
+                            <Form.Input
+                                fluid
+                                name="End time"
+                                placeholder="Insert End time"
+                                label="End time"
+                                value={et_dt}
+                                onChange={e => setet_dt(e.target.value)}
+                            />
+                        </Form.Field>
+                        <Button content='Enter' icon='signup' size='big' />
+                    </Form>
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => setmark(false)}>OK</Button>
+            </Modal.Actions>
+        </Modal>
         <Container fluid>
         <Button
             fluid
@@ -109,7 +149,7 @@ function BookMeeting(){
         > Book Meeting </Button>
         <Button
             fluid
-            onClick={() => {setOpen(true)}}
+            onClick={() => {setmark(true)}}
         > Mark as unavailable</Button>
     </Container>
     </Container>
