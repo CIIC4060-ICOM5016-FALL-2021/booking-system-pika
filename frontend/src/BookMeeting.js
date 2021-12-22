@@ -101,7 +101,7 @@ function BookMeeting(){
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => setOpen(false)}>OK</Button>
+                <Button onClick={() => setOpen(false)}>Cancel</Button>
             </Modal.Actions>
         </Modal>
         <Modal
@@ -139,7 +139,7 @@ function BookMeeting(){
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => setmark(false)}>OK</Button>
+                <Button onClick={() => setmark(false)}>Cancel</Button>
             </Modal.Actions>
         </Modal>
         <Container fluid>
