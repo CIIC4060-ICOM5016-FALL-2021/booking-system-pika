@@ -15,8 +15,11 @@ import axios from "axios";
 // }
 
 function BookMeeting(){
+    const [r, setr] = useState(false);
+    const [t, sett] = useState(false);
     const [dates, setDates] = useState([]);
     const [open, setOpen] = useState(false);
+    const [booking, setbooking] = useState(false);
     const [unavailable, setavailable] = useState(false);
     const [mark,setmark] = useState(false);
     const localizer = momentLocalizer(moment)
@@ -24,8 +27,31 @@ function BookMeeting(){
     const [et_dt, setet_dt] = useState("");
     const[room_id,setroom_id] = useState("");
     const[invitee,setinvitee]=  useState([]);
-    axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', { "st_dt": st_dt, "et_dt": et_dt,"host_id": 41
-        ,"invited_id":  invitee,"room_id": room_id})
+
+    const y = ()=>{
+        setr(true)
+    }
+    function first() {
+        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == []) {
+            return false
+        } else {
+            return true
+        }
+    }
+    function check() {
+        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == []||!y){
+            return false
+        }else {
+            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', {
+                "st_dt": st_dt, "et_dt": et_dt, "host_id": 41
+                , "invited_id": invitee, "room_id": room_id
+            })
+            return true
+        }
+    }
+
+    // axios.get('https://booking-system-pika.herokuapp.com/pika-booking/rooms').then(res=>(
+   //     setDates(res.data)))
     return <Container style={{ height: 800 }}><Calendar
         selectable
         localizer={localizer}
@@ -43,6 +69,22 @@ function BookMeeting(){
     >
 
     </Calendar>
+        <Modal
+            centered={false}
+            open={t}
+            onClose={() => sett(false)}
+            onOpen={() => sett(true)}
+        >
+            <Modal.Header>Invalid!</Modal.Header>
+            <Modal.Content>
+                <Modal.Description>
+                    You don't have not submitted all the asked information, please complete all parameters asked.
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => sett(false)}>OK</Button>
+            </Modal.Actions>
+        </Modal>
         <Modal
             centered={false}
             open={open}
@@ -96,12 +138,28 @@ function BookMeeting(){
 
                             />
                         </Form.Field>
-                        <Button content='Enter' icon='signup' size='big' />
+                        <Button content='Enter' icon='signup' size='big' onClick={() => (first()?setr(true): sett(true))}/>
                     </Form>
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setOpen(false)}>Cancel</Button>
+            </Modal.Actions>
+        </Modal>
+        <Modal
+            centered={false}
+            open={r}
+            onClose={() => setr(false)}
+            onOpen={() => setr(true)}
+        >
+            <Modal.Header>Are you sure?</Modal.Header>
+            <Modal.Content>
+                <Modal.Description>
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => setr(false)}>No</Button>
+                <Button onClick={() => check()}>Yes</Button>
             </Modal.Actions>
         </Modal>
         <Modal
