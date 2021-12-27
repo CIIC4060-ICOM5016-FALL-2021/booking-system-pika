@@ -26,32 +26,55 @@ function BookMeeting(){
     const [st_dt, setst_dt] = useState("");
     const [et_dt, setet_dt] = useState("");
     const[room_id,setroom_id] = useState("");
-    const[invitee,setinvitee]=  useState([]);
+    const[invitee,setinvitee]=  useState("");
+    const [g,setg]= useState(false);
+
 
     const y = ()=>{
         setr(true)
     }
+    const returnallfalse=()=>{
+        setr(false)
+        setOpen(false)
+        setst_dt("")
+        setet_dt("")
+        setroom_id("")
+        setinvitee("")
+        setg(false)
+
+}
     function first() {
-        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == []) {
+        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == "") {
             return false
         } else {
             return true
         }
     }
     function check() {
-        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == []||!y){
+        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == ""||!y){
             return false
         }else {
+            let e = localStorage.getItem("login-data");
+            let   dat = JSON.parse(e)
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', {
-                "st_dt": st_dt, "et_dt": et_dt, "host_id": 41
+                "st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id
                 , "invited_id": invitee, "room_id": room_id
             })
             return true
         }
     }
-
-    // axios.get('https://booking-system-pika.herokuapp.com/pika-booking/rooms').then(res=>(
-   //     setDates(res.data)))
+    function unavailablecheck(){
+        if (st_dt == "" || et_dt == "" ||!y){
+            return false
+        }else {
+            let e = localStorage.getItem("login-data");
+            let   dat = JSON.parse(e)
+            axios.post(' https://booking-system-pika.herokuapp.com/pika-booking/persons/available', {
+                "p_id": dat.p_id  ,"st_dt": st_dt, "et_dt": et_dt
+            })
+            return true
+        }
+    }
     return <Container style={{ height: 800 }}><Calendar
         selectable
         localizer={localizer}
@@ -159,7 +182,16 @@ function BookMeeting(){
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setr(false)}>No</Button>
-                <Button onClick={() => check()}>Yes</Button>
+                <Button onClick={() => check()&& setg(true)}>Yes</Button>
+            </Modal.Actions>
+        </Modal>
+        <Modal centered={false}
+               open={g}
+               onClose={() => setg(false)}
+               onOpen={() => setg(true)}>
+            <Modal.Header>You Have Booked a Room.</Modal.Header>
+            <Modal.Actions>
+                <Button onClick={() => returnallfalse()}>okay</Button>
             </Modal.Actions>
         </Modal>
         <Modal
