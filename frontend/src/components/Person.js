@@ -15,8 +15,13 @@ class Person extends React.Component{
             textflag : false
         };
     }
+
     componentDidMount() {
-axios.post('https://booking-system-pika.herokuapp.com//pika-booking/persons/but-not',{"p_id": 5}).then(res=>{
+        let e = localStorage.getItem("login-data");
+      let   data = JSON.parse(e)
+        console.log(data.p_id);
+
+axios.post('https://booking-system-pika.herokuapp.com//pika-booking/persons/but-not',{"p_id": data.p_id}).then(res=>{
     let Per=res.data
     this.setState({person: Per});
 })

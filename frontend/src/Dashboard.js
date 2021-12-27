@@ -1,8 +1,5 @@
 import React, {Component, useState} from 'react';
-import {Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import moment from 'moment';
-import {Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis} from "recharts";
 import axios, {Axios} from "axios";
 import {Button,
     Divider,
@@ -30,7 +27,8 @@ class Dashboard extends React.Component{
     }
 
     componentDidMount() {
-
+        let e = localStorage.getItem("login-data");
+        console.log(localStorage.getItem("login-data"));
         axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons/most-booked').then(res=>{
             let BookedPerson = res.data;
             this.setState({BookedPersons:BookedPerson});

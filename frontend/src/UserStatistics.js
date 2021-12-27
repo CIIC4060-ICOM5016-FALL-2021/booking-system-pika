@@ -7,12 +7,14 @@ function UserStatistics (){
     let [data,setdata] =  useState("");
     let [d,setd] =  useState("");
     let[name,setname] =  useState("");
-const login = localStorage.getItem('Login')
-        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/most-booked-room', {"p_id": login}).then(res => {
+    let e = localStorage.getItem("login-data");
+    let   dat = JSON.parse(e)
+    console.log(dat.p_id);
+        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/most-booked-room', {"p_id": data.p_id}).then(res => {
             setdata(res.data);
 
         })
-        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/shared',{"p_id": '5'}).then(res => {
+        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/shared',{"p_id": data.p_id}).then(res => {
             setd(res.data);
         })
 
