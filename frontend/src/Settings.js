@@ -42,13 +42,17 @@ function Settings() {
         sett(true)
     }
     function getinfo() {
-        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/id', {"p_id": 101}).then(res => {
+        let e = localStorage.getItem("login-data");
+        let   dat = JSON.parse(e)
+        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/id', {"p_id": dat.p_id}).then(res => {
             setname(res.data)
         })
     }
     function deleteact(){
         if (t ==true) {
-            axios.delete('https://booking-system-pika.herokuapp.com/pika-booking/persons/id', {"p_id": 101}).then(res => {
+            let e = localStorage.getItem("login-data");
+            let   dat = JSON.parse(e)
+            axios.delete('https://booking-system-pika.herokuapp.com/pika-booking/persons/id').then(res => {
                 setname(res.data)
             })
             return "deleted"
