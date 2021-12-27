@@ -41,6 +41,9 @@ function BookMeeting(){
         setroom_id("")
         setinvitee("")
         setg(false)
+        setbooking(false)
+        setavailable(false)
+        setmark(false)
 
 }
     function first() {
@@ -57,9 +60,15 @@ function BookMeeting(){
             let e = localStorage.getItem("login-data");
             let   dat = JSON.parse(e)
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', {
-                "st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id
-                , "invited_id": invitee, "room_id": room_id
+                "st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id, "invited_id": invitee, "room_id": room_id
             })
+            return true
+        }
+    }
+    function first1() {
+        if (st_dt == "" || et_dt == "" ) {
+            return false
+        } else {
             return true
         }
     }
@@ -70,7 +79,7 @@ function BookMeeting(){
             let e = localStorage.getItem("login-data");
             let   dat = JSON.parse(e)
             axios.post(' https://booking-system-pika.herokuapp.com/pika-booking/persons/available', {
-                "p_id": dat.p_id  ,"st_dt": st_dt, "et_dt": et_dt
+                "person_id": dat.p_id  ,"st_dt": st_dt, "et_dt": et_dt
             })
             return true
         }
@@ -141,7 +150,6 @@ function BookMeeting(){
                         <Form.Field>
                             <Form.Input
                                 fluid
-                                icon='r_id'
                                 name="r_id"
                                 placeholder=" Insert r_id"
                                 label="Room ID"
@@ -152,7 +160,6 @@ function BookMeeting(){
                         <Form.Field>
                             <Form.Input
                                 fluid
-                                icon='Invitee_id'
                                 name="Invitee_id"
                                 placeholder=" Insert Invitee_id"
                                 label="Invitee_id"
@@ -224,12 +231,37 @@ function BookMeeting(){
                                 onChange={e => setet_dt(e.target.value)}
                             />
                         </Form.Field>
-                        <Button content='Enter' icon='signup' size='big' />
+                        <Button content='Enter' icon='signup' size='big' onClick={() => (first1()?setavailable(true): sett(true))}/>
                     </Form>
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setmark(false)}>Cancel</Button>
+            </Modal.Actions>
+        </Modal>
+        <Modal
+            centered={false}
+            open={unavailable}
+            onClose={() => setavailable(false)}
+            onOpen={() => setavailable(true)}
+        >
+            <Modal.Header>Are you sure?</Modal.Header>
+            <Modal.Content>
+                <Modal.Description>
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => setavailable(false)}>No</Button>
+                <Button onClick={() => unavailablecheck()&& setbooking(true)}>Yes</Button>
+            </Modal.Actions>
+        </Modal>
+        <Modal centered={false}
+               open={booking}
+               onClose={() => setbooking(false)}
+               onOpen={() => setbooking(true)}>
+            <Modal.Header>You are unavailable at this hour, {st_dt} to {et_dt}.</Modal.Header>
+            <Modal.Actions>
+                <Button onClick={() => returnallfalse()}>okay</Button>
             </Modal.Actions>
         </Modal>
         <Container fluid>
