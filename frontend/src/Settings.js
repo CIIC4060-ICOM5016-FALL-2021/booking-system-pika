@@ -47,6 +47,7 @@ function Settings() {
         axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/id', {"p_id": dat.p_id}).then(res => {
             setname(res.data)
         })
+
     }
     function deleteact(){
         if (t ==true) {
@@ -59,13 +60,17 @@ function Settings() {
         }
     }
     function check() {
+        getinfo()
         if (fname == "" || lname == "" || phone == "" || gender == "" || email == "" || password == "" || !y) {
             return false
         } else {
+            let e = localStorage.getItem("login-data");
+            let   dat = JSON.parse(e)
             axios.put('https://booking-system-pika.herokuapp.com/pika-booking/persons', {
+                "p_id" : dat.p_id   ,
                 "p_fname": fname,
                 "p_lname": lname,
-                "p_role": name.role,
+                "p_role": name.p_role,
                 "p_email": email,
                 "p_phone": phone,
                 "p_gender": gender,
