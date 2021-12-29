@@ -28,7 +28,7 @@ function BookMeeting(){
     const[room_id,setroom_id] = useState("");
     const[invitee,setinvitee]=  useState("");
     const [g,setg]= useState(false);
-
+    const [its,setits] = useState(false)
 
     const y = ()=>{
         setr(true)
@@ -59,8 +59,10 @@ function BookMeeting(){
         }else {
             let e = localStorage.getItem("login-data");
             let   dat = JSON.parse(e)
+            console.log(invitee)
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', {
-                "st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id, "invited_id": invitee, "room_id": room_id
+                "st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": invitee, "room_id": room_id,
+
             })
             return true
         }
@@ -190,6 +192,21 @@ function BookMeeting(){
             <Modal.Actions>
                 <Button onClick={() => setr(false)}>No</Button>
                 <Button onClick={() => check()&& setg(true)}>Yes</Button>
+            </Modal.Actions>
+        </Modal>
+        <Modal
+            centered={false}
+            open={its}
+            onClose={() => setits(false)}
+            onOpen={() => setits(true)}
+        >
+            <Modal.Header>Room is already booked in selected timeframe. Please select another timeframe.</Modal.Header>
+            <Modal.Content>
+                <Modal.Description>
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => setits(false)}>OK</Button>
             </Modal.Actions>
         </Modal>
         <Modal centered={false}
