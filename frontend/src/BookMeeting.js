@@ -29,7 +29,8 @@ function BookMeeting(){
     const[invitee,setinvitee]=  useState("");
     const [g,setg]= useState(false);
     const [its,setits] = useState(false)
-
+    const[bookings,setbookings] = useState([])
+    const[unavailslots,setunavailslots] = useState([])
     const y = ()=>{
         setr(true)
     }
@@ -98,7 +99,7 @@ function BookMeeting(){
                         'title': 'Selection',
                         'allDay': false,
                         'start': new Date(selected.start),
-                        'end': new Date(selected.end)
+                        'end': new Date(selected.end),
                     }] ) } }
     >
 

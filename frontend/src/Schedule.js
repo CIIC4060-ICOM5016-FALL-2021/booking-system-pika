@@ -60,6 +60,25 @@ function Schedule(){
             return true
         }
     }
+    const returnallfalse=()=>{
+        setr(false)
+        setOpen(false)
+        setst_dt("")
+        setet_dt("")
+        setroom_id("")
+        setinvitee("")
+        setg(false)
+        setbooking(false)
+        setavailable(false)
+      setba_id("")
+        setun("")
+        setdeleteupunavailable(false)
+        setupdatebooking(false)
+        setr(false)
+        setdeletebooking(false)
+        setdeleteupunavailable(false)
+
+    }
     function updateunavailablecheck(){
         let e = localStorage.getItem("login-data");
         let   dat = JSON.parse(e)
