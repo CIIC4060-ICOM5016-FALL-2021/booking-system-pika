@@ -43,6 +43,53 @@ function Schedule(){
     axios.post(' https://booking-system-pika.herokuapp.com/pika-booking/persons/available/timeframe',{"pid": 5,"date": dates}).then(res=>{
 
     })
+    function updatebookingcheck(){
+        let e = localStorage.getItem("login-data");
+        let   dat = JSON.parse(e)
+        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == ""||ba_id==""||!r){
+            return false
+        }else{
+            axios.put("https://booking-system-pika.herokuapp.com/pika-booking/booking", {
+                "b_id": ba_id,
+                "st_dt": st_dt,
+                "et_dt": et_dt,
+                "host_id": dat,
+                "invited_id": invitee,
+                "room_id": room_id
+            })
+            return true
+        }
+    }
+    function updateunavailablecheck(){
+        let e = localStorage.getItem("login-data");
+        let   dat = JSON.parse(e)
+        if (st_dt == "" || et_dt == "" || un==""||!r){
+            return false
+        }else{
+            axios.put(" https://booking-system-pika.herokuapp.com/pika-booking/persons/available", {
+                "person_id":  dat,
+                "st_dt": st_dt,
+                "et_dt": et_dt
+            })
+            return true
+        }
+    }
+    function deletebookingcheck(){
+        if (ba_id==""||!r){
+            return false
+        }else{
+            axios.delete(" https://booking-system-pika.herokuapp.com/pika-booking/booking")
+            return true
+        }
+    }
+    function deleteunavailablegcheck(){
+        if (un==""||!r){
+            return false
+        }else{
+            axios.delete(" https://booking-system-pika.herokuapp.com/pika-booking/persons/available")
+            return true
+        }
+    }
     return <>
     <Container style={{ height: 800 }}><Calendar
         localizer={localizer}
