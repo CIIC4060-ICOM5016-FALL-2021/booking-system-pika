@@ -30,10 +30,12 @@ function BookMeeting(){
     const [g,setg]= useState(false);
     const [its,setits] = useState(false)
     const[bookings,setbookings] = useState([])
+    const[bookinginfo,setbookinginfo] = useState([])
     const[unavailslots,setunavailslots] = useState([])
     const y = ()=>{
         setr(true)
     }
+
     const returnallfalse=()=>{
         setr(false)
         setOpen(false)
