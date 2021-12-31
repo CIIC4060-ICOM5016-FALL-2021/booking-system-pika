@@ -67,7 +67,7 @@ function Schedule(){
         setet_dt("")
         setroom_id("")
         setinvitee("")
-        setg(false)
+
         setbooking(false)
         setavailable(false)
       setba_id("")
