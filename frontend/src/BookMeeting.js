@@ -32,10 +32,16 @@ function BookMeeting(){
     const[bookings,setbookings] = useState([])
     const[bookinginfo,setbookinginfo] = useState([])
     const[unavailslots,setunavailslots] = useState([])
+    const [rooms,setrooms] = useState([])
     const y = ()=>{
         setr(true)
     }
 
+    function getrooms(){
+        axios.get('https://booking-system-pika.herokuapp.com/pika-booking/rooms').then(res=>{
+        setrooms(res.data)
+        })
+    }
     const returnallfalse=()=>{
         setr(false)
         setOpen(false)
