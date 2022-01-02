@@ -32,7 +32,10 @@ function BookMeeting(){
     const[bookings,setbookings] = useState([])
     const[bookinginfo,setbookinginfo] = useState([])
     const[unavailslots,setunavailslots] = useState([])
+    const [schedule,setschedule] = useState([])
     const [rooms,setrooms] = useState([])
+    let e = localStorage.getItem("login-data");
+    let   dat = JSON.parse(e)
     const y = ()=>{
         setr(true)
     }
@@ -42,6 +45,15 @@ function BookMeeting(){
         setrooms(res.data)
         })
     }
+    function getpersonschedule(){
+        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule', {
+            person_id: dat.p_id
+        }).then(res=>{
+           setschedule(res.data)
+        })
+        console.log(schedule)
+    }
+
     const returnallfalse=()=>{
         setr(false)
         setOpen(false)
@@ -99,7 +111,7 @@ function BookMeeting(){
         selectable
         localizer={localizer}
         startAccessor="start"
-        events={dates}
+        events={schedule}
         endAccessor="end"
         views={["month", "day"]}
         defaultDate={Date.now()}
@@ -110,7 +122,6 @@ function BookMeeting(){
                         'end': new Date(selected.end),
                     }] ) } }
     >
-
     </Calendar>
         <Modal
             centered={false}
