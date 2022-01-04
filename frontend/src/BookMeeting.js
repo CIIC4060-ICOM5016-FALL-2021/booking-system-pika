@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
@@ -29,6 +29,7 @@ function BookMeeting(){
     const[invitee,setinvitee]=  useState("");
     const [g,setg]= useState(false);
     const [its,setits] = useState(false)
+    const [Selected,SetSelect] = useState(false)
     const[bookings,setbookings] = useState([])
     const[bookinginfo,setbookinginfo] = useState([])
     const[unavailslots,setunavailslots] = useState([])
@@ -51,7 +52,6 @@ function BookMeeting(){
         }).then(res=>{
            setschedule(res.data)
         })
-        console.log(schedule)
     }
 
     const returnallfalse=()=>{
@@ -65,7 +65,16 @@ function BookMeeting(){
         setbooking(false)
         setavailable(false)
         setmark(false)
+        SetSelect(false)
 
+}
+function run(){
+        if (Selected){
+            setst_dt(dates.startTimeDisplay)
+            setet_dt(dates.endTimeDisplay)
+            return true
+        }
+        return false
 }
     function first() {
         if (st_dt == "" || et_dt == "" || room_id == "" || invitee == "") {
@@ -107,11 +116,31 @@ function BookMeeting(){
             return true
         }
     }
+  useEffect(()=>
+  {
+      getpersonschedule()
+  })
+    function Time(hours, minutes){
+        let pastNoon ="";
+        if (hours< 12){
+            if (hours==0)
+                hours= 12;
+            pastNoon = "AM";
+        }else if (hours>12)
+            hours-=12;
+        pastNoon ="PM"
+        if (minutes ==0){
+            return `${hours}:00 ${pastNoon}`;
+        }else{
+            return `${hours}:${minutes} ${pastNoon}`;
+        }
+    }
+
     return <Container style={{ height: 800 }}><Calendar
         selectable
         localizer={localizer}
         startAccessor="start"
-        events={schedule}
+        events={dates}
         endAccessor="end"
         views={["month", "day"]}
         defaultDate={Date.now()}
@@ -120,7 +149,10 @@ function BookMeeting(){
                         'allDay': false,
                         'start': new Date(selected.start),
                         'end': new Date(selected.end),
-                    }] ) } }
+                        'startTimeDisplay': Time(selected.start.getHours(),selected.start.getMinutes()),
+                         'endTimeDisplay': Time(selected.start.getHours(),selected.start.getMinutes())
+                    }] ) ;SetSelect(true)} }
+
     >
     </Calendar>
         <Modal
