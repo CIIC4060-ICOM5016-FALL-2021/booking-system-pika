@@ -69,11 +69,14 @@ function BookMeeting(){
 
 }
 function run(){
-        if (Selected){
+        if (Selected== true){
             setst_dt(dates.startTimeDisplay)
             setet_dt(dates.endTimeDisplay)
+
+            console.log(dates.startTimeDisplay)
             return true
         }
+
         return false
 }
     function first() {
