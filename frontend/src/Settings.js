@@ -1,5 +1,5 @@
 import {Link, useNavigate} from "react-router-dom";
-import React, {Component, createContext, useState} from 'react';
+import React, {Component, createContext, useEffect, useState} from 'react';
 import {
     Button,
     Divider,
@@ -18,6 +18,7 @@ function Settings() {
     const [open, setOpen] = useState(false);
     const [t, sett] = useState(false);
     const [r, setr] = useState(false);
+    const [e, sete] = useState(false);
     const [fname, setfname] = useState("");
     const [lname, setlname] = useState("");
     const [phone, setphone] = useState("");
@@ -41,33 +42,36 @@ function Settings() {
     const q = () => {
         sett(true)
     }
+
     function getinfo() {
         let e = localStorage.getItem("login-data");
-        let   dat = JSON.parse(e)
+        let dat = JSON.parse(e)
         axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/id', {"p_id": dat.p_id}).then(res => {
             setname(res.data)
         })
 
     }
-    function deleteact(){
-        if (t ==true) {
+
+    function deleteact() {
+        if (t == true) {
             let e = localStorage.getItem("login-data");
-            let   dat = JSON.parse(e)
+            let dat = JSON.parse(e)
             axios.delete('https://booking-system-pika.herokuapp.com/pika-booking/persons/id').then(res => {
                 setname(res.data)
             })
             return "deleted"
         }
     }
+
     function check() {
         getinfo()
         if (fname == "" || lname == "" || phone == "" || gender == "" || email == "" || password == "" || !y) {
             return false
         } else {
             let e = localStorage.getItem("login-data");
-            let   dat = JSON.parse(e)
+            let dat = JSON.parse(e)
             axios.put('https://booking-system-pika.herokuapp.com/pika-booking/persons', {
-                "p_id" : dat.p_id   ,
+                "p_id": dat.p_id,
                 "p_fname": fname,
                 "p_lname": lname,
                 "p_role": name.p_role,
@@ -79,13 +83,37 @@ function Settings() {
             }).then(res => {
                 setdata(res.data);
             })
+            console.log(data);
             return true
         }
     }
+    function gender1(parameter){
+        switch(parameter) {
+            case 1:
+                return "Male"
+            case 2:
+                return "Female"
 
+        }
+    }
+    function Role(parameter) {
+        switch (parameter) {
+            case 1:
+                return "Student"
+            case 2:
+                return "Professor"
+            case 3:
+                return "Staff"
+            default:
+                return "Visitor"
+        }
+    }
         return (
             <>
-                <Navbar />
+                <Navbar/>
+                <p>
+
+                </p>
                 <Modal
                     centered={false}
                     open={open}
@@ -191,6 +219,10 @@ function Settings() {
                         <Button onClick={() => check()}>Yes</Button>
                     </Modal.Actions>
                 </Modal>
+                <Modal>
+                    <Modal.Header>You have updated you info</Modal.Header>
+                    <Button onClick={() => check() && sete(true)}>Yes</Button>
+                </Modal>
                 <Modal
                     centered={false}
                     open={t}
@@ -207,6 +239,13 @@ function Settings() {
                         <Button onClick={() => deleteact()}>Yes</Button>
                     </Modal.Actions>
                 </Modal>
+                <h1>Account Info</h1>
+                <h2> First Name: {name.p_fname}</h2>
+                <h2> Last Name: {name.p_lname}</h2>
+                <h2> Email: {name.p_email}</h2>
+                <h2> Role: {Role(name.p_role)}</h2>
+                <h2> Gender: {gender1(name.p_gender)}</h2>
+                <h2> Phone: {name.p_phone}</h2>
                 <Grid centered>
                     <Grid.Column style={{maxWidth: 550, marginTop: 20}}>
                         <SemanticHeader>Settings</SemanticHeader>
@@ -214,15 +253,14 @@ function Settings() {
                             <Segment>
                                 <Form.Field>
 
-                        <Form.Button content='Update Account' primary onClick={handleChange}/>
-                                    </Form.Field>
+                                    <Form.Button content='Update Account' primary onClick={handleChange}/>
+                                </Form.Field>
                                 <Form.Field>
 
                                     <Form.Button content='Delete Account' primary onClick={q}/>
                                 </Form.Field>
-                                </Segment>
+                            </Segment>
                         </Form>
-
 
 
                     </Grid.Column>
@@ -230,6 +268,7 @@ function Settings() {
             </>
 
         )
+
 
 }
 export default Settings;

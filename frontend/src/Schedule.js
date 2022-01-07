@@ -39,7 +39,7 @@ function Schedule(){
         'title': 'Selection',
         'allDay': false,
         'start': new Date(moment.now()),
-        'end': new Date(moment.now())
+        'end': new Date(moment.now()),
     }]);
     const [open, setOpen] = useState(false);
     const localizer = momentLocalizer(moment)
@@ -81,6 +81,17 @@ function Schedule(){
         setdeletebooking(false)
         setdeleteupunavailable(false)
         sett(false)
+    }
+
+
+
+    function Time(year,month, date, hours, minutes){
+        if (minutes==0)
+            return `${year}-${month +1}-${date} ${hours}:00:00-04`;
+        else if (minutes< 10)
+            return `${year}-${month +1}-${date} ${hours}:0${minutes}:00-04`;
+        else
+            return `${year}-${month +1}-${date} ${hours}:${minutes}:00-04`;
     }
     function getperson(){
         axios.post( "https://booking-system-pika.herokuapp.com/pika-booking/person/unavailable/id", {"Person_id": dat.p_id})
