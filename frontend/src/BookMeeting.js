@@ -24,7 +24,7 @@ function BookMeeting(){
     const [mark,setmark] = useState(false);
     const localizer = momentLocalizer(moment)
     const [st_dt, setst_dt] = useState("");
-    const [et_dt, setet_dt] = useState("");
+    let [et_dt, setet_dt] = useState("");
     const[room_id,setroom_id] = useState("");
     const[invitee,setinvitee]=  useState("");
     const [g,setg]= useState(false);
@@ -69,10 +69,10 @@ function BookMeeting(){
 
 }
 function run(){
-        if (Selected== true){
+        if (Selected== true && open== true){
             setst_dt(dates[0].startTimeDisplay)
             setet_dt(dates[0].endTimeDisplay)
-            
+
             return true
         }
 
@@ -121,7 +121,6 @@ function run(){
   useEffect(()=>
   {
       getpersonschedule()
-      run()
   })
     function Time(hours, minutes){
         let pastNoon ="";
