@@ -33,6 +33,8 @@ function Schedule(){
     const[deletebooking,setdeletebooking] =useState(false)
     const [updateunavailable,setupunavailable]= useState(false);
     const [deleteunavailable,setdeleteupunavailable]= useState(false);
+    let e = localStorage.getItem("login-data");
+    let   dat = JSON.parse(e)
     const [dates, setDates] = useState([{
         'title': 'Selection',
         'allDay': false,
@@ -80,6 +82,9 @@ function Schedule(){
         setdeleteupunavailable(false)
         sett(false)
     }
+    function getperson(){
+        axios.post( "https://booking-system-pika.herokuapp.com/pika-booking/person/unavailable/id", {"Person_id": dat.p_id})
+    }
     function check(){
         if (st_dt == "" || et_dt == "" || un==""){
             return true
@@ -89,14 +94,13 @@ function Schedule(){
         }
     }
     function updateunavailablecheck(){
-        let e = localStorage.getItem("login-data");
-        let   dat = JSON.parse(e)
+
         if (st_dt == "" || et_dt == "" || un==""||!r){
             return false
         }else{
             axios.put(" https://booking-system-pika.herokuapp.com/pika-booking/persons/available", {
                 "pa_id" : un,
-                "person_id":  dat,
+                "person_id":  dat.p_id,
                 "st_dt": st_dt,
                 "et_dt": et_dt
             })
