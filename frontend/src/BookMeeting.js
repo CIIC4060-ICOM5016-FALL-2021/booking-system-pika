@@ -70,10 +70,9 @@ function BookMeeting(){
 }
 function run(){
         if (Selected== true){
-            setst_dt(dates.startTimeDisplay)
-            setet_dt(dates.endTimeDisplay)
-
-            console.log(dates.startTimeDisplay)
+            setst_dt(dates[0].startTimeDisplay)
+            setet_dt(dates[0].endTimeDisplay)
+            
             return true
         }
 
@@ -122,6 +121,7 @@ function run(){
   useEffect(()=>
   {
       getpersonschedule()
+      run()
   })
     function Time(hours, minutes){
         let pastNoon ="";
