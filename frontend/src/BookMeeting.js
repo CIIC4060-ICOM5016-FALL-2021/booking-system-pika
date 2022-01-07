@@ -69,10 +69,9 @@ function BookMeeting(){
 
 }
 function run(){
-        if (Selected== true && open== true){
+        if (Selected== true && open== true||Selected== true && mark== true){
             setst_dt(dates[0].startTimeDisplay)
             setet_dt(dates[0].endTimeDisplay)
-
             return true
         }
 
@@ -121,21 +120,15 @@ function run(){
   useEffect(()=>
   {
       getpersonschedule()
+      run()
   })
-    function Time(hours, minutes){
-        let pastNoon ="";
-        if (hours< 12){
-            if (hours==0)
-                hours= 12;
-            pastNoon = "AM";
-        }else if (hours>12)
-            hours-=12;
-        pastNoon ="PM"
-        if (minutes ==0){
-            return `${hours}:00 ${pastNoon}`;
-        }else{
-            return `${hours}:${minutes} ${pastNoon}`;
-        }
+    function Time(year,month, date, hours, minutes){
+        if (minutes==0)
+       return `${year}-${month +1}-${date} ${hours}:00:00-04`;
+        else if (minutes< 10)
+            return `${year}-${month +1}-${date} ${hours}:0${minutes}:00-04`;
+        else
+            return `${year}-${month +1}-${date} ${hours}:${minutes}:00-04`;
     }
 
     return <Container style={{ height: 800 }}><Calendar
@@ -151,8 +144,8 @@ function run(){
                         'allDay': false,
                         'start': new Date(selected.start),
                         'end': new Date(selected.end),
-                        'startTimeDisplay': Time(selected.start.getHours(),selected.start.getMinutes()),
-                         'endTimeDisplay': Time(selected.start.getHours(),selected.start.getMinutes())
+                        'startTimeDisplay': Time(selected.start.getFullYear(), selected.start.getMonth(),selected.start.getDate(), selected.start.getHours(),selected.start.getMinutes()),
+                         'endTimeDisplay': Time(selected.start.getFullYear(), selected.start.getMonth(),selected.start.getDate(),selected.end.getHours(),selected.end.getMinutes())
                     }] ) ;SetSelect(true)} }
 
     >
