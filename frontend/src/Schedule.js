@@ -17,7 +17,7 @@ import axios from "axios";
 
 
 function Schedule(){
-    const [t,sett] = useState("")
+    const [t,sett] = useState(false)
     const [r, setr] = useState(false);
     const [booking, setbooking] = useState(false);
     const [unavailable, setavailable] = useState(false);
@@ -28,6 +28,7 @@ function Schedule(){
     const[room_id,setroom_id] = useState("");
     const[invitee,setinvitee]=  useState("");
     const[un,setun] =  useState("");
+
     const [updatebooking,setupdatebooking] = useState(false);
     const[deletebooking,setdeletebooking] =useState(false)
     const [updateunavailable,setupunavailable]= useState(false);
@@ -77,7 +78,15 @@ function Schedule(){
         setr(false)
         setdeletebooking(false)
         setdeleteupunavailable(false)
-
+        sett(false)
+    }
+    function check(){
+        if (st_dt == "" || et_dt == "" || un==""){
+            return true
+        }else
+        {
+            return false
+        }
     }
     function updateunavailablecheck(){
         let e = localStorage.getItem("login-data");
@@ -86,6 +95,7 @@ function Schedule(){
             return false
         }else{
             axios.put(" https://booking-system-pika.herokuapp.com/pika-booking/persons/available", {
+                "pa_id" : un,
                 "person_id":  dat,
                 "st_dt": st_dt,
                 "et_dt": et_dt
@@ -120,6 +130,22 @@ function Schedule(){
     >
 
     </Calendar>
+        <Modal
+            centered={false}
+            open={open}
+            onClose={() => setOpen(false)}
+            onOpen={() => setOpen(true)}
+        >
+            <Modal.Header>Invalid!</Modal.Header>
+            <Modal.Content>
+                <Modal.Description>
+                    You don't have not submitted all the asked information, please complete all parameters asked.
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => setOpen(false)}>OK</Button>
+            </Modal.Actions>
+        </Modal>
         <Modal open={booking}
                onClose={() => setbooking(false)}
                onOpen={() => setbooking(true)}>
@@ -279,7 +305,30 @@ function Schedule(){
         </Modal.Content>
         <Modal.Actions>
             <Button onClick={() => setupunavailable(false)}>cancel</Button>
-            <Button content='Confirm'/>
+            <Button content='Confirm'
+                    onClick={() => {check()? setOpen(true):setr(true)} }/>
+        </Modal.Actions>
+    </Modal>
+        <Modal open={r}
+               onClose={() => setr(false)}
+               onOpen={() => setr(true)}
+        >
+        <Modal.Header>Are you sure?</Modal.Header>
+        <Modal.Content>
+            <Modal.Description>
+            </Modal.Description>
+        </Modal.Content>
+        <Modal.Actions>
+            <Button onClick={() => setr(false)}>No</Button>
+            <Button onClick={() => updateunavailablecheck()&& sett(true)}>Yes</Button>
+        </Modal.Actions>
+    </Modal>
+    <Modal open={t}
+               onClose={() => sett(false)}
+               onOpen={() => sett(true)}>
+        <Modal.Header>You have updated your unavailable timeslot</Modal.Header>
+        <Modal.Actions>
+            <Button onClick={() => returnallfalse()}>Ok</Button>
         </Modal.Actions>
     </Modal>
         <Modal open={deleteunavailable}
