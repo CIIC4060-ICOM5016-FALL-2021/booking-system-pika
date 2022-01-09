@@ -145,7 +145,7 @@ function run(){
         views={["month", "day"]}
         defaultDate={Date.now()}
         onSelecting = {(selected) =>{ setDates([{
-                        'title': 'Selection',
+                        'title': 'Your preferred booking time or unavailable time',
                         'allDay': false,
                         'start': new Date(selected.start),
                         'end': new Date(selected.end),
