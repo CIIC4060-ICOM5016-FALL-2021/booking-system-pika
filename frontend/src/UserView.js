@@ -24,7 +24,7 @@ function UserView(){
             menuItem: 'Room Management', render: () => <Tab.Pane active={isAuth}><BookMeeting/></Tab.Pane>
         },
         {
-            menuItem: 'Settings', render: () => <Settings/>
+            menuItem: 'Account', render: () => <Settings/>
         }
     ]
 

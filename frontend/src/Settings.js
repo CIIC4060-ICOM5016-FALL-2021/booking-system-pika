@@ -19,6 +19,7 @@ function Settings() {
     const [t, sett] = useState(false);
     const [r, setr] = useState(false);
     const [e, sete] = useState(false);
+    const [info, setinfo] = useState(false);
     const [fname, setfname] = useState("");
     const [lname, setlname] = useState("");
     const [phone, setphone] = useState("");
@@ -44,12 +45,17 @@ function Settings() {
     }
 
     function getinfo() {
-        let e = localStorage.getItem("login-data");
-        let dat = JSON.parse(e)
-        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/id', {"p_id": dat.p_id}).then(res => {
-            setname(res.data)
-        })
-
+        if (info==false) {
+            let e = localStorage.getItem("login-data");
+            let dat = JSON.parse(e)
+            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/id', {"p_id": dat.p_id}).then(res => {
+                setname(res.data)
+            })
+            setinfo(true)
+        }
+        else {
+            return
+        }
     }
 
     function deleteact() {
@@ -112,7 +118,7 @@ function Settings() {
             <>
                 <Navbar/>
                 <p>
-
+                    {getinfo()}
                 </p>
                 <Modal
                     centered={false}
