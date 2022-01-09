@@ -102,6 +102,15 @@ function Settings() {
 
         }
     }
+    function gender2(parameter){
+        switch(parameter) {
+            case "Male":
+                return 1
+            case "Female":
+                return 2
+
+        }
+    }
     function Role(parameter) {
         switch (parameter) {
             case 1:
