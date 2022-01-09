@@ -261,9 +261,9 @@ function Settings() {
                 <h2> Role: {Role(name.p_role)}</h2>
                 <h2> Gender: {gender1(name.p_gender)}</h2>
                 <h2> Phone: {name.p_phone}</h2>
-                <Grid centered>
+                <Grid >
                     <Grid.Column style={{maxWidth: 550, marginTop: 20}}>
-                        <SemanticHeader>Settings</SemanticHeader>
+                        <SemanticHeader>Updates</SemanticHeader>
                         <Form>
                             <Segment>
                                 <Form.Field>
