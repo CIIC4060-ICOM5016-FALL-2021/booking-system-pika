@@ -70,6 +70,7 @@ function BookMeeting(){
         setavailable(false)
         setmark(false)
         SetSelect(false)
+        setinfo(false)
 
 }
 function run(){
