@@ -107,25 +107,18 @@ def get_available_rooms_at_timeframe():
 
 
 # Gets all unavailable rooms by the room id, not the ra_id
-@app.route('/pika-booking/rooms/unavailable/roomid', methods=['POST'])
-def handle_room_unavailable_getter_post():
-    args = request.json
-    if request.method == 'POST':
-        if args and "room_id" in args:
-            return AvailableRoom().get_unavailable_room_by_id(args)
-        else:
-            return jsonify("Args not found: room_id"), 405
+@app.route('/pika-booking/rooms/unavailable/<int:room_id>', methods=['GET'])
+def handle_room_unavailable_getter_post(room_id):
+    if request.method == 'GET':
+        return AvailableRoom().get_unavailable_room_by_id(room_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
-@app.route('/pika-booking/rooms/unavailable/raid', methods=['POST'])
-def handle_room_id_unavailable_getter_post():
-    args = request.json
-    if request.method == 'POST':
-        if args and "ra_id" in args:
-            return AvailableRoom().get_unavailable_ra_by_id(args)
-        else:
-            return jsonify("Args not found: ra_id"), 405
+
+@app.route('/pika-booking/rooms/unavailable/ra-id/<int:ra_id>', methods=['GET'])
+def handle_room_id_unavailable_getter_ra_id(ra_id):
+    if request.method == 'GET':
+        return AvailableRoom().get_unavailable_by_ra_id(ra_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -141,16 +134,14 @@ def handle_get_room_all_day_schedule_getter_post():
     else:
         return jsonify("Method Not Allowed"), 405
 
-@app.route('/pika-booking/rooms/available/all-schedule', methods=['POST'])
-def handle_get_room_all_schedule_getter_post():
-    args = request.json
-    if request.method == 'POST':
-        if args:
-            return AvailableRoom().get_schedule(args)
-        else:
-            return jsonify("Args not found"), 405
+
+@app.route('/pika-booking/rooms/available/all-schedule/<int:r_id>', methods=['GET'])
+def handle_get_room_all_schedule_getter_post(r_id):
+    if request.method == 'GET':
+        return AvailableRoom().get_schedule(r_id)
     else:
         return jsonify("Method Not Allowed"), 405
+
 
 @app.route('/pika-booking/rooms/available/schedule', methods=['POST'])
 def handle_verify_available_room_getter_post():
@@ -164,28 +155,22 @@ def handle_verify_available_room_getter_post():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/person/unavailable/id', methods=['POST'])
-def handle_person_unavailable_getter_post():
-    args = request.json
-    if request.method == 'POST':
-        if args and "pa_id" in args:
-
-            return AvailablePerson().get_unavailable_person_by_id(args)
-        else:
-            return jsonify("Args not found: pa_id"), 405
+@app.route('/pika-booking/person/unavailable/pa_id/<int:pa_id>', methods=['GET'])
+def handle_unavailable_person_pa_id(pa_id):
+    if request.method == 'GET':
+        return AvailablePerson().get_unavailable_person_by_id(pa_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
-@app.route('/pika-booking/person/unavailable/personid', methods=['POST'])
-def handle_person_id_unavailable_getter_post():
-    args = request.json
-    if request.method == 'POST':
-        if args and "person_id" in args:
-            return AvailablePerson().get_unavailable_person_by_person_id(args)
-        else:
-            return jsonify("Args not found: person_id"), 405
+
+@app.route('/pika-booking/person/unavailable/person_id/<int:pa_id>', methods=['GET'])
+def handle_unavailable_person_by_person_id(pa_id):
+    if request.method == 'GET':
+        return AvailablePerson().get_unavailable_person_by_person_id(pa_id)
     else:
         return jsonify("Method Not Allowed"), 405
+
+
 # ========================== #
 # ===-| A C C O U N T |-=== #
 # ========================= #
@@ -201,6 +186,7 @@ def handle_account():
             return jsonify("Args not found"), 405
     else:
         return jsonify("Method Not Allowed"), 405
+
 
 # ========================= #
 # ===-| P E R S O N S |-=== #
@@ -241,14 +227,10 @@ def get_all_persons_but():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/persons/person-by-role', methods=['POST'])
-def get_all_persons_by_role():
-    args = request.json
-    if request.method == 'POST':
-        if args:
-            return Person().get_all_persons_by_role(args)
-        else:
-            return jsonify("Args not found: p_id"), 405
+@app.route('/pika-booking/persons/person-by-role/<int:role_id>', methods=['GET'])
+def get_all_persons_by_role(role_id):
+    if request.method == 'GET':
+        return Person().get_all_persons_by_role(role_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -298,6 +280,7 @@ def get_role_access():
     else:
         return jsonify("Method Not Allowed"), 405
 
+
 @app.route('/pika-booking/persons/person/room-roles', methods=['POST'])
 def get_rooms_by_role():
     args = request.json
@@ -308,6 +291,7 @@ def get_rooms_by_role():
             return jsonify("Args not found: p_id"), 405
     else:
         return jsonify("Method Not Allowed"), 405
+
 
 @app.route('/pika-booking/persons/accounts', methods=['POST'])
 def get_account_by_email_and_password():
