@@ -32,7 +32,7 @@ class PersonDAO:
         query = 'update "person" ' \
                 'set p_fname = %s, p_lname= %s, p_email= %s , p_phone = %s ,p_gender= %s,p_password = %s ' \
                 'where p_id = %s '
-        cursor.execute(query, (p_fname, p_lname, p_email, p_phone, p_gender, p_id,p_password))
+        cursor.execute(query, (p_fname, p_lname, p_email, p_phone, p_gender, p_password, p_id))
         self.conn.commit()
         return True
 
@@ -252,6 +252,7 @@ class PersonDAO:
         for row in cursor:
             result.append(row)
         return result
+
     def get_all_person_by_role(self, p_role):
         cursor = self.conn.cursor()
         query = 'select p_id, p_fname, p_lname, p_role, p_email, p_phone, p_gender, p_password ' \

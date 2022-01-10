@@ -4,6 +4,19 @@ from models.Person import PersonDAO
 from models.Room import RoomDAO
 
 
+def schedule_stuff(data):
+    result_st_dt = []
+    result_et_dt = []
+    for st_dt, et_dt in data:
+        result_et_dt.append(et_dt)
+        result_st_dt.append(st_dt)
+    result = {
+        "st_dt": result_st_dt,
+        "et_dt": result_et_dt
+    }
+    return result
+
+
 class AvailableRoom:
 
     def build_available_time_room_map(self, row):
@@ -139,9 +152,7 @@ class AvailableRoom:
             }
             return jsonify(result), 200
 
-    def get_schedule(self,json):
-        room_id = json['room_id']
-
+    def get_schedule(self, room_id):
         dao = AvailableRoomDAO()
         room_dao = RoomDAO()
 
@@ -150,19 +161,10 @@ class AvailableRoom:
             return jsonify("Room Not Found"), 404
         else:
             res = dao.get_all_schedule(room_id)
-            result_st_dt = []
-            result_et_dt = []
-            for st_dt, et_dt in res:
-                result_et_dt.append(et_dt)
-                result_st_dt.append(st_dt)
-            result = {
-                "st_dt": result_st_dt,
-                "et_dt": result_et_dt
-            }
+            result = schedule_stuff(res)
             return jsonify(result), 200
 
-    def get_unavailable_room_by_id(self, json):
-        room_id = json['room_id']
+    def get_unavailable_room_by_id(self, room_id):
         dao = AvailableRoomDAO()
         room_dao = RoomDAO()
 
@@ -182,8 +184,7 @@ class AvailableRoom:
             }
             return jsonify(result), 200
 
-    def get_unavailable_ra_by_id(self, json):
-        room_id = json['ra_id']
+    def get_unavailable_by_ra_id(self, room_id):
         dao = AvailableRoomDAO()
         room_dao = RoomDAO()
 
@@ -191,7 +192,7 @@ class AvailableRoom:
         if not existing_room:
             return jsonify("Room Not Found"), 404
         else:
-            res = dao.get_unavailable_room_by_raid(room_id)
+            res = dao.get_unavailable_room_by_ra_id(room_id)
             result_st_dt = []
             result_et_dt = []
             for st_dt, et_dt in res:

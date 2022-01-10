@@ -102,15 +102,10 @@ class Person:
             result_list.append(obj)
         return jsonify(result_list)
 
-
-
-    def get_all_persons_by_role(self, json=None):
-
+    def get_all_persons_by_role(self, p_role):
         method = PersonDAO()
 
-        person_list = method.get_all_person_by_role(json["p_role"])
-
-
+        person_list = method.get_all_person_by_role(p_role)
         if not person_list:
             return jsonify("Nobody is on the list! It feels, lonely.."), 404
         else:
@@ -119,6 +114,7 @@ class Person:
             obj = self.build_person_map(row)
             result_list.append(obj)
         return jsonify(result_list)
+
     def get_persons_by_id(self, p_id):
         method = PersonDAO()
         person_tuple = method.get_person_by_id(p_id)
@@ -191,9 +187,9 @@ class Person:
         p_password = json['p_password']
         method = PersonDAO()
         exist = self.persons_by_id_exist(p_id)
-        updated_info = method.update_person(p_id, p_fname, p_lname, p_email, p_phone, p_gender,p_password)
+        updated_info = method.update_person(p_id, p_fname, p_lname, p_email, p_phone, p_gender, p_password)
         if updated_info and exist:
-            result = self.build_person_update_attr_dict(p_fname, p_lname, p_email, p_phone, p_gender,p_password)
+            result = self.build_person_update_attr_dict(p_fname, p_lname, p_email, p_phone, p_gender, p_password)
             return jsonify(result)
         else:
             return jsonify('Not found person')

@@ -1,4 +1,6 @@
 from flask import jsonify
+
+from controller.AvailableRoom import schedule_stuff
 from controller.Person import Person
 from models.AvailablePerson import AvailablePersonDAO
 from models.Person import PersonDAO
@@ -11,7 +13,9 @@ class AvailablePerson:
 
     def build_unavailable_time_person_info(self, row):
         result = {'st_dt': row[0],
-                  'et_dt': row[1], 'person_id': row[2]}
+                  'et_dt': row[1],
+                  'person_id': row[2]
+                  }
         return result
 
     def build_unavailable_person_attr_dict(self, pa_id, st_dt, et_dt, p_id):
@@ -54,8 +58,8 @@ class AvailablePerson:
                 result_list.append(obj)
         return jsonify(result_list)
 
-    def get_unavailable_person_by_id(self, json):
-        pa_id = json["pa_id"]
+########
+    def get_unavailable_person_by_id(self, pa_id):
         method = AvailablePersonDAO()
         person = method.get_unavailable_person_by_id(pa_id)
         if not person:
@@ -64,8 +68,7 @@ class AvailablePerson:
             result = self.build_unavailable_time_person_info(person)
         return jsonify(result)
 
-    def get_unavailable_person_by_person_id(self, json):
-        pa_id = json["person_id"]
+    def get_unavailable_person_by_person_id(self, pa_id):
         method = AvailablePersonDAO()
 
         person_dao = PersonDAO()
@@ -85,6 +88,7 @@ class AvailablePerson:
                 "et_dt": result_et_dt
             }
             return jsonify(result), 200
+########
 
     # def update_unavailable_schedule(self):
     def update_unavailable_schedule(self, json):
@@ -166,15 +170,7 @@ class AvailablePerson:
             return jsonify("Person Not Found"), 404
         else:
             res = dao.get_all_schedule(person_id)
-            result_st_dt = []
-            result_et_dt = []
-            for st_dt, et_dt in res:
-                result_et_dt.append(et_dt)
-                result_st_dt.append(st_dt)
-            result = {
-                "st_dt": result_st_dt,
-                "et_dt": result_et_dt
-            }
+            result = schedule_stuff(res)
             return jsonify(result), 200
 
     def delete_all_unavailable_person_schedule(self, json: dict):

@@ -61,7 +61,8 @@ class AvailableRoomDAO:
         for row in cursor:
             result.append(row)
         return result
-    def get_unavailable_room_by_raid(self, room_id):
+
+    def get_unavailable_room_by_ra_id(self, room_id):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt ' \
                 'from availableroom ' \
