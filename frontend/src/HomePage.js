@@ -42,6 +42,7 @@ function HomePage() {
         if (data== ""){
             return true
         }
+        localStorage.removeItem("login-data")
         localStorage.setItem("login-data", JSON.stringify(data))
         console.log(localStorage.getItem("login-data"))
         return false

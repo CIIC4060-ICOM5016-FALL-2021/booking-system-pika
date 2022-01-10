@@ -63,6 +63,7 @@ function Settings() {
             let e = localStorage.getItem("login-data");
             let dat = JSON.parse(e)
             axios.delete(`https://booking-system-pika.herokuapp.com/pika-booking/persons/${dat.p_id}`)
+            localStorage.removeItem("login-data")
             return "deleted"
         }
     }
