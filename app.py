@@ -192,7 +192,7 @@ def handle_account():
 # ===-| P E R S O N S |-=== #
 # ========================= #
 
-@app.route('/pika-booking/persons', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route('/pika-booking/persons', methods=['GET', 'POST', 'PUT'])
 def handle_persons():
     args = request.json
     if request.method == 'POST':
@@ -206,11 +206,6 @@ def handle_persons():
             return Person().update_person(args)
         else:
             return jsonify("Missing Arguments"), 405
-    elif request.method == 'DELETE':
-        if args and "p_id" in args:
-            return Person().delete_person(args["p_id"])
-        else:
-            return jsonify("Args not found: p_id"), 405
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -235,14 +230,13 @@ def get_all_persons_by_role(role_id):
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/persons/id', methods=['POST'])
-def handle_person_getter_post():
-    args = request.json
-    if request.method == 'POST':
-        if args and "p_id" in args:
-            return Person().get_persons_by_id(args["p_id"])
-        else:
-            return jsonify("Args not found: p_id"), 405
+@app.route('/pika-booking/persons/<int:p_id>', methods=['GET', 'DELETE'])
+def handle_person_getter_post(p_id):
+
+    if request.method == 'GET':
+        return Person().get_persons_by_id(p_id)
+    elif request.method == 'DELETE':
+        return Person().delete_person(p_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
