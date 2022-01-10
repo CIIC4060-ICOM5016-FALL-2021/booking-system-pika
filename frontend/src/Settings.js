@@ -48,7 +48,7 @@ function Settings() {
         if (info==false) {
             let e = localStorage.getItem("login-data");
             let dat = JSON.parse(e)
-            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/id', {"p_id": dat.p_id}).then(res => {
+            axios.get( `https://booking-system-pika.herokuapp.com/pika-booking/persons/${dat.p_id}`).then(res => {
                 setname(res.data)
             })
             setinfo(true)
@@ -62,9 +62,7 @@ function Settings() {
         if (t == true) {
             let e = localStorage.getItem("login-data");
             let dat = JSON.parse(e)
-            axios.delete('https://booking-system-pika.herokuapp.com/pika-booking/persons/id').then(res => {
-                setname(res.data)
-            })
+            axios.delete(`https://booking-system-pika.herokuapp.com/pika-booking/persons/${dat.p_id}`)
             return "deleted"
         }
     }
