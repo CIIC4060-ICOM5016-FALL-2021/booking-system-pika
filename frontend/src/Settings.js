@@ -68,7 +68,20 @@ function Settings() {
             return "deleted"
         }
     }
+    const returnallfalse=()=>{
+        setr(false)
+        setOpen(false)
+        sete(false)
+        setfname("")
+        setlname("")
+        setphone("")
+        setgender("")
+        setEmail("")
+        setPassword("")
+        setr(false)
 
+        sett(false)
+    }
     function check() {
         getinfo()
         if (fname == "" || lname == "" || phone == "" || gender == "" || email == "" || password == "" || !y) {
@@ -231,12 +244,15 @@ function Settings() {
                     </Modal.Content>
                     <Modal.Actions>
                         <Button onClick={() => setr(false)}>No</Button>
-                        <Button onClick={() => check()}>Yes</Button>
+                        <Button onClick={() => check() && sete(true)}>Yes</Button>
                     </Modal.Actions>
                 </Modal>
-                <Modal>
+                <Modal     centered={false}
+                           open={e}
+                           onClose={() => sete(false)}
+                           onOpen={() => sete(true)}>
                     <Modal.Header>You have updated you info</Modal.Header>
-                    <Button onClick={() => check() && sete(true)}>Yes</Button>
+                    <Button onClick={() => returnallfalse()}>Ok</Button>
                 </Modal>
                 <Modal
                     centered={false}
