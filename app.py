@@ -58,14 +58,10 @@ def handle_rooms():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/rooms/id', methods=['POST'])
-def handle_room_getter_post():
-    args = request.json
-    if request.method == 'POST':
-        if args and "r_id" in args:
-            return Room().get_room_by_id(args["r_id"])
-        else:
-            return jsonify("Args not found: r_id"), 405
+@app.route('/pika-booking/rooms/<int:r_id>', methods=['GET'])
+def handle_room_getter_post(r_id):
+    if request.method == 'GET':
+        return Room().get_room_by_id(r_id)
     else:
         return jsonify("Method Not Allowed"), 405
 

@@ -191,9 +191,9 @@ class Person:
         p_password = json['p_password']
         method = PersonDAO()
         exist = self.persons_by_id_exist(p_id)
-        updated_info = method.update_person(p_id, p_fname, p_lname, p_email, p_phone, p_gender,p_password)
+        updated_info = method.update_person(p_id, p_fname, p_lname, p_email, p_phone, p_gender, p_password)
         if updated_info and exist:
-            result = self.build_person_update_attr_dict(p_fname, p_lname, p_email, p_phone, p_gender,p_password)
+            result = self.build_person_update_attr_dict(p_fname, p_lname, p_email, p_phone, p_gender, p_password)
             return jsonify(result)
         else:
             return jsonify('Not found person')
