@@ -1,4 +1,4 @@
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useLinkClickHandler, useNavigate} from "react-router-dom";
 import React, {Component, createContext, useEffect, useState} from 'react';
 import {
     Button,
@@ -12,6 +12,7 @@ import {
 } from 'semantic-ui-react';
 import axios from "axios";
 import Navbar from "./components/Navbar/Navbar";
+import HomePage from "./HomePage";
 
 
 function Settings() {
@@ -19,6 +20,7 @@ function Settings() {
     const [t, sett] = useState(false);
     const [r, setr] = useState(false);
     const [e, sete] = useState(false);
+    const [g,setg] = useState(false);
     const [info, setinfo] = useState(false);
     const [fname, setfname] = useState("");
     const [lname, setlname] = useState("");
@@ -30,9 +32,7 @@ function Settings() {
     let [name, setname] = useState("");
     const navigate = useNavigate();
 
-    function handlesubmit() {
-        navigate("./Dashboard")
-    }
+
 
     const handleChange = () => {
         setOpen(true);
@@ -267,7 +267,25 @@ function Settings() {
                     </Modal.Content>
                     <Modal.Actions>
                         <Button onClick={() => sett(false)}>No</Button>
-                        <Button onClick={() => deleteact()}>Yes</Button>
+                        <Button onClick={() => deleteact()&& setg(true)}>Yes</Button>
+                    </Modal.Actions>
+                </Modal>
+                <Modal
+                    centered={false}
+                    open={g}
+                    onClose={() => setg(false)}
+                    onOpen={() => setg(true)}
+                >
+                    <Modal.Header>You have deleted your account</Modal.Header>
+                    <Modal.Content>
+                        <Modal.Description>
+                        </Modal.Description>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Link to = "/" > <button>
+                          Ok
+                        </button>
+                        </Link>
                     </Modal.Actions>
                 </Modal>
                 <h1>Account Info</h1>
