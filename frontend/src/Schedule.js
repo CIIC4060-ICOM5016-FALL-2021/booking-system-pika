@@ -21,7 +21,7 @@ function Schedule(){
     const [r, setr] = useState(false);
     const [booking, setbooking] = useState(false);
     const [unavailable, setavailable] = useState(false);
-    const [mark,setmark] = useState(false);
+    const [mark,setmark] = useState([]);
     const [ba_id,setba_id] = useState("");
     const [st_dt, setst_dt] = useState("");
     const [et_dt, setet_dt] = useState("");
@@ -47,12 +47,12 @@ function Schedule(){
     const localizer = momentLocalizer(moment)
 
 
-    const [schedule1,setschedule1] =  useState({
+    const [schedule1,setschedule1] =  useState([{
         'title': 'Selection',
         'allDay': false,
         'start': new Date(moment.now()),
         'end': new Date(moment.now()),
-    })
+    }])
     function getpersonschedule(){
         if (info==false) {
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule', {
@@ -62,19 +62,21 @@ function Schedule(){
                 let i =0
                 for  (let meet of res.data.st_dt) {
 
-                const st = res.data.st_dt[i]
-                const et = res.data.et_dt[i]
+                    const st =` ${res.data.st_dt[i]}-0400 (Atlantic Standard Time)`
+                    const et = ` ${res.data.et_dt[i]}-0400 (Atlantic Standard Time)`
 
-                const w = {title: "Event", start: st, end: et}
+                const w = [{title: "Event", 'allDay': false , 'start':  st, 'end': et}]
                 t.push(w)
                     i=i+1
             }
                 setmeetings(t)
         })
     }
-        console.log(meetings)
+
+
 
     }
+
     function updatebookingcheck(){
         let e = localStorage.getItem("login-data");
         let   dat = JSON.parse(e)
@@ -165,6 +167,7 @@ function Schedule(){
     }
     return <>
         {getpersonschedule()}
+
     <Container style={{ height: 800 }}><Calendar
         localizer={localizer}
         startAccessor="start"
