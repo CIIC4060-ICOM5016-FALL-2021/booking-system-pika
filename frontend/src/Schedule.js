@@ -28,7 +28,7 @@ function Schedule(){
     const[room_id,setroom_id] = useState("");
     const[invitee,setinvitee]=  useState("");
     const[un,setun] =  useState("");
-
+    const[date,setdate] =  useState("");
     const [updatebooking,setupdatebooking] = useState(false);
     const[deletebooking,setdeletebooking] =useState(false)
     const [updateunavailable,setupunavailable]= useState(false);
@@ -41,11 +41,32 @@ function Schedule(){
         'start': new Date(moment.now()),
         'end': new Date(moment.now()),
     }]);
+    const [info, setinfo] = useState(false);
     const [open, setOpen] = useState(false);
     const localizer = momentLocalizer(moment)
     axios.post(' https://booking-system-pika.herokuapp.com/pika-booking/persons/available/timeframe',{"pid": 5,"date": dates}).then(res=>{
 
     })
+    const [schedule1,setschedule1] =  useState({
+        'title': 'Selection',
+        'allDay': false,
+        'start': new Date(moment.now()),
+        'end': new Date(moment.now()),
+    })
+    function getpersonschedule(){
+        if (info==false) {
+            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule', {
+                person_id: dat.p_id
+            }).then(res => {
+                setschedule1({ 'title': 'Selection',
+                    'allDay': false,
+                    'start':res.data.st_dt,
+                    'end': res.data.et_dt
+            })
+            setinfo(true)
+        })
+    }
+    }
     function updatebookingcheck(){
         let e = localStorage.getItem("login-data");
         let   dat = JSON.parse(e)
