@@ -138,6 +138,7 @@ function Settings() {
         return (
             <>
                 <Navbar/>
+
                 <p>
                     {getinfo()}
                 </p>
@@ -287,16 +288,17 @@ function Settings() {
                         </Link>
                     </Modal.Actions>
                 </Modal>
+
                 <h1>Account Info</h1>
-                <h2> First Name: {name.p_fname}</h2>
+                <h2 aria-checked={true}> First Name: {name.p_fname}</h2>
                 <h2> Last Name: {name.p_lname}</h2>
                 <h2> Email: {name.p_email}</h2>
                 <h2> Role: {Role(name.p_role)}</h2>
                 <h2> Gender: {gender1(name.p_gender)}</h2>
                 <h2> Phone: {name.p_phone}</h2>
                 <Grid >
-                    <Grid.Column style={{maxWidth: 550, marginTop: 20}}>
-                        <SemanticHeader>Updates</SemanticHeader>
+                    <Grid.Column style={{maxWidth: 200, marginTop: 20}}>
+                        <SemanticHeader>Account Options</SemanticHeader>
                         <Form>
                             <Segment>
                                 <Form.Field>

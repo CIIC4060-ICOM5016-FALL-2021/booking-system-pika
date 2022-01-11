@@ -151,7 +151,8 @@ function run(){
                         'end': new Date(selected.end),
                         'startTimeDisplay': Time(selected.start.getFullYear(), selected.start.getMonth(),selected.start.getDate(), selected.start.getHours(),selected.start.getMinutes()),
                          'endTimeDisplay': Time(selected.start.getFullYear(), selected.start.getMonth(),selected.start.getDate(),selected.end.getHours(),selected.end.getMinutes())
-                    }] ) ;SetSelect(true)} }
+                    }])
+            { console.log(selected.end)};SetSelect(true)} }
 
     >
     </Calendar>

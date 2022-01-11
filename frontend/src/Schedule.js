@@ -33,6 +33,7 @@ function Schedule(){
     const[deletebooking,setdeletebooking] =useState(false)
     const [updateunavailable,setupunavailable]= useState(false);
     const [deleteunavailable,setdeleteupunavailable]= useState(false);
+    const [meetings,setmeetings] =useState([])
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
     const [dates, setDates] = useState([{
@@ -44,9 +45,8 @@ function Schedule(){
     const [info, setinfo] = useState(false);
     const [open, setOpen] = useState(false);
     const localizer = momentLocalizer(moment)
-    axios.post(' https://booking-system-pika.herokuapp.com/pika-booking/persons/available/timeframe',{"pid": 5,"date": dates}).then(res=>{
 
-    })
+
     const [schedule1,setschedule1] =  useState({
         'title': 'Selection',
         'allDay': false,
@@ -58,14 +58,19 @@ function Schedule(){
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule', {
                 person_id: dat.p_id
             }).then(res => {
-                setschedule1({ 'title': 'Selection',
-                    'allDay': false,
-                    'start':res.data.st_dt,
-                    'end': res.data.et_dt
-            })
-            setinfo(true)
+           let t=[]
+
+                    const st = res.data.st_dt[0]
+                    const et = res.data.et_dt[0]
+
+                    const w = {title: "Event", start:st, end:et}
+                    t.push(w)
+
+                setmeetings(t)
         })
     }
+        console.log(meetings)
+
     }
     function updatebookingcheck(){
         let e = localStorage.getItem("login-data");
@@ -156,10 +161,11 @@ function Schedule(){
         }
     }
     return <>
+        {getpersonschedule()}
     <Container style={{ height: 800 }}><Calendar
         localizer={localizer}
         startAccessor="start"
-        events={dates}
+        events={meetings}
         endAccessor="end"
         views={["month", "day"]}
         defaultDate={Date.now()}
