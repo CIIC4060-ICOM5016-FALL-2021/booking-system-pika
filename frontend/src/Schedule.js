@@ -58,14 +58,17 @@ function Schedule(){
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule', {
                 person_id: dat.p_id
             }).then(res => {
-           let t=[]
+                let t = []
+                let i =0
+                for  (let meet of res.data.st_dt) {
 
-                    const st = res.data.st_dt[0]
-                    const et = res.data.et_dt[0]
+                const st = res.data.st_dt[i]
+                const et = res.data.et_dt[i]
 
-                    const w = {title: "Event", start:st, end:et}
-                    t.push(w)
-
+                const w = {title: "Event", start: st, end: et}
+                t.push(w)
+                    i=i+1
+            }
                 setmeetings(t)
         })
     }
