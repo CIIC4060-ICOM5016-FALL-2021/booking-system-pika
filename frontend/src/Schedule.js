@@ -65,7 +65,7 @@ function Schedule(){
                     const st =` ${res.data.st_dt[i]}-0400 (Atlantic Standard Time)`
                     const et = ` ${res.data.et_dt[i]}-0400 (Atlantic Standard Time)`
 
-                const w = {title: "Event", 'allDay': false , 'start':  new Date(st), 'end':  new Date(et)}
+                const w = {title: "Unavaiable", allDay: false , start:  new Date(st), end :  new Date(et), room: 4}
                 t.push(w)
                     i=i+1
             }
