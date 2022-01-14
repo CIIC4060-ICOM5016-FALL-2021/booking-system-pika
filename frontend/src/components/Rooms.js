@@ -13,7 +13,7 @@ function Rooms(props) {
 
     const [open, setOpen] = useState();
     const [Building, setBuilding] = useState("");
-    const [type, settype] = useState(-1);
+    const [type, settype] = useState("");
     const [dept, setdept] = useState("");
     const [createdMessage, setCreatedMessage] = useState("");
     const [editMessage, setEditMessage] = useState("");
@@ -303,15 +303,15 @@ function Rooms(props) {
                             <Grid.Column>
                                 <Form>
                                     <Form.Input
-                                        onChange={(e) => {setroomid(e.target.value);}}
-                                        label='Room Name'
+                                        onChange={(e) => {setdept(e.target.value);}}
+                                        label='Department'
                                     />
                                     <Form.Input
                                         onChange={(e) => {setBuilding(e.target.value)}}
                                         label='Building Name'
                                     />
-                                    <Form.Input label='Permission'>
-                                        <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setroompermision(e.target.value);}}>
+                                    <Form.Input label='Type'>
+                                        <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {settype(e.target.value);}}>
                                             <option key={0} value={"0"}>Select Permission</option>
                                             {
                                                 ["Student", "Department Staff"].map((item) => {return <option>{item}</option>})
