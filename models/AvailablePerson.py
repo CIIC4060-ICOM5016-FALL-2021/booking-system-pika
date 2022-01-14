@@ -2,7 +2,7 @@ import psycopg2
 from config.dbcondig import db_root_config
 
 
-class AvailablePersonDAO:
+class AvailablePersonDAO(object):
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (db_root_config['dbname'],
                                                                             db_root_config['user'],
@@ -11,43 +11,50 @@ class AvailablePersonDAO:
                                                                             db_root_config['host'])
         self.conn = psycopg2.connect(connection_url)
 
-    def create_unavailable_person_time(self, st_dt, et_dt, person_id):
+    def __del__(self):
+        self.conn.close()
+
+    def create_unavailable_person_time(self, st_dt, et_dt, person_id: int):
         cursor = self.conn.cursor()
         query = 'insert into "availableperson" ' \
                 '(st_dt, et_dt, person_id) values (%s, %s, %s) returning pa_id;'
         cursor.execute(query, (st_dt, et_dt, person_id,))
         pa_id = cursor.fetchone()[0]
         self.conn.commit()
+        cursor.close()
         return pa_id
 
-    def get_all_unavailable_person(self):
+    def get_all_unavailable_person(self) -> list:
         cursor = self.conn.cursor()
         query = 'select  pa_id, st_dt, et_dt, person_id ' \
                 'from "availableperson";'
         cursor.execute(query)
         result = []
-        # ok
         for row in cursor:
             result.append(row)
+        cursor.close()
         return result
 
-    def get_unavailable_person_by_id(self, pa_id):
+    def get_unavailable_person_by_unavailable_id(self, pa_id: int):
         cursor = self.conn.cursor()
         query = 'select  st_dt, et_dt, person_id ' \
                 'from "availableperson"' \
                 'where pa_id = %s'
         cursor.execute(query, (pa_id,))
         result = cursor.fetchone()
+        cursor.close()
         return result
-    def get_unavailable_person_by_person_id(self, person_id):
+
+    def get_unavailable_person_by_id(self, p_id: int):
         cursor = self.conn.cursor()
         query = 'select  st_dt, et_dt ' \
                 'from "availableperson"' \
                 'where person_id = %s'
-        cursor.execute(query, (person_id,))
+        cursor.execute(query, (p_id,))
         result = []
         for row in cursor:
             result.append(row)
+        cursor.close()
         return result
 
     def get_unavailable_time_of_person_by_id_in_booking(self, p_id):
