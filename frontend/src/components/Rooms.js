@@ -28,7 +28,7 @@ function Rooms(props) {
     const [roomSchedule, setRoomSchedule] = useState(new Date());
     const [allDayRS, setallDayRS] = useState([]);
     const [canShowSched, setCanShowSched] = useState(false);
-    const [roomid,setroomid] =useState("");
+    const [Room_id,setroomid] =useState("");
     const roomID = props.id;
     const [st, setst_dt] = useState("");
     let [et, setet_dt] = useState("");

@@ -43,19 +43,13 @@ function RoomManagement(){
                 <Container>
                     <Grid container spacing={3}>
                         {Array.from(Array(rooms.length)).map((_, i) => (
-                            <Rooms>
-                                <label>
+                            <Rooms
 
-
-                                    Room_id: {rooms[i].r_id}
-                              Building: {rooms[i].r_building}
-                                 Department: {rooms[i].r_dept}
-                                    Type: {rooms[i].r_type}
-                                    type={"edit"}
-
-
-                                </label>
-                            </Rooms>
+                                Room_id: {`${rooms[i].r_id}`}
+                                Building: {`${rooms[i].r_building}`}
+                                Department: {rooms[i].r_dept}
+                                Type: {rooms[i].r_type}
+                                type={"edit"}/>
                         ))}
                         <Grid justify={"center"} container item xs={12} md={6} lg={4}>
                             <Rooms
