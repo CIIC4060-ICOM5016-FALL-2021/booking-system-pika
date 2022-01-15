@@ -35,7 +35,7 @@ function Rooms(props) {
    const [roompermission,setroompermision] =useState("");
     console.log("All day",allDayRS)
     function createRoom(){
-        if(  type< 0 || Building==="" || dept===""){
+        if(  type==="" || Building==="" || dept===""){
             console.log("Empty Field")
             setCreatedMessage("Failed to create room, invalid parameters");
         } else {
@@ -123,10 +123,6 @@ function Rooms(props) {
         );
     }
 
-    function getTID(hours, minutes){
-        if(minutes === 30) return hours * 2 + 2;
-        else return hours * 2 + 1;
-    }
 
     function markRoom(){
 
@@ -146,7 +142,6 @@ function Rooms(props) {
 
     function markRoomAvailable(){
         console.log(toMarkAvailable)
-        let day = `${toMarkAvailable.getFullYear()}-${toMarkAvailable.getMonth() + 1}-${toMarkAvailable.getDate()}`;
         const json = { "r_id": roomID,
             "st_dt": st,
             "et_dt": et}
@@ -314,7 +309,7 @@ function Rooms(props) {
                                         <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {settype(e.target.value);}}>
                                             <option key={0} value={"0"}>Select Permission</option>
                                             {
-                                                ["Student", "Department Staff"].map((item) => {return <option>{item}</option>})
+                                                [ 1,2, 3,4, 5].map((item) => {return <option>{item}</option>})
                                             }
                                         </select>
 
@@ -333,13 +328,14 @@ function Rooms(props) {
                                 <Form>
 
                                     <h5 style={{paddingTop: "5px"}}>Building Name</h5>
-                                    <p style={{paddingBottom: "5px"}}>{`${props.building}`}</p>
-
+                                    <p style={{paddingBottom: "5px"}}>{`${props.Building}`}</p>
+                                    <h5 style={{paddingTop: "5px"}}>Department</h5>
+                                    <p style={{paddingBottom: "5px"}}>{`${props.Building}`}</p>
                                     <Form.Input label='Permission'>
                                         <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setroompermision(e.target.value);}}>
                                             <option key={0} value={"0"}>Select Permission</option>
                                             {
-                                                ["Student", "Department Staff"].map((item) => {return <option>{item}</option>})
+                                                [1,2, 3,4, 5].map((item) => {return <option>{item}</option>})
                                             }
                                         </select>
 
