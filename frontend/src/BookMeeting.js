@@ -37,6 +37,7 @@ function BookMeeting(){
     const [rooms,setrooms] = useState([])
     const [info, setinfo] = useState(false);
     const [Edit,setEdit]= useState("")
+    const [free, setfree] = useState(false);
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
     const y = ()=>{
@@ -230,7 +231,6 @@ function run(){
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => setOpen(false)}>Cancel</Button>
             </Modal.Actions>
         </Modal>
         <Modal
@@ -275,6 +275,41 @@ function run(){
         </Modal>
         <Modal
             centered={false}
+            open={free}
+            onClose={() => setfree(false)}
+            onOpen={() => setfree(true)}
+        >
+            <Modal.Header>Room is already booked in selected timeframe. Please select another timeframe.</Modal.Header>
+            <Modal.Content>
+                <Modal.Description>
+                    <Form.Field>
+                    <Form.Input
+                        fluid
+                        name="Start time"
+                        placeholder="Insert Start time"
+                        label="Start time"
+                        value={st_dt}
+                        onChange={e => setst_dt(e.target.value)}
+                    />
+                </Form.Field>
+                <Form.Field>
+                    <Form.Input
+                        fluid
+                        name="End time"
+                        placeholder="Insert End time"
+                        label="End time"
+                        value={et_dt}
+                        onChange={e => setet_dt(e.target.value)}
+                    />
+                </Form.Field>
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => setfree(false)}>OK</Button>
+            </Modal.Actions>
+        </Modal>
+        <Modal
+            centered={false}
             open={mark}
             onClose={() => setmark(false)}
             onOpen={() => setmark(true)}
@@ -308,7 +343,6 @@ function run(){
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => setmark(false)}>Cancel</Button>
             </Modal.Actions>
         </Modal>
         <Modal
@@ -345,6 +379,7 @@ function run(){
             fluid
             onClick={() => {setmark(true)}}
         > Mark as unavailable</Button>
+            <Button fluid onClick={()=>setfree(true)}>Show all free user in time frame</Button>
     </Container>
     </Container>
 
