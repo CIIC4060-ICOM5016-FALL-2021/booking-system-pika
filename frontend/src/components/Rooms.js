@@ -28,8 +28,8 @@ function Rooms(props) {
     const [roomSchedule, setRoomSchedule] = useState(new Date());
     const [allDayRS, setallDayRS] = useState([]);
     const [canShowSched, setCanShowSched] = useState(false);
-    const [Room_id,setroomid] =useState("");
-    const roomID = props.id;
+    const roomID = props.Room_id;
+    console.log(roomID)
     const [st, setst_dt] = useState("");
     let [et, setet_dt] = useState("");
    const [roompermission,setroompermision] =useState("");
@@ -193,6 +193,7 @@ function Rooms(props) {
     function fetchRoomSchedule(){
         const url = `https://booking-system-pika.herokuapp.com/pika-booking/rooms/available/all-day-schedule`;
         let day = `${roomSchedule.getFullYear()}-${roomSchedule.getMonth() + 1}-${roomSchedule.getDate()}`;
+        console.log(day)
         const inject = {"room_id": roomID, "date": day};
         console.log(inject)
         axios.post(url, inject,
@@ -208,6 +209,7 @@ function Rooms(props) {
                 const endDate = new Date(roomSchedule.getFullYear(), roomSchedule.getMonth() + 1, roomSchedule.getDate(), parseInt(blockEnd[0]), parseInt(blockEnd[1]), parseInt(blockEnd[2]));
                 result.push({start: startDate, end: endDate, available: ts.available, user: ts.user})
             }
+
             setallDayRS(result)
         },(error) => {
             console.log(error);
@@ -262,6 +264,7 @@ function Rooms(props) {
                     <Typography variant="body2" color="textSecondary">Building: {props.Building}</Typography>
                     <Typography variant="body2" color="textSecondary">Department: {props.Department}</Typography>
                     <Typography variant="body2" color="textSecondary">Type: {props.Type}</Typography>
+
                 </CardContent>
             </Card>
             <Modal centered={false} open={open} onClose={() => setOpen(false)} onOpen={() => setOpen(true)}>
@@ -362,12 +365,10 @@ function Rooms(props) {
                             Or select Time Slot to mark available, keep in mind that these time slots are of <strong>30 minutes</strong> in duration <br/>
                             {unavailableTimeSlots.length > 0 &&
                                 <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {
-                                    if (e.target.value != 0) {
+                                    if (e.target.value !== 0) {
                                         setToMarkAvailable(new Date(e.target.value));
                                         setInvalidTimeSlot(false);
-                                        {
-                                            console.log(e.target.value)
-                                        }
+
                                     } else setInvalidTimeSlot(true)
                                 }}>
                                     <option key={0} value={"0"}>Select Time Slot</option>
