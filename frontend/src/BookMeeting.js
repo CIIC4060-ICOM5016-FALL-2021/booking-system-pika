@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import {Button, Container, Form, Modal} from "semantic-ui-react";
+import {Button, Container, Form, Modal, ModalDescription} from "semantic-ui-react";
 import axios from "axios";
 
 
@@ -17,25 +17,35 @@ import axios from "axios";
 function BookMeeting(){
     const [r, setr] = useState(false);
     const [t, sett] = useState(false);
+    const [b, setb] = useState(false);
     const [dates, setDates] = useState([]);
     const [open, setOpen] = useState(false);
     const [booking, setbooking] = useState(false);
+    const [book, setbook] = useState(false);
     const [unavailable, setavailable] = useState(false);
+    const [unavail, setavail] = useState(false);
     const [mark,setmark] = useState(false);
     const localizer = momentLocalizer(moment)
     const [st_dt, setst_dt] = useState("");
     let [et_dt, setet_dt] = useState("");
     const[room_id,setroom_id] = useState("");
-    const[invitee,setinvitee]=  useState("");
+    const[invitee,setinvitee]=  useState([]);
     const [g,setg]= useState(false);
     const [its,setits] = useState(false)
     const [Selected,SetSelect] = useState(false)
-    const [schedule,setschedule] = useState([])
+    const [schedule,setschedule] = useState( [])
     const [info, setinfo] = useState(false);
     const [Edit,setEdit]= useState("")
     const [free, setfree] = useState(false);
+    const [updatebooking,setupdatebooking] = useState(false);
+    const[deletebooking,setdeletebooking] =useState(false)
+    const [updateunavailable,setupunavailable]= useState(false);
+    const [deleteunavailable,setdeleteupunavailable]= useState(false);
+    const [listfree,setlistfree]=useState([]);
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
+    const[un,setun] =  useState("");
+    const [ba_id,setba_id] = useState("");
     const y = ()=>{
         setr(true)
     }
@@ -52,21 +62,83 @@ function BookMeeting(){
         }
     }
 
+   function getfreeuser(){
+
+   }
+
     const returnallfalse=()=>{
         setr(false)
         setOpen(false)
         setst_dt("")
         setet_dt("")
         setroom_id("")
-        setinvitee("")
+        setinvitee([])
         setg(false)
         setbooking(false)
+        setbook(false)
         setavailable(false)
+        setavail(false)
         setmark(false)
         SetSelect(false)
         setinfo(false)
+        setb(false)
+        setba_id("")
+        setun("")
+        setdeleteupunavailable(false)
+        setupdatebooking(false)
+        setr(false)
+        setdeletebooking(false)
+        setdeleteupunavailable(false)
+        sett(false)
 
 }
+    function updatebookingcheck(){
+        let e = localStorage.getItem("login-data");
+        let   dat = JSON.parse(e)
+        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == ""||ba_id==""||!r){
+            return false
+        }else{
+            axios.put("https://booking-system-pika.herokuapp.com/pika-booking/booking", {
+                "b_id": ba_id,
+                "st_dt": st_dt,
+                "et_dt": et_dt,
+                "host_id": dat,
+                "invited_id": invitee,
+                "room_id": room_id
+            })
+            return true
+        }
+    }
+    function updateunavailablecheck(){
+
+        if (st_dt == "" || et_dt == "" || un==""||!r){
+            return false
+        }else{
+            axios.put(" https://booking-system-pika.herokuapp.com/pika-booking/persons/available", {
+                "pa_id" : un,
+                "person_id":  dat.p_id,
+                "st_dt": st_dt,
+                "et_dt": et_dt
+            })
+            return true
+        }
+    }
+    function deletebookingcheck(){
+        if (ba_id==""||!r){
+            return false
+        }else{
+            axios.delete(" https://booking-system-pika.herokuapp.com/pika-booking/booking")
+            return true
+        }
+    }
+    function deleteunavailablegcheck(){
+        if (un==""||!r){
+            return false
+        }else{
+            axios.delete(" https://booking-system-pika.herokuapp.com/pika-booking/persons/available")
+            return true
+        }
+    }
 function run(){
         if (Selected== true && open== true||Selected== true && mark== true){
             setst_dt(dates[0].startTimeDisplay)
@@ -77,14 +149,14 @@ function run(){
         return false
 }
     function first() {
-        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == "") {
+        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == []) {
             return false
         } else {
             return true
         }
     }
     function check() {
-        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == ""||!y){
+        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == []||!y){
             return false
         }else {
             let e = localStorage.getItem("login-data");
@@ -334,7 +406,7 @@ function run(){
                                 onChange={e => setet_dt(e.target.value)}
                             />
                         </Form.Field>
-                        <Button content='Enter' icon='signup' size='big' onClick={() => (first1()?setavailable(true): sett(true))}/>
+                        <Button content='Enter' icon='signup' size='big' onClick={() => (first1()?setavail(true): sett(true))}/>
                     </Form>
                 </Modal.Description>
             </Modal.Content>
@@ -343,9 +415,9 @@ function run(){
         </Modal>
         <Modal
             centered={false}
-            open={unavailable}
-            onClose={() => setavailable(false)}
-            onOpen={() => setavailable(true)}
+            open={unavail}
+            onClose={() => setavail(false)}
+            onOpen={() => setavail(true)}
         >
             <Modal.Header>Are you sure?</Modal.Header>
             <Modal.Content>
@@ -353,14 +425,14 @@ function run(){
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => setavailable(false)}>No</Button>
-                <Button onClick={() => unavailablecheck()&& setbooking(true)}>Yes</Button>
+                <Button onClick={() => setavail(false)}>No</Button>
+                <Button onClick={() => unavailablecheck()&& setbook(true)}>Yes</Button>
             </Modal.Actions>
         </Modal>
         <Modal centered={false}
                open={booking}
-               onClose={() => setbooking(false)}
-               onOpen={() => setbooking(true)}>
+               onClose={() => setbook(false)}
+               onOpen={() => setbook(true)}>
             <Modal.Header>You are unavailable at this hour, {st_dt} to {et_dt}.</Modal.Header>
             <Modal.Actions>
                 <Button onClick={() => returnallfalse()}>okay</Button>
@@ -376,6 +448,217 @@ function run(){
             onClick={() => {setmark(true)}}
         > Mark as unavailable</Button>
             <Button fluid onClick={()=>setfree(true)}>Show all free user in time frame</Button>
+            <Modal open={booking}
+                   onClose={() => setbooking(false)}
+                   onOpen={() => setbooking(true)}>
+                <Modal.Header>What do you want to change of your booking?</Modal.Header>
+                <Modal.Actions>
+                    <Button onClick={()=>setupdatebooking(true)}>Update Booking</Button>
+                    <Button onClick={()=>setdeletebooking(true)}> Cancel Booking </Button>
+                    <Button onClick={() => setbooking(false)}>cancel</Button>
+                </Modal.Actions>>
+
+            </Modal>
+            <Modal open={updatebooking}
+                   onClose={() => setupdatebooking(false)}
+                   onOpen={() => setupdatebooking(true)}>
+                <Modal.Header>What do you want to change of booking?</Modal.Header>
+                <Modal.Content>
+                    <Modal.Description>
+                        <Form.Field>
+                            <Form.Input
+                                fluid
+                                name="Ba_id"
+                                placeholder=" Insert Booking id"
+                                label="ba_id"
+                                value={ba_id}
+                                onChange={e => setba_id(e.target.value)}
+
+                            />
+                        </Form.Field>
+                        <Form>
+                            <Form.Field>
+                                <Form.Input
+                                    fluid
+                                    name="Start time"
+                                    placeholder="Insert Start time"
+                                    label="Start time"
+                                    value={st_dt}
+                                    onChange={e => setst_dt(e.target.value)}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <Form.Input
+                                    fluid
+                                    name="End time"
+                                    placeholder="Insert End time"
+                                    label="End time"
+                                    value={et_dt}
+                                    onChange={e => setet_dt(e.target.value)}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <Form.Input
+                                    fluid
+                                    name="r_id"
+                                    placeholder=" Insert r_id"
+                                    label="Room ID"
+                                    value={room_id}
+                                    onChange={e => setroom_id(e.target.value)}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <Form.Input
+                                    fluid
+                                    name="Invitee_id"
+                                    placeholder=" Insert Invitee_id"
+                                    label="Invitee_id"
+                                    value={invitee}
+                                    onChange={e => setinvitee(e.target.value)}
+
+                                />
+                            </Form.Field>
+                            <Button content='Enter' icon='signup' size='big'/>
+                        </Form>
+                    </Modal.Description>
+                </Modal.Content>
+                <Modal.Actions>
+                    <Button onClick={() => setupdatebooking(false)}>cancel</Button>
+                </Modal.Actions>
+            </Modal>
+            <Modal open={deletebooking}
+                   onClose={() => setdeletebooking(false)}
+                   onOpen={() => setdeletebooking(true)}>
+                <Modal.Header>which booking do you want to delete?</Modal.Header>
+                <Modal.Content>
+                    <ModalDescription>
+                        <Form.Field>
+                            <Form.Input
+                                fluid
+                                name="Ba_id"
+                                placeholder=" Insert Booking id"
+                                label="ba_id"
+                                value={ba_id}
+                                onChange={e => setba_id(e.target.value)}
+
+                            />
+                        </Form.Field>
+
+                    </ModalDescription>
+
+                </Modal.Content>
+                <Modal.Actions>
+                    <Button content='Confirm'/>
+                    <Button onClick={() => setdeletebooking(false)}>cancel</Button>
+                </Modal.Actions>>
+
+            </Modal>
+            <Modal open={unavailable}
+                   onClose={() => setavailable(false)}
+                   onOpen={() => setavailable(true)}>
+                <Modal.Header>What do you want to change of your free time?</Modal.Header>
+                <Modal.Actions>
+                    <Button onClick={()=>setupunavailable(true)}>Update Unavailibility</Button>
+                    <Button onClick={() => setdeleteupunavailable(true)}> Cancel Your Unavailibility </Button>
+                    <Button onClick={() => setavailable(false)}>cancel</Button>
+                </Modal.Actions>>
+
+            </Modal>
+            <Modal open={updateunavailable}
+                   onClose={() => setupunavailable(false)}
+                   onOpen={() => setupunavailable(true)}>
+                <Modal.Header>What do you want to change of your free time?</Modal.Header>
+                <Modal.Content>
+                    <Modal.Description>
+                        <Form.Field>
+                            <Form.Input
+                                fluid
+                                name="unavailable id"
+                                placeholder=" Insert Unavailable Id"
+                                label="unavailable id"
+                                value={un}
+                                onChange={e => setun(e.target.value)}
+
+                            />
+                        </Form.Field>
+                        <Form>
+                            <Form.Field>
+                                <Form.Input
+                                    fluid
+                                    name="Start time"
+                                    placeholder="Insert Start time"
+                                    label="Start time"
+                                    value={st_dt}
+                                    onChange={e => setst_dt(e.target.value)}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <Form.Input
+                                    fluid
+                                    name="End time"
+                                    placeholder="Insert End time"
+                                    label="End time"
+                                    value={et_dt}
+                                    onChange={e => setet_dt(e.target.value)}
+                                />
+                            </Form.Field>
+                        </Form>
+                    </Modal.Description>
+                </Modal.Content>
+                <Modal.Actions>
+                    <Button onClick={() => setupunavailable(false)}>cancel</Button>
+                    <Button content='Confirm'
+                            onClick={() => {check()? setOpen(true):setr(true)} }/>
+                </Modal.Actions>
+            </Modal>
+            <Modal open={r}
+                   onClose={() => setr(false)}
+                   onOpen={() => setr(true)}
+            >
+                <Modal.Header>Are you sure?</Modal.Header>
+                <Modal.Content>
+                    <Modal.Description>
+                    </Modal.Description>
+                </Modal.Content>
+                <Modal.Actions>
+                    <Button onClick={() => setr(false)}>No</Button>
+                    <Button onClick={() => updateunavailablecheck()&& setb(true)}>Yes</Button>
+                </Modal.Actions>
+            </Modal>
+            <Modal open={t}
+                   onClose={() => setb(false)}
+                   onOpen={() => setb(true)}>
+                <Modal.Header>You have updated your unavailable timeslot</Modal.Header>
+                <Modal.Actions>
+                    <Button onClick={() => returnallfalse()}>Ok</Button>
+                </Modal.Actions>
+            </Modal>
+            <Modal open={deleteunavailable}
+                   onClose={() => setdeleteupunavailable(false)}
+                   onOpen={() => setdeleteupunavailable(true)}>
+                <Modal.Header>Which free time do you want to delete?</Modal.Header>
+                <Modal.Content>
+                    <Modal.Description>
+                        <Form.Field>
+                            <Form.Input
+                                fluid
+                                name="unavailable id"
+                                placeholder=" Insert Unavailable Id"
+                                label="unavailable id"
+                                value={un}
+                                onChange={e => setun(e.target.value)}
+
+                            />
+                        </Form.Field>
+                    </Modal.Description>
+                </Modal.Content>
+                <Modal.Actions>
+                    <Button onClick={() => setdeleteupunavailable(false)}>cancel</Button>
+                    <Button content='Confirm'/>
+                </Modal.Actions>>
+            </Modal>
+            <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
+            <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
     </Container>
     </Container>
 
