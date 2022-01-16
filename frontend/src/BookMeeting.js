@@ -36,17 +36,14 @@ function BookMeeting(){
     const [schedule,setschedule] = useState([])
     const [rooms,setrooms] = useState([])
     const [info, setinfo] = useState(false);
+    const [Edit,setEdit]= useState("")
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
     const y = ()=>{
         setr(true)
     }
 
-    function getrooms(){
-        axios.get('https://booking-system-pika.herokuapp.com/pika-booking/rooms').then(res=>{
-        setrooms(res.data)
-        })
-    }
+
     function getpersonschedule(){
         if (info==false) {
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule', {
@@ -99,6 +96,11 @@ function run(){
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', {
                 "st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": invitee, "room_id": room_id,
 
+            },
+            (error) => {
+                console.log(error);
+                setEdit("You can't make booking")
+                console.log(Edit);
             })
             return true
         }

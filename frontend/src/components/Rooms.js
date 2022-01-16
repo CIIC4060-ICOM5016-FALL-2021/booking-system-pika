@@ -259,8 +259,9 @@ function Rooms(props) {
                 }
                 <CardContent>
 
-                    <Typography variant="body2" color="textSecondary">Capacity: {props.capacity}</Typography>
-                    <Typography variant="body2" color="textSecondary">Permission: {props.permission}</Typography>
+                    <Typography variant="body2" color="textSecondary">Building: {props.Building}</Typography>
+                    <Typography variant="body2" color="textSecondary">Department: {props.Department}</Typography>
+                    <Typography variant="body2" color="textSecondary">Type: {props.Type}</Typography>
                 </CardContent>
             </Card>
             <Modal centered={false} open={open} onClose={() => setOpen(false)} onOpen={() => setOpen(true)}>

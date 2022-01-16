@@ -10,7 +10,8 @@ function UserStatistics (){
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
     console.log(dat.p_id);
-        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/most-booked-room', {"p_id": dat.p_id}).then(res => {
+        axios.post(
+            'https://booking-system-pika.herokuapp.com/pika-booking/persons/person/most-booked-room', {"p_id": dat.p_id}).then(res => {
             setdata(res.data);
 
         })
