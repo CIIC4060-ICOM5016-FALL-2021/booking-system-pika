@@ -254,7 +254,7 @@ function Rooms(props) {
                             <IconButton onClick={() => setOpen(true)}><EditOutlined/></IconButton>
                         }
                         title={props.roomName}
-                        subheader={props.building}
+                        subheader={props.Building}
                     />
                 }
                 <CardContent>
@@ -308,7 +308,7 @@ function Rooms(props) {
                                     />
                                     <Form.Input label='Type'>
                                         <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {settype(e.target.value);}}>
-                                            <option key={0} value={"0"}>Select Permission</option>
+                                            <option key={0} value={"0"}>Select Type</option>
                                             {
                                                 [ 1,2, 3,4, 5].map((item) => {return <option>{item}</option>})
                                             }
@@ -332,11 +332,12 @@ function Rooms(props) {
                                     <p style={{paddingBottom: "5px"}}>{`${props.Building}`}</p>
                                     <h5 style={{paddingTop: "5px"}}>Department</h5>
                                     <p style={{paddingBottom: "5px"}}>{`${props.Department}`}</p>
-                                    <Form.Input label='Permission'>
+                                    <Form.Input label='Type'>
                                         <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setroompermision(e.target.value);}}>
-                                            <option key={0} value={"0"}>Select Permission</option>
+                                            <option key={0} value={"0"}>Select Type</option>
                                             {
-                                                [1,2, 3,4, 5, 6].map((item) => {return <option>{item}</option>})
+
+                                                    ["ece","mate", "adem","fisi"].map((item) => {return <option>{item}</option>})
                                             }
                                         </select>
 
