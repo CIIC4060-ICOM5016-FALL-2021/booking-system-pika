@@ -47,8 +47,8 @@ function RoomManagement(){
 
                                 Room_id= {`${rooms[i].r_id}`}
                                 Building= {`${rooms[i].r_building}`}
-                                Department= {rooms[i].r_dept}
-                                Type= {rooms[i].r_type}
+                                Department= {`${rooms[i].r_dept}`}
+                                Type= {`${rooms[i].r_type}`}
                                 type={"edit"}/>
                         ))}
                         <Grid justify={"center"} container item xs={12} md={6} lg={4}>

@@ -330,12 +330,12 @@ function Rooms(props) {
                                     <h5 style={{paddingTop: "5px"}}>Building Name</h5>
                                     <p style={{paddingBottom: "5px"}}>{`${props.Building}`}</p>
                                     <h5 style={{paddingTop: "5px"}}>Department</h5>
-                                    <p style={{paddingBottom: "5px"}}>{`${props.Building}`}</p>
+                                    <p style={{paddingBottom: "5px"}}>{`${props.Department}`}</p>
                                     <Form.Input label='Permission'>
                                         <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setroompermision(e.target.value);}}>
                                             <option key={0} value={"0"}>Select Permission</option>
                                             {
-                                                [1,2, 3,4, 5].map((item) => {return <option>{item}</option>})
+                                                [1,2, 3,4, 5, 6].map((item) => {return <option>{item}</option>})
                                             }
                                         </select>
 
