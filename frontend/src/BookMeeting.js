@@ -4,6 +4,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import {Button, Container, Form, Modal, ModalDescription} from "semantic-ui-react";
 import axios from "axios";
+import {Book} from "@material-ui/icons";
 
 
 // Event {
@@ -110,6 +111,9 @@ function BookMeeting(){
             return true
         }
     }
+    function getfreeinviteetime(){
+
+    }
     function updateunavailablecheck(){
 
         if (st_dt == "" || et_dt == "" || un==""||!r){
@@ -141,7 +145,8 @@ function BookMeeting(){
         }
     }
 function run(){
-        if (Selected== true && open== true||Selected== true && mark== true){
+        if (Selected== true && open== true||Selected== true && mark== true||Selected== true &&free==true||Selected==true&&unavailable==true
+        || Selected==true && booking==true){
             setst_dt(dates[0].startTimeDisplay)
             setet_dt(dates[0].endTimeDisplay)
             return true
