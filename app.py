@@ -189,7 +189,7 @@ def get_available_rooms():
 # ========================= #
 
 
-@app.route('/pika-booking/booking', methods=['GET', 'POST', 'PUT'])
+@app.route('/pika-booking/bookings', methods=['GET', 'POST', 'PUT'])
 def handle_bookings():
     args = request.json
     if request.method == 'POST':
@@ -209,9 +209,34 @@ def handle_bookings():
         return jsonify("Method Not Allowed"), 405
 
 
+@app.route('/pika-booking/bookings/<int:b_id>', methods=['GET', 'DELETE'])
+def handle_booking_by(b_id):
+    if request.method == 'GET':
+        # Get Person by name or id
+        return Booking.get_booking_by_id(b_id)
+    elif request.method == 'DELETE':
+        # Delete Person by id
+        return Booking.delete_booking(b_id)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/bookings/shared-time', methods=['POST'])
+def get_free_time_for_meeting_users():
+    # This gets the most booked room in general
+    args = request.json
+    if request.method == 'POST':
+        if args:
+            return Booking.get_shared_free_timeslot(request.json)
+        else:
+            return jsonify("Args not found"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
+
 # ========================================== #
 # ===-| U N A V A I L A B L E  R O O M |-=== #
 # ========================================== #
+
 
 if __name__ == "__main__":
     app.debug = True

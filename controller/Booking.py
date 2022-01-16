@@ -117,12 +117,14 @@ def get_booking_by_id(b_id: int):
     if method.check_if_booking_exists(b_id):
         data = method.get_booking_by_id(b_id)
         return jsonify({
-            'room_id': data['room_id'],
-            'host_id': data['host_id'],
-            'invited_id': data['invited_id'],
-            'st_dt': data['st_dt'],
-            'et_dt': data['et_dt']
-
+            'room_id': data[4],
+            'host_id': data[3],
+            'invited_id': data[2],
+            'start_time': data[0],
+            'end_time': data[1],
+            'room_url': 'https://booking-system-pika.herokuapp.com/rooms/' + str(data[4]),
+            'host_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(data[3]),
+            'invited_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(data[2])
         }), 200
 
 
@@ -142,9 +144,37 @@ def get_busiest_hours():
         return jsonify(result_list), 200
 
 
-def get_all_bookings(limit_thingy=125):
-    return None
+def get_all_bookings(limit_thingy: int = 125):
+    method = BookingDAO()ata[2],
+            'start_time': data[0],
+            'end_time': data[1],
+            'room_url': 'https://booking-system-pika.herokuapp.com/rooms/' + str(data[0]),
+            'host_url': 'htt
+    count = method.count_booking()
+    if count != 0:
+        data = method.get_all_booking(limit_thingy)
+        bookings = {}
+        result: dict = {'count': count, 'bookings': {}}
+        for index, row in enumerate(data):
+            bookings[index] = {
+                'p_id': row[0],
+                'first_name': row[1],
+                'last_name': row[2],
+                'url': 'https://booking-system-pika.herokuapp.com/bookings/' + str(row[0])
+            }
+        result['persons'] = bookings
+        return jsonify(result), 200
+    else:
+        return jsonify("There are no Persons around"), 404
 
 
 def update_room(json: dict):
+    return None
+
+
+def delete_booking(b_id):
+    return None
+
+
+def get_shared_free_timeslot(json):
     return None

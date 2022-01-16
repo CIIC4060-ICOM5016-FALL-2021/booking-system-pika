@@ -39,6 +39,7 @@ class BookingDAO:
         cursor.execute(query, (st_dt, et_dt, invited_id, host_id, room_id,))
         b_id = cursor.fetchone()[0]
         self.conn.commit()
+        cursor.close()
         return b_id
 
     def get_meetings_by_id(self, b_id):
@@ -55,6 +56,7 @@ class BookingDAO:
         result = []
         for row in cursor:
             result.append(row)
+        cursor.close()
         return result
 
     # Updates existing entry
@@ -65,6 +67,7 @@ class BookingDAO:
                 'where b_id = %s '
         cursor.execute(query, (st_dt, et_dt, invited_id, host_id, room_id, b_id))
         self.conn.commit()
+        cursor.close()
         return True
 
     # deletes an entry
@@ -77,13 +80,14 @@ class BookingDAO:
         return deleted_rows != 0
 
     # returns the whole booking query
-    def get_all_booking(self):
+    def get_all_booking(self, limit_thingy: int):
         cursor = self.conn.cursor()
-        query = 'select b_id, st_dt, et_dt, invited_id, host_id, room_id from "booking";'
-        cursor.execute(query)
+        query = 'select b_id, st_dt, et_dt, invited_id, host_id, room_id from "booking" limit %s;'
+        cursor.execute(query, (limit_thingy,))
         result = []
         for row in cursor:
             result.append(row)
+        cursor.close()
         return result
 
     # return a single column entry of the booking with given id
@@ -167,6 +171,22 @@ class BookingDAO:
             result.append(row)
         return result
 
+    def check_if_booking_exists(self, b_id: int):
+        cursor = self.conn.cursor()
+        query = 'select exists(select 1 from booking where b_id = %s);'
+        cursor.execute(query, (b_id,))
+        result = cursor.fetchone()[0]
+        cursor.close()
+        return result
+
+    def count_booking(self):
+        cursor = self.conn.cursor()
+        query = 'select count(*) as "count" ' \
+                'from booking;'
+        cursor.execute(query,)
+        result = cursor.fetchone()[0]
+        cursor.close()
+        return result
 
 
     # Returns the timeframe of the most busiest hour around
@@ -183,5 +203,3 @@ class BookingDAO:
             result.append(row)
         return result
 
-    def check_if_booking_exists(self, b_id):
-        pass
