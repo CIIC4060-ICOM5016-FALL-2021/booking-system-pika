@@ -203,10 +203,12 @@ function Rooms(props) {
             let result = []
             let i=0;
             for(let ts of response.data.st_dt){ // data : [ {timeBlock1}, {timeBlock2}, {...} ]
-                const blockStart = response.data.st_dt[i];
-                const blockEnd = response.data.et_dt[i];
+                const blockStart = ` ${response.data.st_dt[i]}-0400 (Atlantic Standard Time)`
+                const blockEnd = `${response.data.et_dt[i]}-0400 (Atlantic Standard Time)`;
                 const startDate = new Date(blockStart);
+                console.log(startDate);
                 const endDate = new Date(blockEnd);
+                console.log(endDate);
                 result.push({start: startDate, end: endDate})
                 i++
             }
@@ -414,8 +416,8 @@ function Rooms(props) {
                                         allDayRS.map(item => {
                                                 return (
                                                     <tr>
-                                                        <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.start.getHours()+4, item.start.getMinutes())}</td>
-                                                        <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.end.getHours()+4, item.end.getMinutes())}</td>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.start.getHours(), item.start.getMinutes())}</td>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.end.getHours(), item.end.getMinutes())}</td>
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{"No"}</td>
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{item.user}</td>
                                                     </tr>
