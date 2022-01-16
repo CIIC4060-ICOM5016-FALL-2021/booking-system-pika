@@ -1,9 +1,8 @@
-import React, {Component, useState} from 'react';
+import React, { useState} from 'react';
 import {Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import {Button, Card, Container, Form, Modal, ModalContent, ModalDescription, Segment} from "semantic-ui-react";
-import {Link} from "react-router-dom";
+import {Button, Container, Form, Modal, ModalDescription, Segment} from "semantic-ui-react";
 import axios from "axios";
 
 
@@ -21,14 +20,12 @@ function Schedule(){
     const [r, setr] = useState(false);
     const [booking, setbooking] = useState(false);
     const [unavailable, setavailable] = useState(false);
-    const [mark,setmark] = useState([]);
     const [ba_id,setba_id] = useState("");
     const [st_dt, setst_dt] = useState("");
     const [et_dt, setet_dt] = useState("");
     const[room_id,setroom_id] = useState("");
     const[invitee,setinvitee]=  useState("");
     const[un,setun] =  useState("");
-    const[date,setdate] =  useState("");
     const [updatebooking,setupdatebooking] = useState(false);
     const[deletebooking,setdeletebooking] =useState(false)
     const [updateunavailable,setupunavailable]= useState(false);
@@ -36,23 +33,10 @@ function Schedule(){
     const [meetings,setmeetings] =useState([])
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
-    const [dates, setDates] = useState([{
-        'title': 'Selection',
-        'allDay': false,
-        'start': new Date(moment.now()),
-        'end': new Date(moment.now()),
-    }]);
     const [info, setinfo] = useState(false);
     const [open, setOpen] = useState(false);
     const localizer = momentLocalizer(moment)
 
-
-    const [schedule1,setschedule1] =  useState([{
-        'title': 'Selection',
-        'allDay': false,
-        'start': new Date(moment.now()),
-        'end': new Date(moment.now()),
-    }])
     function getpersonschedule(){
         if (info==false) {
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule', {
@@ -114,16 +98,6 @@ function Schedule(){
         sett(false)
     }
 
-
-
-    function Time(year,month, date, hours, minutes){
-        if (minutes==0)
-            return `${year}-${month +1}-${date} ${hours}:00:00-04`;
-        else if (minutes< 10)
-            return `${year}-${month +1}-${date} ${hours}:0${minutes}:00-04`;
-        else
-            return `${year}-${month +1}-${date} ${hours}:${minutes}:00-04`;
-    }
     function getperson(){
         axios.post( "https://booking-system-pika.herokuapp.com/pika-booking/person/unavailable/id", {"Person_id": dat.p_id})
     }

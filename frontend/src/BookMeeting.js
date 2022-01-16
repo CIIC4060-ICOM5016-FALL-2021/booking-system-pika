@@ -30,11 +30,7 @@ function BookMeeting(){
     const [g,setg]= useState(false);
     const [its,setits] = useState(false)
     const [Selected,SetSelect] = useState(false)
-    const[bookings,setbookings] = useState([])
-    const[bookinginfo,setbookinginfo] = useState([])
-    const[unavailslots,setunavailslots] = useState([])
     const [schedule,setschedule] = useState([])
-    const [rooms,setrooms] = useState([])
     const [info, setinfo] = useState(false);
     const [Edit,setEdit]= useState("")
     const [free, setfree] = useState(false);
@@ -208,9 +204,9 @@ function run(){
                         <Form.Field>
                             <Form.Input
                                 fluid
-                                name="r_id"
-                                placeholder=" Insert r_id"
-                                label="Room ID"
+                                name="Room Name"
+                                placeholder=" Insert Room Name"
+                                label="Room Name"
                                 value={room_id}
                                 onChange={e => setroom_id(e.target.value)}
                             />

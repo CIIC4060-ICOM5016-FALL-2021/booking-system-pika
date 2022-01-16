@@ -46,6 +46,7 @@ function RoomManagement(){
                             <Rooms
 
                                 Room_id= {`${rooms[i].r_id}`}
+                                RoomName ={`${rooms[i].RoomName}`}
                                 Building= {`${rooms[i].r_building}`}
                                 Department= {`${rooms[i].r_dept}`}
                                 Type= {`${rooms[i].r_type}`}

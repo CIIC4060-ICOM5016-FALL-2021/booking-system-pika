@@ -203,8 +203,8 @@ function Rooms(props) {
             let result = []
             let i=0;
             for(let ts of response.data.st_dt){ // data : [ {timeBlock1}, {timeBlock2}, {...} ]
-                const blockStart = ts.st_dt[i];
-                const blockEnd = ts.et_dt[i];
+                const blockStart = response.data.st_dt[i];
+                const blockEnd = response.data.et_dt[i];
                 const startDate = new Date(blockStart);
                 const endDate = new Date(blockEnd);
                 result.push({start: startDate, end: endDate})
@@ -314,7 +314,7 @@ function Rooms(props) {
                                         <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {settype(e.target.value);}}>
                                             <option key={0} value={"0"}>Select Type</option>
                                             {
-                                                [ 1,2, 3,4, 5].map((item) => {return <option>{item}</option>})
+                                                [ "ece","mate", "adem","fisi"].map((item) => {return <option>{item}</option>})
                                             }
                                         </select>
 
@@ -414,9 +414,9 @@ function Rooms(props) {
                                         allDayRS.map(item => {
                                                 return (
                                                     <tr>
-                                                        <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.start.getHours(), item.start.getMinutes())}</td>
-                                                        <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.end.getHours(), item.end.getMinutes())}</td>
-                                                        <td style={{padding:"5px", border: "1px solid black"}}>{item.available.toString() === "true" ? "Yes" : "No"}</td>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.start.getHours()+4, item.start.getMinutes())}</td>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.end.getHours()+4, item.end.getMinutes())}</td>
+
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{item.user}</td>
                                                     </tr>
                                                 )
@@ -429,7 +429,7 @@ function Rooms(props) {
 
                         </Modal.Description>
                     }
-
+F
                     {props.type === "edit" && !unavailabilityModalOpen && !scheduleModalOpen && <Button onClick={deleteRoom} style={{marginTop: "15px"}}>Delete</Button>}
                     {props.type === "edit" && unavailabilityModalOpen  && unavailableTimeSlots.length > 0 && <Button onClick={markRoomAvailable}>Mark As Available</Button>}
 
