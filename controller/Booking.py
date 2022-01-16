@@ -8,31 +8,6 @@ from models.AvailablePerson import AvailablePersonDAO
 from models.AvailableRoom import AvailableRoomDAO
 
 
-def build_booking_attr_dict(b_id, st_dt, et_dt, invited_id, host_id, room_id):
-    if type(b_id) == list:
-        result = []
-        for booking_id in b_id:
-            result.append({
-                'b_id': booking_id,
-                'st_dt': st_dt,
-                'et_dt': et_dt,
-                'invited_id': invited_id,
-                'host_id': host_id,
-                'room_id': room_id
-            })
-        return result
-
-    elif type(b_id) == int:
-        return {
-            'b_id': b_id,
-            'st_dt': st_dt,
-            'et_dt': et_dt,
-            'invited_id': invited_id,
-            'host_id': host_id,
-            'room_id': room_id
-        }
-
-
 def create_new_booking(json: dict):
     st_dt = json['st_dt']
     et_dt = json['et_dt']
@@ -96,14 +71,28 @@ def create_new_booking(json: dict):
 
                     result: dict = {}
                     for index, row in enumerate(b_id):
-                        result[index] = build_booking_attr_dict(b_id, st_dt, et_dt, invited_id, host_id, room_id), 200
-
-                    return jsonify(result)
+                        result[index] = {
+                            'b_id': row,
+                            'st_dt': st_dt,
+                            'et_dt': et_dt,
+                            'invited_id': invited_id[index],
+                            'host_id': host_id,
+                            'room_id': room_id,
+                            'url': 'https://booking-system-pika.herokuapp.com/bookings/' + str(row)
+                        }
+                    return jsonify(result), 200
                 elif type(invited_id) == int:
                     if AvailablePersonDAO().verify_available_person_at_timeframe(invited_id, st_dt, et_dt):
                         return jsonify("Person has conflict"), 404
                     b_id = method4.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
-                    return jsonify(build_booking_attr_dict(b_id, st_dt, et_dt, invited_id, host_id, room_id)), 200
+                    return jsonify({
+                        'b_id': b_id,
+                        'st_dt': st_dt,
+                        'et_dt': et_dt,
+                        'invited_id': invited_id,
+                        'host_id': host_id,
+                        'url': 'https://booking-system-pika.herokuapp.com/bookings/' + str(b_id)
+                    }), 200
             else:
                 return jsonify("Host does not have access to this room"), 404
         else:
@@ -134,36 +123,32 @@ def get_busiest_hours():
     if not busiest:
         return jsonify("Not Found"), 404
     else:
-        result_list: list = []
-        for row in busiest:
-            result_list.append({
+        result: dict = {}
+        for index, row in enumerate(busiest):
+            result[index] = {
                 'st_dt': row[0],
                 'et_dt': row[1],
                 'active_hour': row[2]
-            })
-        return jsonify(result_list), 200
+            }
+        return jsonify(result), 200
 
 
 def get_all_bookings(limit_thingy: int = 125):
-    method = BookingDAO()ata[2],
-            'start_time': data[0],
-            'end_time': data[1],
-            'room_url': 'https://booking-system-pika.herokuapp.com/rooms/' + str(data[0]),
-            'host_url': 'htt
+    method = BookingDAO()
     count = method.count_booking()
     if count != 0:
         data = method.get_all_booking(limit_thingy)
         bookings = {}
-        result: dict = {'count': count, 'bookings': {}}
-        for index, row in enumerate(data):
+        result_b: dict = {'count': count, 'bookings': {}}
+        for index, b_row in enumerate(data):
             bookings[index] = {
-                'p_id': row[0],
-                'first_name': row[1],
-                'last_name': row[2],
-                'url': 'https://booking-system-pika.herokuapp.com/bookings/' + str(row[0])
+                'p_id': b_row[0],
+                'first_name': b_row[1],
+                'last_name': b_row[2],
+                'url': 'https://booking-system-pika.herokuapp.com/bookings/' + str(b_row[0])
             }
-        result['persons'] = bookings
-        return jsonify(result), 200
+        result_b['persons'] = bookings
+        return jsonify(result_b), 200
     else:
         return jsonify("There are no Persons around"), 404
 

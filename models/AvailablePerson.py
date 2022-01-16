@@ -87,7 +87,7 @@ class AvailablePersonDAO(object):
             result.append(row)
         return result
 
-    def verify_available_person_at_timeframe(self, p_id, st_dt, et_dt):
+    def verify_available_person_at_timeframe(self, p_id, st_dt, et_dt) -> bool:
         cursor = self.conn.cursor()
         query = "select exists(select booking.invited_id, booking.st_dt, booking.et_dt " \
                 "from booking " \
@@ -100,7 +100,7 @@ class AvailablePersonDAO(object):
                 "and availableperson.person_id=%s)  " \
                 "as booleanresult;"
         cursor.execute(query, (st_dt, et_dt, p_id, p_id,st_dt, et_dt, p_id,))
-        result = cursor.fetchone()
+        result = cursor.fetchone()[0]
         return result
 
     def verify_conflict_at_timeframe(self, p_id, st_dt, et_dt):
