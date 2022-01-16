@@ -80,6 +80,7 @@ function BookMeeting(){
         setavail(false)
         setmark(false)
         SetSelect(false)
+        setfree(false)
         setinfo(false)
         setb(false)
         setba_id("")
@@ -347,7 +348,7 @@ function run(){
             onClose={() => setfree(false)}
             onOpen={() => setfree(true)}
         >
-            <Modal.Header>Room is already booked in selected timeframe. Please select another timeframe.</Modal.Header>
+            <Modal.Header> Please select  timeframe.</Modal.Header>
             <Modal.Content>
                 <Modal.Description>
                     <Form.Field>
