@@ -34,10 +34,7 @@ function UserStatistics (){
                 Go to Dashboard
             </button>
             </Link>
-            <Link to = "/rooms" > <button>
-                Go to room list
-            </button>
-            </Link>
+
             <Link to = "/person" > <button>
                 Go to Person list
             </button>
