@@ -200,16 +200,17 @@ function Rooms(props) {
             {headers: {'Content-Type': 'application/json'}}//text/plain //application/json
         ).then((response) => {
             console.log("Response", response.data);
-            const timeSlots = response.data
             let result = []
-            for(let ts of timeSlots){ // data : [ {timeBlock1}, {timeBlock2}, {...} ]
-                const blockStart = ts.tstarttime.split(":");
-                const blockEnd = ts.tendtime.split(":");
-                const startDate = new Date(roomSchedule.getFullYear(), roomSchedule.getMonth() + 1, roomSchedule.getDate(), parseInt(blockStart[0]), parseInt(blockStart[1]), parseInt(blockStart[2]));
-                const endDate = new Date(roomSchedule.getFullYear(), roomSchedule.getMonth() + 1, roomSchedule.getDate(), parseInt(blockEnd[0]), parseInt(blockEnd[1]), parseInt(blockEnd[2]));
-                result.push({start: startDate, end: endDate, available: ts.available, user: ts.user})
+            let i=0;
+            for(let ts of response.data.st_dt){ // data : [ {timeBlock1}, {timeBlock2}, {...} ]
+                const blockStart = ts.st_dt[i];
+                const blockEnd = ts.et_dt[i];
+                const startDate = new Date(blockStart);
+                const endDate = new Date(blockEnd);
+                result.push({start: startDate, end: endDate})
+                i++
             }
-
+       console.log(result)
             setallDayRS(result)
         },(error) => {
             console.log(error);
