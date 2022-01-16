@@ -416,7 +416,7 @@ function Rooms(props) {
                                                     <tr>
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.start.getHours()+4, item.start.getMinutes())}</td>
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.end.getHours()+4, item.end.getMinutes())}</td>
-
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{"No"}</td>
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{item.user}</td>
                                                     </tr>
                                                 )
@@ -429,7 +429,7 @@ function Rooms(props) {
 
                         </Modal.Description>
                     }
-F
+
                     {props.type === "edit" && !unavailabilityModalOpen && !scheduleModalOpen && <Button onClick={deleteRoom} style={{marginTop: "15px"}}>Delete</Button>}
                     {props.type === "edit" && unavailabilityModalOpen  && unavailableTimeSlots.length > 0 && <Button onClick={markRoomAvailable}>Mark As Available</Button>}
 
