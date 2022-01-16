@@ -129,7 +129,7 @@ function Rooms(props) {
         const json = {rid: roomID,  "st_dt": st,
             "et_dt": et, person_id: JSON.parse(localStorage.getItem('login-data')).p_id};
 
-        axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/rooms/availablee`,
+        axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/rooms/available`,
             json,
             {headers: {'Content-Type': 'application/json'}}
         ).then((response) => {
