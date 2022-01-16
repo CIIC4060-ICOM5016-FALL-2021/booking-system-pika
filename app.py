@@ -202,7 +202,7 @@ def handle_bookings():
         return Booking.get_all_bookings()
     if request.method == 'PUT':
         if args:
-            return Booking.update_room(args)
+            return Booking.update_booking(args)
         else:
             return jsonify("Missing Arguments"), 405
     else:
@@ -221,6 +221,21 @@ def handle_booking_by(b_id):
         return jsonify("Method Not Allowed"), 405
 
 
+@app.route('/pika-booking/bookings/purge', methods=['DELETE'])
+def handle_purge():
+    if request.method == 'DELETE':
+        args = request.json
+        if args:
+            if 'invitee' in args:
+                return Booking.delete_invitee_from_booking(args)
+            return Booking.delete_booking_host(args)
+        else:
+            return jsonify("Missing Arguments"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+
 @app.route('/pika-booking/bookings/shared-time', methods=['POST'])
 def get_free_time_for_meeting_users():
     # This gets the most booked room in general
@@ -237,6 +252,10 @@ def get_free_time_for_meeting_users():
 # ===-| U N A V A I L A B L E  R O O M |-=== #
 # ========================================== #
 
+
+# ============================================== #
+# ===-| U N A V A I L A B L E  P E O P L E |-=== #
+# ============================================== #
 
 if __name__ == "__main__":
     app.debug = True

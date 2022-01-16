@@ -115,22 +115,8 @@ def get_booking_by_id(b_id: int):
             'host_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(data[3]),
             'invited_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(data[2])
         }), 200
-
-
-def get_busiest_hours():
-    method = BookingDAO()
-    busiest = method.get_busiest_hours()
-    if not busiest:
-        return jsonify("Not Found"), 404
     else:
-        result: dict = {}
-        for index, row in enumerate(busiest):
-            result[index] = {
-                'st_dt': row[0],
-                'et_dt': row[1],
-                'active_hour': row[2]
-            }
-        return jsonify(result), 200
+        return jsonify("Booking Id Not Found"), 405
 
 
 def get_all_bookings(limit_thingy: int = 125):
@@ -150,16 +136,105 @@ def get_all_bookings(limit_thingy: int = 125):
         result_b['persons'] = bookings
         return jsonify(result_b), 200
     else:
-        return jsonify("There are no Persons around"), 404
-
-
-def update_room(json: dict):
-    return None
+        return jsonify("No Bookings Found"), 404
 
 
 def delete_booking(b_id):
-    return None
+    method = BookingDAO()
+    if method.check_if_booking_exists(b_id):
+        method.delete_booking(b_id)
+        return jsonify("Booking Deleted Successfully"), 200
+    else:
+        return jsonify("No Bookings Found")
 
 
-def get_shared_free_timeslot(json):
-    return None
+def update_booking(json: dict):
+    b_id = json['b_id']
+    st_dt = json['st_dt']
+    et_dt = json['et_dt']
+    invited_id = json['invited_id']
+    host_id = json['host_id']
+    room_id = json['room_id']
+    method = BookingDAO()
+    if method.check_if_booking_exists(b_id):
+        method.update_booking(b_id, st_dt, et_dt, invited_id, host_id, room_id)
+        return jsonify(True), 200
+    else:
+        return jsonify('Booking Not Found'), 404
+
+
+def delete_booking_host(json: dict):
+    host = json['host_id']
+    st_dt = json['start_time']
+    et_dt = json['end_time']
+
+    method = BookingDAO()
+    method2 = PersonDAO()
+    if method2.check_if_person_exists(host):
+        data = method.delete_booking_host(host, st_dt, et_dt)
+        result = {}
+        for index, row in enumerate(data):
+            result[index] = {
+                'b_id': row
+            }
+        return jsonify(result), 200
+    else:
+        return jsonify('Host Not Found'), 404
+
+
+def delete_invitee_from_booking(json: dict):
+    host_id = json['host_id']
+    invitee = json['invitee']
+    st_dt = json['st_dt']
+    et_dt = json['et_dt']
+    method = BookingDAO()
+    method2 = PersonDAO()
+    if not method2.check_if_person_exists(host_id):
+        return jsonify("Host Not found"), 404
+    if type(invitee) == list:
+        for i in invitee:
+            if not method2.check_if_person_exists(i):
+                return jsonify("Invitee Not found. ID is" + str(i)), 404
+        b_id = {}
+        for index, row in enumerate(invitee):
+            b_id[index] = {
+                'b_id': method.delete_booking_invitee(host_id, row, st_dt, et_dt)
+            }
+        return jsonify(b_id), 200
+    elif type(invitee) == int:
+        if not method2.check_if_person_exists(invitee):
+            return jsonify({
+                'b_id': method.delete_booking_invitee(host_id, invitee, st_dt, et_dt)
+            })
+
+
+def get_free_time_of_day(self,p_id,date):
+        cursor = self.conn.cursor()
+
+#########################################
+def get_busiest_hours():
+    method = BookingDAO()
+    busiest = method.get_busiest_hours()
+    if not busiest:
+        return jsonify("Not Found"), 404
+    else:
+        result: dict = {}
+        for index, row in enumerate(busiest):
+            result[index] = {
+                'st_dt': row[0],
+                'et_dt': row[1],
+                'active_hour': row[2]
+            }
+        return jsonify(result), 200
+
+# returns a single row who would be the most booked room
+def get_most_booked_rooms(self):
+    cursor =''
+
+def get_persons_who_booked_in_room_at_given_timeframe():
+    cursor = ''
+
+def get_most_booked_users():
+    cursor = 'a'
+
+
