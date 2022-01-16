@@ -91,7 +91,8 @@ class AvailableRoomDAO:
     def verify_conflict_at_timeframe(self, r_id, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'select room_id, is_there_conflict, st_dt, et_dt from ( select room_id, st_dt, et_dt, tsrange(st_dt, ' \
-                'et_dt) && tsrange(timestamp %s,timestamp %s) as is_there_conflict from (select room_id, st_dt, et_dt from availableroom ' \
+                'et_dt) && tsrange(timestamp %s,timestamp %s) ' \
+                'as is_there_conflict from (select room_id, st_dt, et_dt from availableroom ' \
                 'where room_id = %s UNION select room_id, st_dt, et_dt from booking where room_id = %s) as ' \
                 'hisdedpisded) t; '
         cursor.execute(query, (st_dt, et_dt, r_id, r_id))
@@ -113,9 +114,17 @@ class AvailableRoomDAO:
             result.append(row)
         return result
 
-    def delete_unavailable_room(self, r_id):
+    def delete_unavailable_room_by_unavailable_id(self, ra_id):
         cursor = self.conn.cursor()
         query = 'delete from "availableroom" where ra_id = %s;'
+        cursor.execute(query, (ra_id,))
+        deleted_rows = cursor.rowcount
+        self.conn.commit()
+        return deleted_rows != 0
+
+    def delete_unavailable_room(self, r_id):
+        cursor = self.conn.cursor()
+        query = 'delete from "availableroom" where room_id = %s;'
         cursor.execute(query, (r_id,))
         deleted_rows = cursor.rowcount
         self.conn.commit()

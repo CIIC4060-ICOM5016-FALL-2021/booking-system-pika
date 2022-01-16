@@ -250,7 +250,8 @@ class PersonDAO(object):
 
     def get_account_info(self, p_email: str, p_password: str):
         cursor = self.conn.cursor()
-        query = 'select p_id, p_fname, p_lname from person where p_email = %s and p_password = %s;'
+        query = 'select p_id, p_fname, p_lname ' \
+                'from person where p_email = %s and p_password = %s;'
         cursor.execute(query, (p_email, p_password,))
         result = cursor.fetchone()
         cursor.close()

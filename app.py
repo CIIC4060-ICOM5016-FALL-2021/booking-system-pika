@@ -30,15 +30,18 @@ def main():
 @app.route('/pika-booking/persons', methods=['GET', 'POST', 'PUT'])
 def handle_persons():
     args = request.json
+    # Create new Person
     if request.method == 'POST':
         if args:
             return create_new_person(args)
         return jsonify("Args not found"), 405
     elif request.method == 'GET':
+        # Get all Persons
         if request.args:
             return Person.get_all_persons(int(request.args['limit']))
         return Person.get_all_persons()
     if request.method == 'PUT':
+        # Update Person
         if args:
             return Person.update_person(args)
         else:
@@ -50,8 +53,10 @@ def handle_persons():
 @app.route('/pika-booking/persons/<int:p_id>', methods=['GET', 'DELETE'])
 def handle_person_by(p_id):
     if request.method == 'GET':
+        # Get Person by name or id
         return Person.get_person(p_id)
     elif request.method == 'DELETE':
+        # Delete Person by id
         return Person.delete_person(p_id)
     else:
         return jsonify("Method Not Allowed"), 405
@@ -160,17 +165,54 @@ def handle_rooms_by_name(r_name):
 
 @app.route('/pika-booking/rooms/most-booked', methods=['GET'])
 def get_most_booked_room():
-    # This gets the most booked room in general
+    # This gets the most booked room in general (top 10)
     if request.method == 'GET':
         return Room.get_most_booked_rooms()
     else:
         return jsonify("Method Not Allowed"), 405
 
 
+@app.route('/pika-booking/rooms/available-room', methods=['POST'])
+def get_available_rooms():
+    # Get available room given a timeframe
+    args = request.json
+    print(args, "AET")
+    if request.method == 'POST':
+        if args and args['st_dt'] and args['et_dt']:
+            return Room.get_available_rooms(args)
+        return jsonify("Args not found"), 405
+    else:
+        jsonify("Method Not Allowed"), 405
+
 # ========================= #
 # ===-| B O O K I N G |-=== #
 # ========================= #
 
+
 @app.route('/pika-booking/booking', methods=['GET', 'POST', 'PUT'])
 def handle_bookings():
     args = request.json
+    if request.method == 'POST':
+        if args:
+            return Booking.create_new_booking(args)
+        return jsonify("Args not found"), 405
+    elif request.method == 'GET':
+        if request.args:
+            return Booking.get_all_bookings(int(request.args['limit']))
+        return Booking.get_all_bookings()
+    if request.method == 'PUT':
+        if args:
+            return Booking.update_room(args)
+        else:
+            return jsonify("Missing Arguments"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+# ========================================== #
+# ===-| U N A V A I L A B L E  R O O M |-=== #
+# ========================================== #
+
+if __name__ == "__main__":
+    app.debug = True
+    app.run()

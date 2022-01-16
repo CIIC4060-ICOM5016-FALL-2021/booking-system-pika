@@ -25,14 +25,14 @@ def get_all_persons(limit: int = 125):
         persons = {}
         result: dict = {'count': count, 'persons': {}}
         for index, row in enumerate(data):
-            persons[row] = {
+            persons[index] = {
                 'p_id': row[0],
                 'first_name': row[1],
                 'last_name': row[2],
                 'url': 'https://booking-system-pika.herokuapp.com/persons/' + str(row[0])
             }
         result['persons'] = persons
-        return jsonify(result)
+        return jsonify(result), 200
     else:
         return jsonify("There are no Persons around"), 404
 

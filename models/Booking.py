@@ -167,6 +167,8 @@ class BookingDAO:
             result.append(row)
         return result
 
+
+
     # Returns the timeframe of the most busiest hour around
     # TODO FIX NOW!!!!!!!!!!
     def get_busiest_hours(self):
@@ -180,3 +182,6 @@ class BookingDAO:
         for row in cursor:
             result.append(row)
         return result
+
+    def check_if_booking_exists(self, b_id):
+        pass

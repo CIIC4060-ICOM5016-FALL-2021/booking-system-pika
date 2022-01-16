@@ -14,7 +14,8 @@ class RoomDAO(object):
         T_LAB: 'laboratory',
         T_CLASSROOM: 'classroom',
         T_OFFICE: 'office',
-        T_STY_SPACE: 'study_space'
+        T_STY_SPACE: 'study_space',
+        T_CONFERENCE: 'conference_hall'
     }
 
     def __init__(self):
@@ -39,7 +40,7 @@ class RoomDAO(object):
     def count_rooms(self):
         cursor = self.conn.cursor()
         query = 'select count(*) as "count" ' \
-                'from room limit %s;'
+                'from room;'
         cursor.execute(query,)
         result = cursor.fetchone()[0]
         cursor.close()

@@ -12,14 +12,14 @@ def get_all_rooms(limit_thingy=25):
         rooms = {}
         result: dict = {'count': count, 'rooms': {}}
         for index, row in enumerate(data):
-            rooms[row] = {
+            rooms[index] = {
                 'r_id': row[0],
                 'room_name': row[1],
                 'room_type': method.rooms[row[2]],
                 'url': 'https://booking-system-pika.herokuapp.com/rooms/' + str(row[0])
             }
         result['rooms'] = rooms
-        return jsonify(result)
+        return jsonify(result), 200
     else:
         return jsonify("There are no Rooms around"), 404
 
@@ -92,14 +92,14 @@ def get_most_booked_rooms():
     if not booked_rooms:
         return jsonify("There's either no Bookings or no Rooms created"), 404
     else:
-        result = []
-        for row in booked_rooms:
-            result.append({
+        result: dict = {}
+        for index, row in enumerate(booked_rooms):
+            result[index] = {
                 "r_id": row[0],
                 "room_name": row[1],
                 "timed_booked": row[2],
                 "url": 'https://booking-system-pika.herokuapp.com/rooms/' + str(row[0])
-            })
+            }
         return jsonify(result), 200
 
 
