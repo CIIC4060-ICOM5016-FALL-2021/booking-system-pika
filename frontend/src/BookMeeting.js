@@ -42,6 +42,7 @@ function BookMeeting(){
     const[deletebooking,setdeletebooking] =useState(false)
     const [updateunavailable,setupunavailable]= useState(false);
     const [deleteunavailable,setdeleteupunavailable]= useState(false);
+    const [userfree,setuserfree]= useState(false);
     const [listfree,setlistfree]=useState([]);
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
@@ -92,6 +93,7 @@ function BookMeeting(){
         setdeletebooking(false)
         setdeleteupunavailable(false)
         sett(false)
+        setuserfree(false)
 
 }
     function updatebookingcheck(){
@@ -665,6 +667,11 @@ function run(){
             </Modal>
             <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
             <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
+            <Modal open == {userfree}
+                   onClose={() => setuserfree(false)}
+                   onOpen={() => setduserfree(true)}>
+                <Button onClick={() => returnallfalse()}>ok</Button>
+            </Modal>
     </Container>
     </Container>
 
