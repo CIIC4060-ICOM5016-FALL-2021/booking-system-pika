@@ -6,13 +6,7 @@ import {Button, Container, Form, Modal, ModalDescription} from "semantic-ui-reac
 import axios from "axios";
 
 
-// Event {
-//     title: string,
-//         start: Date,
-//         end: Date,
-//         allDay?: boolean
-//     resource?: any,
-// }
+
 
 function BookMeeting(){
     const [r, setr] = useState(false);
