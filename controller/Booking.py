@@ -80,7 +80,7 @@ def create_new_booking(json: dict):
                             'invited_id': invited_id[index],
                             'host_id': host_id,
                             'room_id': room_id,
-                            'url': 'https://booking-system-pika.herokuapp.com/bookings/' + str(row)
+                            'url': 'https://booking-system-pika.herokuapp.com/pika-booking/bookings/' + str(row)
                         }
                         result['bookings'] = bookings
                     return jsonify(result), 200
@@ -95,7 +95,7 @@ def create_new_booking(json: dict):
                         'et_dt': et_dt,
                         'invited_id': invited_id,
                         'host_id': host_id,
-                        'url': 'https://booking-system-pika.herokuapp.com/bookings/' + str(b_id)
+                        'url': 'https://booking-system-pika.herokuapp.com/pika-booking/bookings/' + str(b_id)
                     }), 200
             else:
                 return jsonify("Host does not have access to this room"), 404
@@ -117,9 +117,9 @@ def get_booking(booking):
                 'invited_id': data[3],
                 'start_time': data[4],
                 'end_time': data[5],
-                'room_url': 'https://booking-system-pika.herokuapp.com/rooms/' + str(data[1]),
-                'host_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(data[2]),
-                'invited_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(data[3])
+                'room_url': 'https://booking-system-pika.herokuapp.com/pika-booking/rooms/' + str(data[1]),
+                'host_url': 'https://booking-system-pika.herokuapp.com/pika-booking/persons/' + str(data[2]),
+                'invited_url': 'https://booking-system-pika.herokuapp.com/pika-booking/persons/' + str(data[3])
             }), 200
         else:
             return jsonify("Booking Id Not Found"), 404
@@ -138,9 +138,9 @@ def get_booking(booking):
                     'invited_id': row[3],
                     'start_time': row[4],
                     'end_time': row[5],
-                    'room_url': 'https://booking-system-pika.herokuapp.com/rooms/' + str(row[1]),
-                    'host_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(row[2]),
-                    'invited_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(row[3])
+                    'room_url': 'https://booking-system-pika.herokuapp.com/pika-booking/rooms/' + str(row[1]),
+                    'host_url': 'https://booking-system-pika.herokuapp.com/pika-booking/persons/' + str(row[2]),
+                    'invited_url': 'https://booking-system-pika.herokuapp.com/pika-booking/persons/' + str(row[3])
 
                 }
             result[booking] = b
@@ -161,7 +161,7 @@ def get_all_bookings(limit_thingy: int = 125):
                 'b_id': b_row[0],
                 'start_time': b_row[1],
                 'end_time': b_row[2],
-                'url': 'https://booking-system-pika.herokuapp.com/bookings/' + str(b_row[0])
+                'url': 'https://booking-system-pika.herokuapp.com/pika-booking/bookings/' + str(b_row[0])
             }
         result_b['bookings'] = bookings
         return jsonify(result_b), 200

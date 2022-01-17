@@ -19,7 +19,7 @@ def create_unavailable_time_schedule(json: dict):
             'st_dt': st_dt,
             'et_dt': et_dt,
             'p_id': person_id,
-            'url': 'https://booking-system-pika.herokuapp.com/persons/' + str(person_id)
+            'url': 'https://booking-system-pika.herokuapp.com/pika-booking/persons/' + str(person_id)
         }), 200
     else:
         return jsonify("Person doesn't exist"), 404
@@ -38,7 +38,7 @@ def get_all_unavailable_persons(limit_thingy: int = 75):
                 'st_dt': row[1],
                 'et_dt': row[2],
                 'person_id': row[3],
-                'url': 'https://booking-system-pika.herokuapp.com/persons/' + str(row[0])
+                'url': 'https://booking-system-pika.herokuapp.com/pika-booking/persons/' + str(row[0])
             }
         result['unavailable_timeframes'] = unavailable
         return jsonify(result), 200

@@ -16,7 +16,7 @@ def get_all_rooms(limit_thingy=25):
                 'r_id': row[0],
                 'room_name': row[1],
                 'room_type': method.rooms[row[2]],
-                'url': 'https://booking-system-pika.herokuapp.com/rooms/' + str(row[0])
+                'url': 'https://booking-system-pika.herokuapp.com/pika-booking/rooms/' + str(row[0])
             }
         result['rooms'] = rooms
         return jsonify(result), 200
@@ -98,7 +98,7 @@ def get_most_booked_rooms():
                 "r_id": row[0],
                 "room_name": row[1],
                 "timed_booked": row[2],
-                "url": 'https://booking-system-pika.herokuapp.com/rooms/' + str(row[0])
+                "url": 'https://booking-system-pika.herokuapp.com/pika-booking/rooms/' + str(row[0])
             }
         return jsonify(result), 200
 
@@ -118,6 +118,6 @@ def get_available_rooms(json):
                 'r_id': row[0],
                 'room_name': row[1],
                 'room_type': row[2],
-                'url': 'https://booking-system-pika.herokuapp.com/rooms/' + str(row[0])
+                'url': 'https://booking-system-pika.herokuapp.com/pika-booking/rooms/' + str(row[0])
             }
         return jsonify(result), 200

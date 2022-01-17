@@ -29,7 +29,7 @@ def get_all_persons(limit: int = 125):
                 'p_id': row[0],
                 'first_name': row[1],
                 'last_name': row[2],
-                'url': 'https://booking-system-pika.herokuapp.com/persons/' + str(row[0])
+                'url': 'https://booking-system-pika.herokuapp.com/pika-booking/persons/' + str(row[0])
             }
         result['persons'] = persons
         return jsonify(result), 200
@@ -85,7 +85,7 @@ def get_persons_by_role(r_id):
                 'p_id': row[0],
                 'first_name': row[1],
                 'last_name': row[2],
-                'url': 'https://booking-system-pika.herokuapp.com/persons/' + str(row[0])
+                'url': 'https://booking-system-pika.herokuapp.com/pika-booking/persons/' + str(row[0])
             }
         result['persons'] = persons
         return jsonify(result), 200
@@ -142,7 +142,7 @@ def get_hosts_that_invited_this_person(invitee_id: int):
                 'first_name': row[1],
                 'last_name': row[2],
                 'shared_times': row[3],
-                'url': 'https://booking-system-pika.herokuapp.com/persons/' + str(row[0])
+                'url': 'https://booking-system-pika.herokuapp.com/pika-booking/persons/' + str(row[0])
             }
         return jsonify(result), 200
 
@@ -158,7 +158,7 @@ def get_most_used_room_by_person(p_id: int):
             'r_id': data[0],
             'r_name': data[1],
             'times_used': data[2],
-            'url': 'https://booking-system-pika.herokuapp.com/rooms/' + str(data[0])
+            'url': 'https://booking-system-pika.herokuapp.com/pika-booking/rooms/' + str(data[0])
         })
     else:
         return jsonify("Target person does not exists"), 404
@@ -175,7 +175,7 @@ def get_person_who_booked_most(limit_thingy=10):
             'first_name': row[1],
             'last_name': row[2],
             'bookings': row[3],
-            'url': 'https://booking-system-pika.herokuapp.com/persons/' + str(row[0])
+            'url': 'https://booking-system-pika.herokuapp.com/pika-booking/persons/' + str(row[0])
         }
     return jsonify(result), 200
 
@@ -192,5 +192,5 @@ def get_account_info(json: dict):
             'p_id': data[0],
             'first_name': data[1],
             'last_name': data[2],
-            'url': 'https://booking-system-pika.herokuapp.com/persons/' + str(data[0])
+            'url': 'https://booking-system-pika.herokuapp.com/pika-booking/persons/' + str(data[0])
         }), 200
