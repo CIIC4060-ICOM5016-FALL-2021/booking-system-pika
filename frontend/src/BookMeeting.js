@@ -98,7 +98,7 @@ function BookMeeting(){
     function updatebookingcheck(){
         let e = localStorage.getItem("login-data");
         let   dat = JSON.parse(e)
-        if (st_dt === "" || et_dt === "" || room_id ==="" || invitee === ""||ba_id===""||!r){
+        if (st_dt === "" || et_dt === "" || room_id ==="" || invitee === []||ba_id===""||!r){
             return false
         }else{
             axios.put("https://booking-system-pika.herokuapp.com/pika-booking/booking", {
