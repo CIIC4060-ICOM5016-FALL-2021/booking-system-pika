@@ -9,8 +9,6 @@ import UserView from "./UserView";
 import Dashboard from "./Dashboard";
 import SignUp from "./components/Registering/SignUp";
 
-import Rooms from "./components/Rooms";
-import Person from "./components/Person";
 ReactDOM.render(
     <BrowserRouter>
         <Routes>

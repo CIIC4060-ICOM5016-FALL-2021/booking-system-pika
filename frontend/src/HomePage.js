@@ -91,7 +91,7 @@ const[t,sett]= useState(false)
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                               />
-                                  <Button content='Login' primary onClick={sett(true)&& check()? handleChange:handleLogin}/>
+                                  <Button content='Login' primary onClick={check()? handleChange:handleLogin}/>
 
                           </Form>
                       </Grid.Column>
