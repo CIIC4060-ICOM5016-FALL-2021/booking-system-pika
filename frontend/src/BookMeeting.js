@@ -43,10 +43,12 @@ function BookMeeting(){
     const [deleteunavailable,setdeleteupunavailable]= useState(false);
     const [userfree,setuserfree]= useState(false);
     const [listfree,setlistfree]=useState([]);
+    const[get,setget] = useState("");
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
     const[un,setun] =  useState("");
     const [ba_id,setba_id] = useState("");
+    const [New,setnew] = useState("");
     const y = ()=>{
         setr(true)
     }
@@ -62,7 +64,13 @@ function BookMeeting(){
             setinfo(true)
         }
     }
+function getbooking(){
+        axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/${ba_id}`).then(res=>{
+            setget(res.data)
+            }
 
+        )
+}
    function getfreeuser(){
 
    }
@@ -93,22 +101,40 @@ function BookMeeting(){
         setdeleteupunavailable(false)
         sett(false)
         setuserfree(false)
-
+        setget("")
+        setnew("")
 }
     function updatebookingcheck(){
         let e = localStorage.getItem("login-data");
         let   dat = JSON.parse(e)
-        if (st_dt === "" || et_dt === "" || room_id ==="" || invitee === []||ba_id===""||!r){
+        if (!r){
             return false
         }else{
-            axios.put("https://booking-system-pika.herokuapp.com/pika-booking/booking", {
-                "b_id": ba_id,
+            let data = {
+                "new_booking_name":New ,
+                "booking_name": ba_id,
                 "st_dt": st_dt,
                 "et_dt": et_dt,
-                "host_id": dat,
+                "host_id": dat.p_id,
                 "invited_id": invitee,
                 "room_id": room_id
-            })
+            }
+            if(New===""){
+                data.new_booking_name=get.booking_name
+            }
+            if(room_id===""){
+                data.room_id =get.room_id
+            }
+            if(st_dt===""){
+                data.st_dt =get.st_dt
+            }
+            if(et_dt===""){
+                data.et_dt =get.et_dt
+            }
+            if (invitee===[]){
+                data.invited_id = get.invited_id
+            }
+            axios.put("https://booking-system-pika.herokuapp.com/pika-booking/booking", data)
             return true
         }
     }
@@ -203,6 +229,7 @@ function run(){
   useEffect(()=>
   {
       getpersonschedule()
+getbooking()
       run()
   })
     function Time(year,month, date, hours, minutes){
