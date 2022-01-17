@@ -87,10 +87,6 @@ class Dashboard extends React.Component{
                                     Go to Person list
                                 </button>
                                 </Link>
-                                <Link to = "/rooms" > <button>
-                                    Go to room list
-                                </button>
-                                </Link>
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>

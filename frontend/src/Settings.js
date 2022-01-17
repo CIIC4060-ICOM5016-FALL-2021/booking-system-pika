@@ -30,7 +30,6 @@ function Settings() {
     const [password, setPassword] = useState("");
     let [data, setdata] = useState("");
     let [name, setname] = useState("");
-    const navigate = useNavigate();
 
 
 
@@ -52,6 +51,7 @@ function Settings() {
                 setname(res.data)
             })
             setinfo(true)
+            console.log(name)
         }
         else {
             return
@@ -82,23 +82,41 @@ function Settings() {
         sett(false)
     }
     function check() {
-        getinfo()
-        if (fname == "" || lname == "" || phone == "" || gender == "" || email == "" || password == "" || !y) {
+
+        if ( !y) {
             return false
         } else {
             let e = localStorage.getItem("login-data");
             let dat = JSON.parse(e)
-            axios.put('https://booking-system-pika.herokuapp.com/pika-booking/persons', {
-                "p_id": dat.p_id,
+            data = {"p_id": dat.p_id,
                 "p_fname": fname,
                 "p_lname": lname,
                 "p_role": name.p_role,
                 "p_email": email,
                 "p_phone": phone,
                 "p_gender": gender,
-                "p_password": password
+                "p_password": password}
+            if (fname ==="") {
+              data.p_fname= name.p_fname
+              console.log(fname);
+            }
+            if (lname==""){
+                data.p_lname=name.p_lname;
+            }
+            if (email==""){
+                data.p_email=name.p_email;
 
-            }).then(res => {
+            }
+            if (phone==""){
+                data.p_phone=name.p_phone;
+            }
+            if (gender==""){
+                data.p_gender=name.p_gender;
+            }
+            if (password==""){
+                data.p_password=name.p_password;
+            }
+            axios.put('https://booking-system-pika.herokuapp.com/pika-booking/persons', data).then(res => {
                 setdata(res.data);
             })
             console.log(data);
