@@ -38,7 +38,7 @@ const y = ()=>{
     if (fname==""||lname==""||role==""||phone==""||gender==""||email==""||password==""||!y){
       return false
     }else {
-      axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons', {
+      axios.post('http://127.0.0.1:5000//pika-booking/persons', {
         "p_fname": fname,
         "p_lname": lname,
         "p_role": role,
