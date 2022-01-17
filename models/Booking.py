@@ -34,11 +34,11 @@ class BookingDAO(object):
         return result
 
     # creates a new booking entry, no checks here btw
-    def create_new_booking(self, st_dt, et_dt, invited_id, host_id, room_id):
+    def create_new_booking(self, b_name: str, st_dt, et_dt, invited_id: int, host_id: int, room_id: int):
         cursor = self.conn.cursor()
-        query = 'insert into "booking" (st_dt, et_dt, invited_id, host_id, room_id) ' \
-                'values (%s,%s,%s,%s,%s) returning b_id; '
-        cursor.execute(query, (st_dt, et_dt, invited_id, host_id, room_id,))
+        query = 'insert into "booking" (b_name, st_dt, et_dt, invited_id, host_id, room_id) ' \
+                'values (%s,%s,%s,%s,%s,%s) returning b_id; '
+        cursor.execute(query, (b_name, st_dt, et_dt, invited_id, host_id, room_id,))
         b_id = cursor.fetchone()[0]
         self.conn.commit()
         cursor.close()
@@ -62,12 +62,12 @@ class BookingDAO(object):
         return result
 
     # Updates existing entry
-    def update_booking(self, b_id, st_dt, et_dt, invited_id, host_id, room_id):
+    def update_booking(self, b_id, b_name, st_dt, et_dt, invited_id, host_id, room_id):
         cursor = self.conn.cursor()
         query = 'update "booking" ' \
-                'set st_dt = %s, et_dt= %s, invited_id = %s, host_id= %s , room_id = %s ' \
+                'set b_name = %s, st_dt = %s, et_dt= %s, invited_id = %s, host_id= %s , room_id = %s ' \
                 'where b_id = %s '
-        cursor.execute(query, (st_dt, et_dt, invited_id, host_id, room_id, b_id))
+        cursor.execute(query, (b_name, st_dt, et_dt, invited_id, host_id, room_id, b_id))
         self.conn.commit()
         cursor.close()
         return True
@@ -122,9 +122,9 @@ class BookingDAO(object):
         return result
 
     # return a single column entry of the booking with given id
-    def get_booking_by_id(self, b_id):
+    def get_booking_by_id(self, b_id: int):
         cursor = self.conn.cursor()
-        query = 'select st_dt, et_dt, invited_id, host_id, room_id ' \
+        query = 'select b_name, room_id, host_id, invited_id, st_dt, et_dt ' \
                 'from "booking" where b_id = %s;'
         cursor.execute(query, (b_id,))
         result = cursor.fetchone()
@@ -184,7 +184,7 @@ class BookingDAO(object):
                 "union select null as invited_id, allday.st_dt::date + interval '1 day - 1 second' as st_dt, " \
                 "allday.st_dt::date + interval '1 day - 1 second' as et_dt from allday) as allday2) as gaps " \
                 "where gaps.ValidGap=true ; "
-        cursor.execute(query,(date,date,p_id,date,date,p_id,))
+        cursor.execute(query, (date, date, p_id, date, date, p_id,))
         result = []
         for row in cursor:
             result.append(row)
@@ -207,4 +207,24 @@ class BookingDAO(object):
 
     def delete_booking_invitee(self, host_id, row, st_dt, et_dt):
         pass
+
+    def check_if_booking_name_exists(self, b_name: str):
+        cursor = self.conn.cursor()
+        query = 'select exists(select 1 from booking where b_name = %s);'
+        cursor.execute(query, (b_name,))
+        result = cursor.fetchone()[0]
+        cursor.close()
+        return result
+
+    def get_booking_by_name(self, b_name: str):
+        cursor = self.conn.cursor()
+        query = 'select b_id, room_id, host_id, invited_id, st_dt, et_dt from booking where b_name = %s;'
+        cursor.execute(query, (b_name,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        cursor.close()
+        return result
+
+
 

@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-from controller import Person, Room, Booking
+from controller import Person, Room, Booking, AvailablePerson
 from controller.Person import create_new_person
 
 app = Flask(__name__, instance_relative_config=True)
@@ -115,7 +115,7 @@ def get_top_10_bookers():
 def get_account_by_email_and_password():
     args = request.json
     if request.method == 'POST':
-        if args:
+        if args and 'p_email' in args and 'p_password' in args:
             return Person.get_account_info(args)
         else:
             return jsonify("Args not found: email or password"), 405
@@ -131,7 +131,7 @@ def get_account_by_email_and_password():
 def handle_roms():
     args = request.json
     if request.method == 'GET':
-        if request.args:
+        if request.args and 'limit' in request.args:
             return Room.get_all_rooms(int(request.args['limit']))
         return Room.get_all_rooms()
     elif request.method == 'POST':
@@ -176,7 +176,6 @@ def get_most_booked_room():
 def get_available_rooms():
     # Get available room given a timeframe
     args = request.json
-    print(args, "AET")
     if request.method == 'POST':
         if args and args['st_dt'] and args['et_dt']:
             return Room.get_available_rooms(args)
@@ -210,10 +209,10 @@ def handle_bookings():
 
 
 @app.route('/pika-booking/bookings/<int:b_id>', methods=['GET', 'DELETE'])
-def handle_booking_by(b_id):
+def handle_booking_by_id(b_id):
     if request.method == 'GET':
         # Get Person by name or id
-        return Booking.get_booking_by_id(b_id)
+        return Booking.get_booking(b_id)
     elif request.method == 'DELETE':
         # Delete Person by id
         return Booking.delete_booking(b_id)
@@ -236,13 +235,14 @@ def handle_purge():
 
 
 
+#########################################
 @app.route('/pika-booking/bookings/shared-time', methods=['POST'])
 def get_free_time_for_meeting_users():
     # This gets the most booked room in general
     args = request.json
     if request.method == 'POST':
         if args:
-            return Booking.get_shared_free_timeslot(request.json)
+            return Booking.get_free_time_of_day(request.json)
         else:
             return jsonify("Args not found"), 405
     else:
@@ -254,8 +254,43 @@ def get_free_time_for_meeting_users():
 
 
 # ============================================== #
-# ===-| U N A V A I L A B L E  P E O P L E |-=== #
+# ===-| U N A V A I L A B L E  P E R S O N |-=== #
 # ============================================== #
+
+@app.route('/pika-booking/persons/unavailable-time', methods=['GET', 'POST', 'PUT'])
+def handle_unavailable_person():
+    args = request.json
+    if request.method == 'GET':
+        if request.args:
+            return AvailablePerson.get_all_unavailable_persons(int(request.args['limit']))
+        return AvailablePerson.get_all_unavailable_persons()
+    elif request.method == 'POST':
+        if args and 'st_dt' in args and 'et_dt' in args and 'person_id' in args:
+            return AvailablePerson.create_unavailable_time_schedule(args)
+        else:
+            return jsonify("Missing Arguments"), 405
+    elif request.method == 'PUT':
+        if args:
+            return AvailablePerson.update_unavailable_schedule(args)
+        else:
+            return jsonify("Missing Arguments"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+###
+@app.route('/pika-booking/persons/unavailable-time/<int:unavailable_timeframe_id>', methods=['DELETE', 'GET'])
+def handle_unavailable_person_by_unavailable_id(unavailable_timeframe_id):
+    pass
+
+
+@app.route('/pika-booking/bookings/<string:b_name>', methods=['GET'])
+def handle_booking_by_name(b_name):
+    if request.method == 'GET':
+        # Get Person by name or id
+        return Booking.get_booking(b_name)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
 
 if __name__ == "__main__":
     app.debug = True

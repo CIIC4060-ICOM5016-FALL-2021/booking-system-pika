@@ -234,12 +234,12 @@ class PersonDAO(object):
         return result
 
     # Retrieves the person who performed the most amount of bookings
-    def get_person_who_booked_most(self):
+    def get_person_who_booked_most(self, limit_thingy: int):
         cursor = self.conn.cursor()
         query = 'select p_id, p_fname, p_lname, count(booking.host_id) as bookings ' \
                 'from booking inner join person on person.p_id = booking.host_id ' \
-                'GROUP BY p_id  order by bookings desc limit 10; '
-        cursor.execute(query)
+                'GROUP BY p_id  order by bookings desc limit %s; '
+        cursor.execute(query, (limit_thingy,))
         result = []
         for row in cursor:
             result.append(row)

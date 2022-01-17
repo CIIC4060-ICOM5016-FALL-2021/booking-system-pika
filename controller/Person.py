@@ -22,7 +22,7 @@ def get_all_persons(limit: int = 125):
     count = method.count_person()
     if count != 0:
         data = method.get_all_person(limit)
-        persons = {}
+        persons: dict = {}
         result: dict = {'count': count, 'persons': {}}
         for index, row in enumerate(data):
             persons[index] = {
@@ -68,6 +68,9 @@ def get_person(person):
                 'email': person_data[2],
                 'phone': person_data[3]
             }), 200
+    else:
+        return jsonify("TypeError. Input person is not an integer (person id)"
+                       " nor a string (person name separated by '-'"), 404
 
 
 def get_persons_by_role(r_id):
@@ -162,9 +165,9 @@ def get_most_used_room_by_person(p_id: int):
 
 
 # Retrieves the person who performed the most amount of bookings
-def get_person_who_booked_most():
+def get_person_who_booked_most(limit_thingy=10):
     method = PersonDAO()
-    data = method.get_person_who_booked_most()
+    data = method.get_person_who_booked_most(limit_thingy)
     result = {}
     for index, row in enumerate(data):
         result[index] = {
@@ -186,8 +189,8 @@ def get_account_info(json: dict):
         return jsonify("Not Found"), 404
     else:
         return jsonify({
-            'p_id': data['p_id'],
-            'first_name': data['p_fname'],
-            'last_name': data['p_lname'],
-            'url': 'https://booking-system-pika.herokuapp.com/persons/' + str(data['p_id'])
+            'p_id': data[0],
+            'first_name': data[1],
+            'last_name': data[2],
+            'url': 'https://booking-system-pika.herokuapp.com/persons/' + str(data[0])
         }), 200

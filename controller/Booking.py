@@ -9,6 +9,7 @@ from models.AvailableRoom import AvailableRoomDAO
 
 
 def create_new_booking(json: dict):
+    b_name = json['booking_name']
     st_dt = json['st_dt']
     et_dt = json['et_dt']
     invited_id = json['invited_id']
@@ -67,11 +68,12 @@ def create_new_booking(json: dict):
                     for inv in invited_id:
                         if method5.verify_available_person_at_timeframe(inv, st_dt, et_dt):
                             return jsonify("Person has conflict"), 404
-                        b_id.append(method4.create_new_booking(st_dt, et_dt, inv, host_id, room_id))
+                        b_id.append(method4.create_new_booking(b_name, st_dt, et_dt, inv, host_id, room_id))
 
-                    result: dict = {}
+                    result: dict = {'booking_name': b_name, 'bookings': {}}
+                    bookings: dict = {}
                     for index, row in enumerate(b_id):
-                        result[index] = {
+                        bookings[index] = {
                             'b_id': row,
                             'st_dt': st_dt,
                             'et_dt': et_dt,
@@ -80,12 +82,14 @@ def create_new_booking(json: dict):
                             'room_id': room_id,
                             'url': 'https://booking-system-pika.herokuapp.com/bookings/' + str(row)
                         }
+                        result['bookings'] = bookings
                     return jsonify(result), 200
                 elif type(invited_id) == int:
                     if AvailablePersonDAO().verify_available_person_at_timeframe(invited_id, st_dt, et_dt):
                         return jsonify("Person has conflict"), 404
-                    b_id = method4.create_new_booking(st_dt, et_dt, invited_id, host_id, room_id)
+                    b_id = method4.create_new_booking(b_name, st_dt, et_dt, invited_id, host_id, room_id)
                     return jsonify({
+                        'booking_name': b_name,
                         'b_id': b_id,
                         'st_dt': st_dt,
                         'et_dt': et_dt,
@@ -101,22 +105,48 @@ def create_new_booking(json: dict):
         return jsonify("Room Not Found"), 404
 
 
-def get_booking_by_id(b_id: int):
+def get_booking(booking):
     method = BookingDAO()
-    if method.check_if_booking_exists(b_id):
-        data = method.get_booking_by_id(b_id)
-        return jsonify({
-            'room_id': data[4],
-            'host_id': data[3],
-            'invited_id': data[2],
-            'start_time': data[0],
-            'end_time': data[1],
-            'room_url': 'https://booking-system-pika.herokuapp.com/rooms/' + str(data[4]),
-            'host_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(data[3]),
-            'invited_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(data[2])
-        }), 200
+    if type(booking) == int:
+        if method.check_if_booking_exists(booking):
+            data = method.get_booking_by_id(booking)
+            return jsonify({
+                'booking_name': data[0],
+                'room_id': data[1],
+                'host_id': data[2],
+                'invited_id': data[3],
+                'start_time': data[4],
+                'end_time': data[5],
+                'room_url': 'https://booking-system-pika.herokuapp.com/rooms/' + str(data[1]),
+                'host_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(data[2]),
+                'invited_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(data[3])
+            }), 200
+        else:
+            return jsonify("Booking Id Not Found"), 404
+    elif type(booking) == str:
+        booking = str(booking).replace('-', ' ')
+
+        if method.check_if_booking_name_exists(booking):
+            data = method.get_booking_by_name(booking)
+            result: dict = {booking: {}}
+            b = {}
+            for index, row in enumerate(data):
+                b[index] = {
+                    'b_id': row[0],
+                    'room_id': row[1],
+                    'host_id': row[2],
+                    'invited_id': row[3],
+                    'start_time': row[4],
+                    'end_time': row[5],
+                    'room_url': 'https://booking-system-pika.herokuapp.com/rooms/' + str(row[1]),
+                    'host_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(row[2]),
+                    'invited_url': 'https://booking-system-pika.herokuapp.com/persons/' + str(row[3])
+
+                }
+            result[booking] = b
+            return jsonify(result), 200
     else:
-        return jsonify("Booking Id Not Found"), 405
+        return jsonify("TypeError. Input booking is not an integer (booking id) nor a string (booking name)"), 404
 
 
 def get_all_bookings(limit_thingy: int = 125):
@@ -128,12 +158,12 @@ def get_all_bookings(limit_thingy: int = 125):
         result_b: dict = {'count': count, 'bookings': {}}
         for index, b_row in enumerate(data):
             bookings[index] = {
-                'p_id': b_row[0],
-                'first_name': b_row[1],
-                'last_name': b_row[2],
+                'b_id': b_row[0],
+                'start_time': b_row[1],
+                'end_time': b_row[2],
                 'url': 'https://booking-system-pika.herokuapp.com/bookings/' + str(b_row[0])
             }
-        result_b['persons'] = bookings
+        result_b['bookings'] = bookings
         return jsonify(result_b), 200
     else:
         return jsonify("No Bookings Found"), 404
@@ -208,8 +238,35 @@ def delete_invitee_from_booking(json: dict):
             })
 
 
-def get_free_time_of_day(self,p_id,date):
-        cursor = self.conn.cursor()
+#####################################################################
+def get_free_time_of_day(json):
+    booking_dao = BookingDAO()
+    booking_id = json['b_id']
+    date = json['date']
+    # existent_booking = self.get_meetings_by_id(json).json
+    # print(existent_booking)
+    # person_dao = PersonDAO()
+    # person_tupple = []
+    # for value in existent_booking.values():
+    #     person = person_dao.get_person_by_id(value['invited_id'])
+    #
+    #     if not person:
+    #         return jsonify("Person not found"), 404
+    #
+    #     # hours = AvailablePersonDAO().get_all_day_schedule(value['invited_id'], date)
+    #
+    #     person_tupple.append(value['invited_id'])
+    #
+    # free_time = booking_dao.get_free_time_of_day(tuple(person_tupple), date)
+    #
+    # mega_map = {}
+    # print(free_time, "This is the free time")
+    # for i, b in enumerate(free_time):
+    #     print(b)
+    #     mega_map[i] = {'free_start': str(b[0]), 'free_end': str(b[1]), 'delta_time': str(b[2])}
+    # print(mega_map)
+    # return jsonify(mega_map)
+
 
 #########################################
 def get_busiest_hours():
@@ -227,14 +284,7 @@ def get_busiest_hours():
             }
         return jsonify(result), 200
 
-# returns a single row who would be the most booked room
-def get_most_booked_rooms(self):
-    cursor =''
 
+#
 def get_persons_who_booked_in_room_at_given_timeframe():
     cursor = ''
-
-def get_most_booked_users():
-    cursor = 'a'
-
-

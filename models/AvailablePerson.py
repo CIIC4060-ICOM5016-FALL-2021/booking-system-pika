@@ -24,11 +24,11 @@ class AvailablePersonDAO(object):
         cursor.close()
         return pa_id
 
-    def get_all_unavailable_person(self) -> list:
+    def get_all_unavailable_person(self, limit_thingy: int) -> list:
         cursor = self.conn.cursor()
         query = 'select  pa_id, st_dt, et_dt, person_id ' \
-                'from "availableperson";'
-        cursor.execute(query)
+                'from "availableperson" limit %s;'
+        cursor.execute(query, (limit_thingy,))
         result = []
         for row in cursor:
             result.append(row)
@@ -182,3 +182,12 @@ class AvailablePersonDAO(object):
             print(row, "ROW")
             result.append(row)
         return result
+
+    def count_unavailable_timeframes(self):
+        cursor = self.conn.cursor()
+        query = 'select count(*) as "count" from availableroom;'
+        cursor.execute(query,)
+        result = cursor.fetchone()[0]
+        cursor.close()
+        return result
+
