@@ -179,15 +179,29 @@ def delete_booking(b_id):
 
 
 def update_booking(json: dict):
-    b_id = json['b_id']
-    st_dt = json['st_dt']
-    et_dt = json['et_dt']
+    b_new_name = json['new_booking_name']
+    b_name = json['booking_name']
+    st_dt = json['start_time']
+    et_dt = json['end_time']
     invited_id = json['invited_id']
+    new_invited_id = json['new_invited_id']
     host_id = json['host_id']
     room_id = json['room_id']
     method = BookingDAO()
-    if method.check_if_booking_exists(b_id):
-        method.update_booking(b_id, st_dt, et_dt, invited_id, host_id, room_id)
+    if method.check_if_booking_name_exists(b_name):
+        bids = method.get_booking_by_name(b_name)
+        method2 = AvailablePersonDAO()
+        for i in bids:
+            if method2.verify_conflict_at_timeframe(i[0], st_dt, et_dt):
+                return jsonify("Conflict found in given timeframe, cannot proceed"), 404
+            # method.update_booking(i[0], b_new_name, st_dt, et_dt, invited_id)
+        print(bids[0][0])
+        print(method2.verify_conflict_at_timeframe(5, st_dt, et_dt), "VERIFY")
+        print(method2.verify_available_person_at_timeframe(5, st_dt, et_dt), "CONFLICT")
+
+        for row in bids:
+            # method.update_booking(b_name, row[0], st_dt, et_dt, invited_id, host_id, room_id)
+            print(row)
         return jsonify(True), 200
     else:
         return jsonify('Booking Not Found'), 404
