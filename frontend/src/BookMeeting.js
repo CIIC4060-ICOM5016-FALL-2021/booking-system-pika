@@ -667,9 +667,9 @@ function run(){
             </Modal>
             <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
             <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
-            <Modal open == {userfree}
+            <Modal open = {userfree}
                    onClose={() => setuserfree(false)}
-                   onOpen={() => setduserfree(true)}>
+                   onOpen={() => setuserfree(true)}>
                 <Button onClick={() => returnallfalse()}>ok</Button>
             </Modal>
     </Container>
