@@ -4,7 +4,6 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import {Button, Container, Form, Modal, ModalDescription} from "semantic-ui-react";
 import axios from "axios";
-import {Book} from "@material-ui/icons";
 
 
 // Event {
@@ -99,7 +98,7 @@ function BookMeeting(){
     function updatebookingcheck(){
         let e = localStorage.getItem("login-data");
         let   dat = JSON.parse(e)
-        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == ""||ba_id==""||!r){
+        if (st_dt === "" || et_dt === "" || room_id ==="" || invitee === ""||ba_id===""||!r){
             return false
         }else{
             axios.put("https://booking-system-pika.herokuapp.com/pika-booking/booking", {
@@ -118,7 +117,7 @@ function BookMeeting(){
     }
     function updateunavailablecheck(){
 
-        if (st_dt == "" || et_dt == "" || un==""||!r){
+        if (st_dt === "" || et_dt === "" || un===""||!r){
             return false
         }else{
             axios.put(" https://booking-system-pika.herokuapp.com/pika-booking/persons/available", {
@@ -131,7 +130,7 @@ function BookMeeting(){
         }
     }
     function deletebookingcheck(){
-        if (ba_id==""||!r){
+        if (ba_id===""||!r){
             return false
         }else{
             axios.delete(" https://booking-system-pika.herokuapp.com/pika-booking/booking")
@@ -139,7 +138,7 @@ function BookMeeting(){
         }
     }
     function deleteunavailablegcheck(){
-        if (un==""||!r){
+        if (un===""||!r){
             return false
         }else{
             axios.delete(" https://booking-system-pika.herokuapp.com/pika-booking/persons/available")
@@ -147,8 +146,8 @@ function BookMeeting(){
         }
     }
 function run(){
-        if (Selected== true && open== true||Selected== true && mark== true||Selected== true &&free==true||Selected==true&&unavailable==true
-        || Selected==true && booking==true){
+        if (Selected=== true && open=== true||Selected=== true && mark=== true||Selected=== true &&free===true||Selected===true&&unavailable===true
+        || Selected===true && booking===true){
             setst_dt(dates[0].startTimeDisplay)
             setet_dt(dates[0].endTimeDisplay)
             return true
