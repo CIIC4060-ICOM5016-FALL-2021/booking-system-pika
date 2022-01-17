@@ -45,8 +45,7 @@ function RoomManagement(){
                         {Array.from(Array(rooms.length)).map((_, i) => (
                             <Rooms
 
-                                Room_id= {`${rooms[i].r_id}`}
-                                RoomName ={`${rooms[i].RoomName}`}
+
                                 Building= {`${rooms[i].r_building}`}
                                 Department= {`${rooms[i].r_dept}`}
                                 Type= {`${rooms[i].r_type}`}

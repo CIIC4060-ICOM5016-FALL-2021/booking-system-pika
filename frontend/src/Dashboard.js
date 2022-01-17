@@ -17,23 +17,26 @@ function Dashboard(){
         const [BookedPersons, setBookedPerson] = useState([]);
         const [BookedRooms, setBookedRooms] = useState([]);
     const [ BusiestHours, setBusiestHours] = useState([]);
+    const [t,sett]= useState(false);
    function  componentDidMount() {
+if (t==false) {
+    axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons/top-bookers').then(res => {
 
-        axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons/top-bookers').then(res=>{
+        setBookedPerson(res.data);
 
-            setBookedPerson(res.data);
-            console.log(res.data)
-        })
-        axios.get('https://booking-system-pika.herokuapp.com/pika-booking/rooms/most-booked').then(res=>{
-            let  BookedRoom = res.data
-           setBookedRooms(BookedRoom);
+        console.log(res.data)
+    })
+    axios.get('https://booking-system-pika.herokuapp.com/pika-booking/rooms/most-booked').then(res => {
+        let BookedRoom = res.data
+        setBookedRooms(BookedRoom);
 
-        })
-        axios.get( 'https://booking-system-pika.herokuapp.com/pika-booking/booking/busiesthour').then(res=>{
-            let  Busiest = res.data
-            setBusiestHours(res.data)
+    })
+    axios.get('https://booking-system-pika.herokuapp.com/pika-booking/booking/busiesthour').then(res => {
+        setBusiestHours(res.data)
 
-        })
+    })
+    sett(true)
+}
     }
 
 
@@ -54,6 +57,7 @@ function Dashboard(){
                             <Grid.Column>
                                 <h5> Most Booked Person:    {Array.from(Array(BookedPersons.length)).map((_, i) => (
                                     <li>
+
                                         Bookings:{BookedPersons[i].bookings},
                                        {BookedPersons[i].first_name }  _
                                          {BookedPersons[i].last_name }</li>))}  </h5>

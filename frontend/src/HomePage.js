@@ -24,7 +24,7 @@ function HomePage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [data,setdata] =  useState("");
-
+const[t,sett]= useState(false)
        const handleChange = () => {
         setOpen(true);
     }
@@ -34,6 +34,7 @@ function HomePage() {
 
     const navigate = useNavigate();
     function check() {
+        if (t== true)
         axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/accounts', {"p_email": email, "p_password": password}).then(res=>
         {
             setdata(res.data);
@@ -90,7 +91,7 @@ function HomePage() {
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                               />
-                                  <Button content='Login' primary onClick={check()? handleChange:handleLogin}/>
+                                  <Button content='Login' primary onClick={sett(true)&& check()? handleChange:handleLogin}/>
 
                           </Form>
                       </Grid.Column>

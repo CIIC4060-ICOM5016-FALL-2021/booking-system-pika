@@ -170,8 +170,8 @@ function run(){
             let e = localStorage.getItem("login-data");
             let   dat = JSON.parse(e)
             console.log(invitee)
-            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', {
-                "st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": invitee, "room_id": room_id,
+            axios.post('https://booking-system-pika.herokuapp.com//pika-booking/bookings', {
+                    "booking_name":ba_id    ,"st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": invitee, "room_id": room_id,
 
             },
             (error) => {
@@ -261,6 +261,15 @@ function run(){
             <Modal.Content>
                 <Modal.Description>
                     <Form>
+                        <Form.Field>
+                            <Form.Input
+                        name="Ba_id"
+                        placeholder=" Insert Booking id"
+                        label="ba_id"
+                        value={ba_id}
+                        onChange={e => setba_id(e.target.value)}
+                            />
+                        </Form.Field>
                         <Form.Field>
                             <Form.Input
                                 fluid
@@ -476,8 +485,8 @@ function run(){
                         <Form.Field>
                             <Form.Input
                                 fluid
-                                name="Ba_id"
-                                placeholder=" Insert Booking id"
+                                name="Booking Name"
+                                placeholder=" Insert Booking Name"
                                 label="ba_id"
                                 value={ba_id}
                                 onChange={e => setba_id(e.target.value)}

@@ -19,9 +19,7 @@ ReactDOM.render(
             <Route exact path="/UserView" element={<UserView/>} />
             <Route exact path="/Dashboard" element={<Dashboard/>} />
           <Route exact path="/BookMeeting" element={<BookMeeting/>} />
-            <Route exact path="/person" element={<Person/>} />
           <Route exact path="/signup" element={<SignUp/>} />
-          <Route exact path="/rooms" element={<Rooms/>} />
         </Routes>
     </BrowserRouter>,
     document.getElementById('root')
