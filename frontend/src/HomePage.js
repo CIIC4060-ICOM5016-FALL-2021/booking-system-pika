@@ -1,6 +1,6 @@
 
 import {Link, useNavigate} from "react-router-dom";
-import React, {Component, createContext, useState} from 'react';
+import React, {Component, createContext, useEffect, useState} from 'react';
 import {
     Button,
     Divider,
@@ -28,26 +28,37 @@ const[t,sett]= useState(false)
        const handleChange = () => {
         setOpen(true);
     }
+    const handle =()=>{
+    sett(true)
+    }
     const handleLogin = () => {
       navigate("/Dashboard")
     }
 
     const navigate = useNavigate();
     function check() {
-        if (t== true)
-        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/accounts', {"p_email": email, "p_password": password}).then(res=>
-        {
-            setdata(res.data);
+        if (t== true) {
+            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/accounts', {
+                "p_email": email,
+                "p_password": password
+            }).then(res => {
+                setdata(res.data);
 
-        })
-        if (data== ""){
-            return true
+            })
+            if (data == "") {
+                sett(false)
+                return handleChange()
+            }
+            localStorage.removeItem("login-data")
+            localStorage.setItem("login-data", JSON.stringify(data))
+            console.log(localStorage.getItem("login-data"))
+            return handleLogin()
         }
-        localStorage.removeItem("login-data")
-        localStorage.setItem("login-data", JSON.stringify(data))
-        console.log(localStorage.getItem("login-data"))
-        return false
     }
+    useEffect(()=>{
+        check()
+        }
+    )
     return (
 
       <>
@@ -91,7 +102,7 @@ const[t,sett]= useState(false)
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                               />
-                                  <Button content='Login' primary onClick={check()? handleChange:handleLogin}/>
+                                  <Button content='Login' primary onClick={handle}/>
 
                           </Form>
                       </Grid.Column>
