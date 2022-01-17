@@ -48,10 +48,10 @@ function Schedule(){
                     const st =` ${res.data.st_dt[i]}-0400 (Atlantic Standard Time)`
                     const et = ` ${res.data.et_dt[i]}-0400 (Atlantic Standard Time)`
                     let tile =""
-                    if ( res.data.bookingname[i]==""){
+                    if ( res.data.booking_name[i]==""){
                         tile = "Unavailable"
                     }else{
-                        tile = res.data.bookingname[i]
+                        tile = res.data.booking_name[i]
                     }
 
                 const w = {title: tile, start:  new Date(st), end :  new Date(et), room: 4}
