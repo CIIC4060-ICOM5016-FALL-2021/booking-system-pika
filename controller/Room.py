@@ -40,20 +40,20 @@ class Room:
     # Read
     #
     # Gets All Rooms
-
-    def get_all_rooms(self):
+    def get_all_rooms(self, limit_thingy=125):
         dao = RoomDAO()
-        all_rooms = dao.get_all_rooms(125)
+        all_rooms = dao.get_all_rooms(limit_thingy)
         if not all_rooms:
             return jsonify("There's no rooms! It feels, lonely.."), 404
         else:
             result = []
-            for r_id, r_name, r_type, r_building in all_rooms:
+            for r_id, r_name, r_type, r_building, r_department in all_rooms:
                 result.append({
                         "r_id": r_id,
-                        "r_building": r_name,
-                        "r_dept": r_type,
-                        "r_type": r_building
+                        "r_name": r_name,
+                        "r_type": r_type,
+                        "r_building": r_building,
+                        "r_department": r_department
                     })
             return jsonify(result), 200
 
