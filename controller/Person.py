@@ -224,9 +224,8 @@ class Person(object):
         else:
             return jsonify("NOT FOUND"), 404
 
-    def person_to_get_access_to_room_info(self, json):
+    def person_to_get_access_to_room_info(self, p_id):
         method = PersonDAO()
-        p_id = json['p_id']
         role = method.get_person_role_by_id(p_id)
 
         if role == 1:
