@@ -1,6 +1,6 @@
 
-import {Link, useNavigate} from "react-router-dom";
-import React, {Component, createContext, useEffect, useState} from 'react';
+import {useNavigate} from "react-router-dom";
+import React, {  useState} from 'react';
 import {
     Button,
     Divider,
@@ -8,15 +8,11 @@ import {
     Grid,
     Header,
     Modal,
-    Segment,
-    Tab
+    Segment
 } from 'semantic-ui-react';
 import './themes/Navbar.css';
 import Navbar from "./components/Navbar/Navbar";
 import axios from "axios";
-const api = axios.create({
-    baseURL: 'https://booking-system-pika.herokuapp.com/pika-booking'
-})
 
 function HomePage() {
 
@@ -24,20 +20,18 @@ function HomePage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [data,setdata] =  useState("");
-const[t,sett]= useState(false)
+
        const handleChange = () => {
         setOpen(true);
     }
-    const handle =()=>{
-    sett(true)
-    }
+
     const handleLogin = () => {
       navigate("/Dashboard")
     }
 
     const navigate = useNavigate();
     function check() {
-        if (t== true) {
+
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/accounts', {
                 "p_email": email,
                 "p_password": password
@@ -45,20 +39,16 @@ const[t,sett]= useState(false)
                 setdata(res.data);
 
             })
-            if (data == "") {
-                sett(false)
-                return handleChange()
+            if (data === "") {
+                return false
             }
             localStorage.removeItem("login-data")
             localStorage.setItem("login-data", JSON.stringify(data))
             console.log(localStorage.getItem("login-data"))
-            return handleLogin()
+            return true
         }
-    }
-    useEffect(()=>{
-        check()
-        }
-    )
+
+
     return (
 
       <>
@@ -102,7 +92,7 @@ const[t,sett]= useState(false)
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                               />
-                                  <Button content='Login' primary onClick={handle}/>
+                                  <Button content='Login' primary onClick={check?handleLogin:handleChange}/>
 
                           </Form>
                       </Grid.Column>

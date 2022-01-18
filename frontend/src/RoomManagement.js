@@ -25,6 +25,8 @@ function RoomManagement(){
     function fetchRooms(){
         axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/rooms`).then((res) => {
                 setRooms(res.data);
+                    console.log(rooms)
+
             }, (error) => {
                 console.log(error);
             }
@@ -45,10 +47,11 @@ function RoomManagement(){
                         {Array.from(Array(rooms.length)).map((_, i) => (
                             <Rooms
 
-                                Room_ID = {`${rooms[i].r_id}`}
+                                RoomName = {`${rooms[i].r_name}`}
                                 Building= {`${rooms[i].r_building}`}
-                                Department= {`${rooms[i].r_dept}`}
+                                Department= {`${rooms[i].r_department}`}
                                 Type= {`${rooms[i].r_type}`}
+                                Room_id = {rooms[i].r_id}
                                 type={"edit"}/>
                         ))}
                         <Grid justify={"center"} container item xs={12} md={6} lg={4}>
