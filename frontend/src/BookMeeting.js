@@ -56,16 +56,6 @@ function BookMeeting(){
     }
 
 
-    function getpersonschedule(){
-        if (info===false) {
-            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule', {
-                person_id: dat.p_id
-            }).then(res => {
-                setschedule(res.data)
-            })
-            setinfo(true)
-        }
-    }
 function getbooking(){
         axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/${ba_id}`).then(res=>{
             setget(res.data)
@@ -228,7 +218,6 @@ function run(){
     }
   useEffect(()=>
   {
-      getpersonschedule()
 getbooking()
       run()
   })
@@ -473,7 +462,7 @@ getbooking()
             </Modal.Actions>
         </Modal>
         <Modal centered={false}
-               open={booking}
+               open={book}
                onClose={() => setbook(false)}
                onOpen={() => setbook(true)}>
             <Modal.Header>You are unavailable at this hour, {st_dt} to {et_dt}.</Modal.Header>

@@ -36,7 +36,7 @@ function Rooms(props) {
     const [st, setst_dt] = useState("");
     let [et, setet_dt] = useState("");
    const [roompermission,setroompermision] =useState("");
-    const [permission,setpermision] =useState("");
+    const [permission,setpermission] =useState("");
     console.log("All day",allDayRS)
     function createRoom(){
         if(  type==="" || Building==="" || dept===""){
@@ -64,7 +64,7 @@ function Rooms(props) {
     }
 
     function getRoomData(){
-        axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/rooms/id/${roomID}`).then((response) => {
+        axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/rooms/${roomID}`).then((response) => {
                 setRoomData(response.data);
             }, (error) => {
                 console.log(error);
@@ -80,12 +80,8 @@ function Rooms(props) {
     }, []);
 
     function editRoom() {
-        if(Building===""  && dept === "" &&  type==="0"){
-            console.log("No changes")
-            setEditMessage("No changes where made");
-        } else {
+
             let data = {"r_id": roomID,
-                "r_name" : name,
                 "r_building": i,
                 "r_dept": permission,
                 "r_type": roompermission}
@@ -95,12 +91,13 @@ function Rooms(props) {
             if (i === "") {
                 data.r_building = roomData.r_building;
             }
-            if (dept === "") {
+            if (permission === "") {
                 data.r_dept= roomData.r_dept;
             }
-            if (type === "") {
+            if (roompermission=== "") {
                 data.r_type= roomData.r_type;
             }
+            console.log(data)
             axios.put(`https://booking-system-pika.herokuapp.com/pika-booking/rooms`,
                 data
             ).then((response) => {
@@ -113,7 +110,7 @@ function Rooms(props) {
                 setEditMessage("Changes were not made")
                 console.log(editMessage);
             });
-        }
+
     }
 
     function deleteRoom(){
@@ -363,14 +360,13 @@ function Rooms(props) {
                                         onChange={e => seti(e.target.value)}
                                     />
                                     <Form.Input label='Department'>
-                                        <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setpermision(e.target.value);}}>
+                                        <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setpermission(e.target.value);}}>
                                             <option key={0} value={"0"}>Select Type</option>
                                             {
 
                                                 ["ece","mate", "adem","fisi"].map((item) => {return <option>{item}</option>})
                                             }
                                         </select>
-
                                     </Form.Input>
                                     <Form.Input label='Type'>
                                         <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setroompermision(e.target.value);}}>

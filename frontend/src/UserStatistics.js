@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import axios from "axios";
 import {Link} from "react-router-dom";
@@ -10,20 +10,27 @@ function UserStatistics (){
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
     console.log(dat.p_id);
-        axios.post(
-            `https://booking-system-pika.herokuapp.com//pika-booking/persons/most-used-room`, {"p_id": dat.p_id}).then(res => {
-            setdata(res.data);
-            console.log(res.data)
-        })
-        axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/shared',{"p_id": dat.p_id}).then(res => {
-            setd(res.data);
-            console.log(d)
-        })
+    function r() {
 
-       axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/${d.p_id}`).then(res =>{
-           setname(res.data)
-       })
+            axios.post(
+                `https://booking-system-pika.herokuapp.com//pika-booking/persons/person/most-booked-room`, {"p_id": dat.p_id}).then(res => {
+                setdata(res.data);
+                console.log(res.data)
+            })
+            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/shared', {"p_id": dat.p_id}).then(res => {
+                setd(res.data);
+                console.log(d)
+            })
 
+            axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/${d.p_id}`).then(res => {
+                setname(res.data)
+            })
+        }
+
+
+    useEffect(()=>{
+        r()
+    })
         return <>
             <Navbar/>
                 <h1>  Most Used Room By You:

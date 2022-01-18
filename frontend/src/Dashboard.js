@@ -47,12 +47,6 @@ if (t===false) {
                 <Segment placeholder>
                     <Grid columns={3}stackable textAlign='center'>
                         <Divider></Divider>
-                        <Link to = "/BookMeeting" >
-                        <button> Create new Booking</button>
-                        </Link>
-                        <div>
-                            <Input action='Search' placeholder='Search...' />
-                        </div>
                         <Grid.Row verticalAlign='middle'>
                             <Grid.Column>
                                 <h5> Most Booked Person:    {Array.from(Array(BookedPersons.length)).map((_, i) => (
