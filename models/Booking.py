@@ -2,27 +2,7 @@ import psycopg2
 from config.dbcondig import db_root_config
 
 
-# Simple function to generate timestamps in python, sort of
-def format_time_stamp(year, month, day, hour=0, minute=0, second=0, tz='-04'):
-    if 0 <= hour < 10:
-        hour = '0' + str(hour)
-    if 0 <= minute < 10:
-        minute = '0' + str(minute)
-    if 0 <= second < 10:
-        second = '0' + str(second)
-    if 0 <= month < 10:
-        month = '0' + str(month)
-    if 0 <= day < 10:
-        day = '0' + str(day)
-
-    # Example timestamp string: '2016-06-22 19:10:25-04'
-    # With leading zeroes just in case
-    result = '' + str(year) + '-' + str(month) + '-' + str(day) + ' ' + str(hour) + ':' + str(minute) + ':' + str(
-        second) + tz
-    return result
-
-
-class BookingDAO:
+class BookingDAO(object):
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (db_root_config['dbname'],
                                                                             db_root_config['user'],
@@ -31,14 +11,37 @@ class BookingDAO:
                                                                             db_root_config['host'])
         self.conn = psycopg2.connect(connection_url)
 
-    # creates a new booking entry, no checks here btw
-    def create_new_booking(self, st_dt, et_dt, invited_id, host_id, room_id):
+    def __del__(self):
+        self.conn.close()
+
+    # Helper Functions
+
+    def check_if_booking_exists(self, b_id: int):
         cursor = self.conn.cursor()
-        query = 'insert into "booking" (st_dt, et_dt, invited_id, host_id, room_id) ' \
-                'values (%s,%s,%s,%s,%s) returning b_id; '
-        cursor.execute(query, (st_dt, et_dt, invited_id, host_id, room_id,))
+        query = 'select exists(select 1 from booking where b_id = %s);'
+        cursor.execute(query, (b_id,))
+        result = cursor.fetchone()[0]
+        cursor.close()
+        return result
+
+    def count_booking(self):
+        cursor = self.conn.cursor()
+        query = 'select count(*) as "count" ' \
+                'from booking;'
+        cursor.execute(query,)
+        result = cursor.fetchone()[0]
+        cursor.close()
+        return result
+
+    # creates a new booking entry, no checks here btw
+    def create_new_booking(self, b_name: str, st_dt, et_dt, invited_id: int, host_id: int, room_id: int):
+        cursor = self.conn.cursor()
+        query = 'insert into "booking" (b_name, st_dt, et_dt, invited_id, host_id, room_id) ' \
+                'values (%s,%s,%s,%s,%s,%s) returning b_id; '
+        cursor.execute(query, (b_name, st_dt, et_dt, invited_id, host_id, room_id,))
         b_id = cursor.fetchone()[0]
         self.conn.commit()
+        cursor.close()
         return b_id
 
     def get_meetings_by_id(self, b_id):
@@ -55,41 +58,73 @@ class BookingDAO:
         result = []
         for row in cursor:
             result.append(row)
+        cursor.close()
         return result
 
     # Updates existing entry
-    def update_booking(self, b_id, st_dt, et_dt, invited_id, host_id, room_id):
+    def update_booking(self, b_id, b_name, st_dt, et_dt, invited_id, host_id, room_id):
         cursor = self.conn.cursor()
         query = 'update "booking" ' \
-                'set st_dt = %s, et_dt= %s, invited_id = %s, host_id= %s , room_id = %s ' \
+                'set b_name = %s, st_dt = %s, et_dt= %s, invited_id = %s, host_id= %s , room_id = %s ' \
                 'where b_id = %s '
-        cursor.execute(query, (st_dt, et_dt, invited_id, host_id, room_id, b_id))
+        cursor.execute(query, (b_name, st_dt, et_dt, invited_id, host_id, room_id, b_id))
         self.conn.commit()
+        cursor.close()
         return True
 
-    # deletes an entry
-    def delete_booking(self, b_id):
+    # returns a single row who would be the most booked room
+    def get_most_booked_rooms(self):
         cursor = self.conn.cursor()
-        query = 'delete from "booking" where b_id in %s;'
-        cursor.execute(query, (tuple(b_id),))
-        deleted_rows = cursor.rowcount
-        self.conn.commit()
-        return deleted_rows != 0
-
-    # returns the whole booking query
-    def get_all_booking(self):
-        cursor = self.conn.cursor()
-        query = 'select b_id, st_dt, et_dt, invited_id, host_id, room_id from "booking";'
+        query = 'select r_id ,r_dept,r_building, count(booking.room_id) as bookings ' \
+                'from booking inner join room on room.r_id = booking.room_id ' \
+                'GROUP BY r_id ,r_dept,r_building order by bookings desc limit 10; '
         cursor.execute(query)
         result = []
         for row in cursor:
             result.append(row)
+        cursor.close()
+        return result
+
+    # deletes an entry
+    def delete_booking(self, b_id):
+        cursor = self.conn.cursor()
+        query = 'delete from "booking" where b_id = %s;'
+        cursor.execute(query, (b_id,))
+        deleted_rows = cursor.rowcount
+        self.conn.commit()
+        cursor.close()
+        return deleted_rows != 0
+
+    ###############
+    def delete_booking_host(self, host_id: int, st_dt, et_dt):
+        cursor = self.conn.cursor()
+        query = 'delete from booking where ' \
+                'st_dt::date = timestamp %s::date and et_dt::date = timestamp %s::date ' \
+                'returning b_id;'
+        cursor.execute(query, (host_id, st_dt, et_dt,))
+        b_id = []
+        for row in cursor:
+            b_id.append(row)
+        self.conn.commit()
+        cursor.close()
+        return b_id
+    #####################
+
+    # returns the whole booking query
+    def get_all_booking(self, limit_thingy: int):
+        cursor = self.conn.cursor()
+        query = 'select b_id, st_dt, et_dt, invited_id, host_id, room_id from "booking" limit %s;'
+        cursor.execute(query, (limit_thingy,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        cursor.close()
         return result
 
     # return a single column entry of the booking with given id
-    def get_booking_by_id(self, b_id):
+    def get_booking_by_id(self, b_id: int):
         cursor = self.conn.cursor()
-        query = 'select st_dt, et_dt, invited_id, host_id, room_id ' \
+        query = 'select b_name, room_id, host_id, invited_id, st_dt, et_dt ' \
                 'from "booking" where b_id = %s;'
         cursor.execute(query, (b_id,))
         result = cursor.fetchone()
@@ -149,24 +184,13 @@ class BookingDAO:
                 "union select null as invited_id, allday.st_dt::date + interval '1 day - 1 second' as st_dt, " \
                 "allday.st_dt::date + interval '1 day - 1 second' as et_dt from allday) as allday2) as gaps " \
                 "where gaps.ValidGap=true ; "
-        cursor.execute(query,(date,date,p_id,date,date,p_id,))
+        cursor.execute(query, (date, date, p_id, date, date, p_id,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
-    # returns a single row who would be the most booked room
-    def get_most_booked_rooms(self):
-        cursor = self.conn.cursor()
-        query = 'select r_id ,r_dept,r_building, count(booking.room_id) as bookings ' \
-                'from booking inner join room on room.r_id = booking.room_id ' \
-                'GROUP BY r_id ,r_dept,r_building order by bookings desc limit 10; '
-        cursor.execute(query)
-        result = []
-        for row in cursor:
-            result.append(row)
-        return result
-
+    ###################
     # Returns the timeframe of the most busiest hour around
     # TODO FIX NOW!!!!!!!!!!
     def get_busiest_hours(self):
@@ -181,5 +205,26 @@ class BookingDAO:
             result.append(row)
         return result
 
-    def get_booking_by_person(self, person_id):
+    def delete_booking_invitee(self, host_id, row, st_dt, et_dt):
         pass
+
+    def check_if_booking_name_exists(self, b_name: str):
+        cursor = self.conn.cursor()
+        query = 'select exists(select 1 from booking where b_name = %s);'
+        cursor.execute(query, (b_name,))
+        result = cursor.fetchone()[0]
+        cursor.close()
+        return result
+
+    def get_booking_by_name(self, b_name: str):
+        cursor = self.conn.cursor()
+        query = 'select b_id, room_id, host_id, invited_id, st_dt, et_dt from booking where b_name = %s;'
+        cursor.execute(query, (b_name,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        cursor.close()
+        return result
+
+
+

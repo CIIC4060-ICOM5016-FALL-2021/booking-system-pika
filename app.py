@@ -3,10 +3,10 @@ import os
 
 from flask_cors import CORS
 
-from controller.AvailableRoom import AvailableRoom
+from controller import AvailableRoom
 from controller import Person
-from controller.Room import Room
-from controller.Booking import Booking
+from controller import Room
+from controller import Booking
 from controller import AvailablePerson
 
 app = Flask(__name__, instance_relative_config=True)
@@ -177,6 +177,127 @@ def handle_all_day_schedule():
             return jsonify("Missing Arguments"), 405
     else:
         return jsonify("Method Not Allowed"), 405
+
+# =================== #
+# ===-| R O O M |-=== #
+# =================== #
+
+
+@app.route('/pika-booking/rooms', methods=['GET', 'POST', 'PUT'])
+def handle_roms():
+    args = request.json
+    if request.method == 'GET':
+        if request.args and 'limit' in request.args:
+            return Room.get_all_rooms(int(request.args['limit']))
+        return Room.get_all_rooms()
+    elif request.method == 'POST':
+        if args:
+            return Room.create_new_room(args)
+        return jsonify("Args not found"), 405
+    elif request.method == 'PUT':
+        if args:
+            return Room.update_room(args)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/rooms/<int:r_id>', methods=['GET', 'DELETE'])
+def handle_rooms_by_id(r_id):
+    if request.method == 'GET':
+        return Room.get_room(r_id)
+    elif request.method == 'DELETE':
+        return Room.delete_room(r_id)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/rooms/<string:r_name>', methods=['GET'])
+def handle_rooms_by_name(r_name):
+    if request.method == 'GET':
+        return Room.get_room(r_name)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/rooms/most-booked', methods=['GET'])
+def get_most_booked_room():
+    # This gets the most booked room in general (top 10)
+    if request.method == 'GET':
+        return Room.get_most_booked_rooms()
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/rooms/available-room', methods=['POST'])
+def get_available_rooms():
+    # Get available room given a timeframe
+    args = request.json
+    if request.method == 'POST':
+        if args and args['st_dt'] and args['et_dt']:
+            return Room.get_available_rooms(args)
+        return jsonify("Args not found"), 405
+    else:
+        jsonify("Method Not Allowed"), 405
+
+
+# ========================= #
+# ===-| B O O K I N G |-=== #
+# ========================= #
+
+@app.route('/pika-booking/bookings', methods=['GET', 'POST', 'PUT'])
+def handle_bookings():
+    args = request.json
+    if request.method == 'POST':
+        if args:
+            return Booking.create_new_booking(args)
+        return jsonify("Args not found"), 405
+    elif request.method == 'GET':
+        if request.args:
+            return Booking.get_all_bookings(int(request.args['limit']))
+        return Booking.get_all_bookings()
+    if request.method == 'PUT':
+        if args:
+            return Booking.update_booking(args)
+        else:
+            return jsonify("Missing Arguments"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/bookings/<int:b_id>', methods=['GET', 'DELETE'])
+def handle_booking_by_id(b_id):
+    if request.method == 'GET':
+        # Get Person by name or id
+        return Booking.get_booking(b_id)
+    elif request.method == 'DELETE':
+        # Delete Person by id
+        return Booking.delete_booking(b_id)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/bookings/<string:b_name>', methods=['GET'])
+def handle_booking_by_name(b_name):
+    if request.method == 'GET':
+        # Get Person by name or id
+        return Booking.get_booking(b_name)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/bookings/purge', methods=['DELETE'])
+def handle_purge():
+    if request.method == 'DELETE':
+        args = request.json
+        if args:
+            if 'invitee' in args:
+                return Booking.delete_invitee_from_booking(args)
+            return Booking.delete_booking_host(args)
+        else:
+            return jsonify("Missing Arguments"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
+
 
 
 if __name__ == "__main__":

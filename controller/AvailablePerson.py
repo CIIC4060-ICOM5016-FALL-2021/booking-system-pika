@@ -135,7 +135,6 @@ def get_unavailable_person_by_id(pa_id):
         }), 200
 
 
-
 ####################################################################
 def get_unavailable_person_by_person_id(person_id: int):
     method = AvailablePersonDAO()
