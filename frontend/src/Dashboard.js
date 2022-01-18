@@ -78,10 +78,6 @@ if (t==false) {
                                     Go to Userview
                                 </button>
                                     </Link>
-                                <Link to = "/person" > <button>
-                                    Go to Person list
-                                </button>
-                                </Link>
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
