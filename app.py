@@ -302,14 +302,11 @@ def get_account_by_email_and_password():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/persons/person/all-schedule', methods=['POST'])
-def handle_get_all_person_schedule_getter_post():
-    args = request.json
-    if request.method == 'POST':
-        if args:
-            return AvailablePerson().get_schedule(args)
-        else:
-            return jsonify("Args not found"), 405
+@app.route('/pika-booking/persons/person/all-schedule/<int:p_id>', methods=['GET'])
+def handle_get_all_person_schedule_getter_post(p_id):
+    if request.method == 'GET':
+        return AvailablePerson().get_schedule(p_id)
+
     else:
         return jsonify("Method Not Allowed"), 405
 
