@@ -267,26 +267,18 @@ def get_person_most_used_room():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/persons/person/role-access', methods=['POST'])
-def get_role_access():
-    args = request.json
-    if request.method == 'POST':
-        if args:
-            return Person().person_to_get_access_to_room_info(args)
-        else:
-            return jsonify("Args not found: p_id"), 405
+@app.route('/pika-booking/persons/person/<int:p_id>/role-access', methods=['GET'])
+def get_role_access(p_id):
+    if request.method == 'GET':
+        return Person().person_to_get_access_to_room_info(p_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/persons/person/room-roles', methods=['POST'])
-def get_rooms_by_role():
-    args = request.json
-    if request.method == 'POST':
-        if args:
-            return Person().role_to_get_access_to_room_info(args)
-        else:
-            return jsonify("Args not found: p_id"), 405
+@app.route('/pika-booking/persons/person/room-roles/<int:r_id>', methods=['GET'])
+def get_rooms_by_role(r_id):
+    if request.method == 'GET':
+        return Person().role_to_get_access_to_room_info(r_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -462,6 +454,7 @@ def get_free_time_for_meeting_users():
             return jsonify("Args not found"), 405
     else:
         return jsonify("Method Not Allowed"), 405
+
 
 if __name__ == "__main__":
     app.debug = True
