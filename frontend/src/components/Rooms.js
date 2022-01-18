@@ -191,7 +191,7 @@ function type1(parameter){
     }
 
     function fetchUnavailableTimeSlots(){
-        const url = `https://booking-system-pika.herokuapp.com/pika-booking/rooms/available/schedule${roomID}`;
+        const url = `https://booking-system-pika.herokuapp.com/pika-booking/rooms/available/schedule/${roomID}`;
         axios.get(url, {
             headers: {'Content-Type': 'application/json' }})
             .then(

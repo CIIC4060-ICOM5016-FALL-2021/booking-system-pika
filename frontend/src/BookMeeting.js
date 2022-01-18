@@ -23,7 +23,7 @@ function BookMeeting(){
     const [st_dt, setst_dt] = useState("");
     let [et_dt, setet_dt] = useState("");
     const[room_id,setroom_id] = useState("");
-    const[invitee,setinvitee]=  useState("");
+    const[invitee,setinvitee]=  useState(0);
     const [g,setg]= useState(false);
     const [its,setits] = useState(false)
     const [Selected,SetSelect] = useState(false)
@@ -49,6 +49,9 @@ function BookMeeting(){
     const[y,sety] = useState(false);
     const[ts,sets]= useState([]);
     const[s,setl]= useState([]);
+    const[h,seth]= useState(false);
+    const[date,setdate]=useState("")
+    const[sh,setlh]= useState([]);
 function getbooking(){
 
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/${ba_id}`).then(res => {
@@ -151,7 +154,11 @@ function getbooking(){
         }
     }
     function getfreeinviteetime(){
-
+    let data ={"invited_id":invitee, "date": date}
+axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/shared-time-user`,data).then(res=>{
+    setlistfree(res.data)
+    seth(true)
+})
     }
     function unavailableofperson(){ if (k===false) {
         axios.get(`https://booking-system-pika.herokuapp.com//pika-booking/person/unavailable/person_id/${dat.p_id}`).then(res => {
@@ -183,7 +190,7 @@ function getbooking(){
         }
     }
     function deleteunavailablegcheck(){
-        if (un===""||!r){
+        if (un===""){
             return false
         }else{
             axios.delete(` https://booking-system-pika.herokuapp.com/pika-booking/person/unavailable/pa_id/${un}`)
@@ -208,14 +215,14 @@ function run(){
         return true
     }
     function check() {
-        if (ba_id===""||st_dt === "" || et_dt === "" || room_id === "" || invitee === ""||!unavail){
+        if (ba_id===""||st_dt === "" || et_dt === "" || room_id === "" || invitee === 0||!y){
             return false
         }else {
             let e = localStorage.getItem("login-data");
             let   dat = JSON.parse(e)
             console.log(invitee)
-            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/bookings', {
-                    "booking_name":ba_id,"st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": invitee, "room_id": room_id,
+            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', {
+                    "b_name":ba_id,"st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": parseInt(invitee), "room_id": room_id,
 
             },
             (error) => {
@@ -421,26 +428,26 @@ function run(){
                     <Form.Input
                         fluid
                         name="Start time"
-                        placeholder="Insert Start time"
-                        label="Start time"
-                        value={st_dt}
-                        onChange={e => setst_dt(e.target.value)}
+                        placeholder="Insert invitee"
+                        label="invitee"
+                        value={invitee}
+                        onChange={e => setinvitee(e.target.value)}
                     />
                 </Form.Field>
                 <Form.Field>
                     <Form.Input
                         fluid
                         name="End time"
-                        placeholder="Insert End time"
-                        label="End time"
-                        value={et_dt}
-                        onChange={e => setet_dt(e.target.value)}
+                        placeholder="Insert date"
+                        label="mm-dd-yyyy"
+                        value={date}
+                        onChange={e => setdate(e.target.value)}
                     />
                 </Form.Field>
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => setfree(false)}>OK</Button>
+                <Button onClick={() => getfreeinviteetime()}>OK</Button>
             </Modal.Actions>
         </Modal>
         <Modal
@@ -749,6 +756,24 @@ function run(){
                 <Modal.Header> You have deleted a unavailable time slot</Modal.Header>
                 <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
             </Modal>
+            <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
+            <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
+            <Modal open = {userfree}
+                   onClose={() => setuserfree(false)}
+                   onOpen={() => setuserfree(true)}>
+                <Button onClick={() => returnallfalse()}>ok</Button>
+            </Modal>
+            {/*<Modal open ={h}*/}
+            {/*       onClose={() => setlh(false)}*/}
+            {/*       onOpen={() => setlh(true)}*/}
+            {/*>*/}
+            {/*    <Modal.Header> time slot</Modal.Header>*/}
+            {/*    <Modal.Description>{sh.map((item =>{*/}
+            {/*        {item.st_dt} {item.et_dt}*/}
+            {/*    }))*/}
+            {/*    } </Modal.Description>*/}
+            {/*    <Button fluid onClick={()=>returnallfalse()}>Ok</Button>*/}
+            {/*</Modal>*/}
             <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
             <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
             <Modal open = {userfree}
