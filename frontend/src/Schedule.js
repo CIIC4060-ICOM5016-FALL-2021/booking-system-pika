@@ -36,7 +36,7 @@ function Schedule(){
                   //  if ( res.data.booking_name[i]===""){
                         tile = "Unavailable"
                   //  }else{
-                  //      tile = res.data.booking_name[i]
+                  //     tile = res.data.booking_name[i]
                   //  }
 
                 const w = {title: tile, start:  new Date(st), end :  new Date(et), room: 4}

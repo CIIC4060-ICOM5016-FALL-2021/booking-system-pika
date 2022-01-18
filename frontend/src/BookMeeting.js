@@ -29,7 +29,7 @@ function BookMeeting(){
     const [st_dt, setst_dt] = useState("");
     let [et_dt, setet_dt] = useState("");
     const[room_id,setroom_id] = useState("");
-    const[invitee,setinvitee]=  useState([]);
+    const[invitee,setinvitee]=  useState("");
     const [g,setg]= useState(false);
     const [its,setits] = useState(false)
     const [Selected,SetSelect] = useState(false)
@@ -51,38 +51,41 @@ function BookMeeting(){
     const[und,setund]= useState(false);
     const[delebook,setdelebook] = useState(false);
     const [rooms, setRooms] = useState([]);
-    const y = ()=>{
-        setr(true)
-    }
-
-
+    const[k,setk] = useState(false);
+    const[y,sety] = useState(false);
+    const[ts,sets]= useState([]);
 function getbooking(){
-        axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/${ba_id}`).then(res=>{
-            setget(res.data)
-            }
 
-        )
+            axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/${ba_id}`).then(res => {
+                    setget(res.data)
+                }
+            )
+
+
 }
    function getfreeuser(){
 
    }
     function getRooms(){
-        axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/person/${dat.p_id}/role-access`).then((res) => {
-                setRooms(res.data);
-                console.log(rooms)
+        if (k===false) {
+            axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/person/${dat.p_id}/role-access`).then((res) => {
+                    setRooms(res.data);
+                    console.log(rooms)
 
-            }, (error) => {
-                console.log(error);
-            }
-        );
+                }, (error) => {
+                    console.log(error);
+                }
+            );
+        }
+        setk(true)
     }
     const returnallfalse=()=>{
-        setr(false)
+
         setOpen(false)
         setst_dt("")
         setet_dt("")
         setroom_id("")
-        setinvitee([])
+        setinvitee("")
         setg(false)
         setbooking(false)
         setbook(false)
@@ -134,7 +137,7 @@ function getbooking(){
             if(et_dt===""){
                 data.et_dt =get.et_dt
             }
-            if (invitee===[]){
+            if (invitee===""){
                 data.invited_id = get.invited_id
             }
             axios.put("https://booking-system-pika.herokuapp.com/pika-booking/booking", data)
@@ -143,6 +146,12 @@ function getbooking(){
     }
     function getfreeinviteetime(){
 
+    }
+    function unavailableofperson(){
+        axios.get(`https://booking-system-pika.herokuapp.com//pika-booking/person/unavailable/person_id/${dat.p_id}`).then(res=>{
+           sets(res.data)
+            console.log(ts)
+        })
     }
     function updateunavailablecheck(){
 
@@ -185,24 +194,30 @@ function run(){
         return false
 }
     function first() {
-        return !(st_dt === "" || et_dt === "" || room_id === "" || invitee === []);
+        if(st_dt === "" || et_dt === "" || room_id === "" || invitee === ""){
+            return false
+        }
+
+        return true
     }
     function check() {
-        if (st_dt === "" || et_dt === "" || room_id === "" || invitee === []||!y){
+        if (ba_id===""||st_dt === "" || et_dt === "" || room_id === "" || invitee === ""||!y){
             return false
         }else {
             let e = localStorage.getItem("login-data");
             let   dat = JSON.parse(e)
             console.log(invitee)
             axios.post('https://booking-system-pika.herokuapp.com//pika-booking/bookings', {
-                    "booking_name":ba_id    ,"st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": invitee, "room_id": room_id,
+                    "booking_name":ba_id,"st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": invitee, "room_id": room_id,
 
             },
             (error) => {
                 console.log(error);
                 setEdit("You can't make booking")
                 console.log(Edit);
+
             })
+            setg(true)
             return true
         }
     }
@@ -227,6 +242,7 @@ function run(){
     }
   useEffect(()=>
   {
+      unavailableofperson()
       getRooms()
 getbooking()
       run()
@@ -288,8 +304,7 @@ getbooking()
                     <Form>
                         <Form.Field>
                             <Form.Input
-                        name="Ba_id"
-                        placeholder=" Insert Booking id"
+                        placeholder=" Insert Booking Name"
                         label="ba_id"
                         value={ba_id}
                         onChange={e => setba_id(e.target.value)}
@@ -316,14 +331,14 @@ getbooking()
                             />
                         </Form.Field>
                         <Form.Field>
-                            <Form.Input
-                                fluid
-                                name="Room Name"
-                                placeholder=" Insert Room Name"
-                                label="Room Name"
-                                value={room_id}
-                                onChange={e => setroom_id(e.target.value)}
-                            />
+                            <Form.Input label='Room'>
+                                <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setroom_id(e.target.value)}}>
+                                    <option key={0} value={"0"}>Select Room</option>
+                                    {rooms.map(item => {
+                                        return (<option key={item.r_id} value={item.r_id}>{item.r_name}</option>)
+                                    })}
+                                </select>
+                            </Form.Input>
                         </Form.Field>
                         <Form.Field>
                             <Form.Input
@@ -336,7 +351,7 @@ getbooking()
 
                             />
                         </Form.Field>
-                        <Button content='Enter' icon='signup' size='big' onClick={() => (first()?setr(true): sett(true))}/>
+                        <Button content='Enter' icon='signup' size='big' onClick={() => (first()?sety(true): sett(true))}/>
                     </Form>
                 </Modal.Description>
             </Modal.Content>
@@ -345,9 +360,9 @@ getbooking()
         </Modal>
         <Modal
             centered={false}
-            open={r}
-            onClose={() => setr(false)}
-            onOpen={() => setr(true)}
+            open={y}
+            onClose={() => sety(false)}
+            onOpen={() => sety(true)}
         >
             <Modal.Header>Are you sure?</Modal.Header>
             <Modal.Content>
@@ -355,8 +370,8 @@ getbooking()
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => setr(false)}>No</Button>
-                <Button onClick={() => check()&& setg(true)}>Yes</Button>
+                <Button onClick={() => sety(false)}>No</Button>
+                <Button onClick={() => check()}>Yes</Button>
             </Modal.Actions>
         </Modal>
         <Modal
@@ -541,7 +556,7 @@ getbooking()
                             </Form.Field>
                             <Form.Field>
                                 <Form.Input label='Room'>
-                                    <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {room_id(e.target.value)}}>
+                                    <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setroom_id(e.target.value)}}>
                                         <option key={0} value={"0"}>Select Room</option>
                                         {rooms.map(item => {
                                             return (<option key={item.r_id} value={item.r_id}>{item.r_name}</option>)
@@ -590,7 +605,7 @@ getbooking()
 
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button content='Confirm' onClick={()=> setdelebook(true)}/>
+                    <Button content='Confirm' onClick={()=> deletebookingcheck()&&setdelebook(true)}/>
                     <Button onClick={() => setdeletebooking(false)}>cancel</Button>
                 </Modal.Actions>>
 
@@ -682,21 +697,22 @@ getbooking()
                 <Modal.Content>
                     <Modal.Description>
                         <Form.Field>
-                            <Form.Input
-                                fluid
-                                name="unavailable id"
-                                placeholder=" Insert Unavailable Id"
-                                label="unavailable id"
-                                value={un}
-                                onChange={e => setun(e.target.value)}
 
-                            />
+                            <Form.Input label='unavailable timeframe'>
+                                <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setun(e.target.value)}}>
+                                    <option key={0} value={"0"}>unavailable timeframe</option>
+                                    {ts.map(item => {
+                                        return (<option key={item.pa_id} value={item.pa_id}>{item.st_dt}-{item.et_dt}</option>)
+                                    })}
+                                </select>
+
+                                </Form.Input>
                         </Form.Field>
                     </Modal.Description>
                 </Modal.Content>
                 <Modal.Actions>
                     <Button onClick={() => setdeleteupunavailable(false)}>cancel</Button>
-                    <Button onClick={()=> setund(true)}>Confirm</Button>
+                    <Button onClick={()=> setund(true)&& deleteunavailablegcheck()}>Confirm</Button>
                 </Modal.Actions>>
             </Modal>
             <Modal open ={und}

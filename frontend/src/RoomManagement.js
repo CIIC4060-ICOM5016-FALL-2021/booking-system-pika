@@ -21,7 +21,20 @@ function RoomManagement(){
             setIsAuth(true);
         }
     }
-
+    function type1(parameter) {
+        switch (parameter) {
+            case 1:
+                return 'laboratory'
+            case 2:
+                return 'classroom'
+            case 3:
+                return 'office'
+            case 4:
+                return 'study_space'
+            case 5:
+                return 'conference_hall'
+        }
+    }
     function getRooms(){
         axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/rooms`).then((res) => {
                 setRooms(res.data);
@@ -50,7 +63,7 @@ function RoomManagement(){
                                 RoomName = {`${rooms[i].r_name}`}
                                 Building= {`${rooms[i].r_building}`}
                                 Department= {`${rooms[i].r_department}`}
-                                Type= {`${rooms[i].r_type}`}
+                                Type= {`${type1(rooms[i].r_type)}`}
                                 Room_id = {rooms[i].r_id}
                                 type={"edit"}/>
                         ))}
