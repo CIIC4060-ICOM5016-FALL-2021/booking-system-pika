@@ -110,29 +110,44 @@ class Room:
 
     # Update
     def update_room(self, json):
-        r_id = json['r_id'] # 1
-        r_building = json['r_building'] # "ADEM"
-        r_dept = json['r_dept'] # "adem"
-        r_type = json['r_type'] # 3
+        r_id = json['r_id']
+        r_name = json['r_name']
+        r_building = json['r_building']
+        r_dept = json['r_dept']
+        r_type = json['r_type']
         dao = RoomDAO()
-        existing_room = dao.get_room(r_id)
-        if not existing_room:
+        if not dao.check_if_room_exists(r_id):
             return jsonify("Room Not Found"), 404
         else:
-            dao.update_room(r_id, r_building, r_dept, r_type)
+            dao.update_room(r_id, r_name, r_building, r_dept, r_type)
             result = self.build_room_attr_dict(r_id, r_building, r_dept, r_type)
             return jsonify(result), 200
 
     # Put a number and get some room thingy
-    def get_room_by_id(self, r_id):
-        dao = RoomDAO()
-        rooms_by_id = dao.get_room(r_id, )
-        if not rooms_by_id:
-            return jsonify("There's no rooms!"), 404
-        else:
-            print(rooms_by_id)
-            result = self.build_room(rooms_by_id)
-            return jsonify(result), 200
+    def get_room(self, room):
+        method = RoomDAO()
+        if type(room) == int:
+            if method.check_if_room_exists(room):
+                data = method.get_room_by_id(room)
+                return jsonify({
+                    'r_name': data[0],
+                    'r_building': data[1],
+                    'r_dept': data[2],
+                    'r_type': method.rooms[data[3]]
+                })
+            else:
+                return jsonify("Room Not Found"), 404
+        elif type(room) == str:
+            data = method.get_room_by_name(room)
+            if not data:
+                return jsonify("Room does not exist"), 404
+            else:
+                return jsonify({
+                    'r_id': data[0],
+                    'r_building': data[1],
+                    'r_dept': data[2],
+                    'r_type': method.rooms[data[3]]
+                })
 
     # Retrieves all available rooms
     def get_available_rooms(self, json):
