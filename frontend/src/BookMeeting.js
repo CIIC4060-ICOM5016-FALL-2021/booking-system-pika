@@ -49,6 +49,8 @@ function BookMeeting(){
     const[un,setun] =  useState("");
     const [ba_id,setba_id] = useState("");
     const [New,setnew] = useState("");
+    const[und,setund]= useState(false);
+    const[delebook,setdelebook] = useState(false);
     const y = ()=>{
         setr(true)
     }
@@ -103,6 +105,8 @@ function getbooking(){
         setuserfree(false)
         setget("")
         setnew("")
+        setund(false)
+        setdelebook(false)
 }
     function updatebookingcheck(){
         let e = localStorage.getItem("login-data");
@@ -182,14 +186,14 @@ function run(){
         return false
 }
     function first() {
-        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == []) {
+        if (st_dt === "" || et_dt === "" || room_id === "" || invitee === []) {
             return false
         } else {
             return true
         }
     }
     function check() {
-        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == []||!y){
+        if (st_dt === "" || et_dt === "" || room_id === "" || invitee === []||!y){
             return false
         }else {
             let e = localStorage.getItem("login-data");
@@ -208,7 +212,7 @@ function run(){
         }
     }
     function first1() {
-        if (st_dt == "" || et_dt == "" ) {
+        if (st_dt ==="" || et_dt === "" ) {
             return false
         } else {
             return true
@@ -578,8 +582,8 @@ getbooking()
                         <Form.Field>
                             <Form.Input
                                 fluid
-                                name="Ba_id"
-                                placeholder=" Insert Booking id"
+                                name="Booking_Name"
+                                placeholder=" Insert Booking Name"
                                 label="ba_id"
                                 value={ba_id}
                                 onChange={e => setba_id(e.target.value)}
@@ -591,7 +595,7 @@ getbooking()
 
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button content='Confirm'/>
+                    <Button content='Confirm' onClick={()=> setdelebook(true)}/>
                     <Button onClick={() => setdeletebooking(false)}>cancel</Button>
                 </Modal.Actions>>
 
@@ -697,8 +701,23 @@ getbooking()
                 </Modal.Content>
                 <Modal.Actions>
                     <Button onClick={() => setdeleteupunavailable(false)}>cancel</Button>
-                    <Button content='Confirm'/>
+                    <Button onClick={()=> setund(true)}>Confirm</Button>
+                    {console.log(und)}
                 </Modal.Actions>>
+            </Modal>
+            <Modal open ={und}
+                   onClose={() => setund(false)}
+                   onOpen={() => setund(true)}
+            >
+                <Modal.Header> You have deleted a unavailable time slot</Modal.Header>
+                <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
+            </Modal>
+            <Modal open ={delebook}
+                   onClose={() => setdelebook(false)}
+                   onOpen={() => setdelebook(true)}
+            >
+                <Modal.Header> You have deleted a unavailable time slot</Modal.Header>
+                <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
             </Modal>
             <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
             <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
