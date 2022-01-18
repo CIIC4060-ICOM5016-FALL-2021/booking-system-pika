@@ -11,7 +11,7 @@ function UserStatistics (){
     let   dat = JSON.parse(e)
     console.log(dat.p_id);
         axios.post(
-            `https://booking-system-pika.herokuapp.com//pika-booking/persons/5/most-used-room`, {"p_id": dat.p_id}).then(res => {
+            `https://booking-system-pika.herokuapp.com//pika-booking/persons/most-used-room`, {"p_id": dat.p_id}).then(res => {
             setdata(res.data);
             console.log(res.data)
         })

@@ -23,11 +23,12 @@ function Rooms(props) {
     const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
     const [unavailableTimeSlot, setUnavailableTimeSlot] = useState(new Date());
     const [unavailableTimeSlots, setUnavailableTimeSlots] = useState([]);
+    const[]= useState(false);
     const [toMarkAvailable, setToMarkAvailable] = useState(new Date())
     const [invalidTimeSlot, setInvalidTimeSlot] = useState(false)
     const [roomSchedule, setRoomSchedule] = useState(new Date());
     const [allDayRS, setallDayRS] = useState([]);
-    const [ setCanShowSched] = useState(false);
+    const [ CanShowSched,setCanShowSched] = useState(false);
     const [name,setname] = useState("");
     const[i,seti] = useState("");
     const roomID = props.Room_id;
