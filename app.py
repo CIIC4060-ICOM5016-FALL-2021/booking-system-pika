@@ -165,7 +165,7 @@ def handle_verify_available_room_getter_post():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/person/unavailable/pa_id/<int:pa_id>', methods=['GET'])
+@app.route('/pika-booking/person/unavailable/pa_id/<int:pa_id>', methods=['GET','DELETE'])
 def handle_unavailable_person_pa_id(pa_id):
     if request.method == 'GET':
         return AvailablePerson().get_unavailable_person_by_id(pa_id)
