@@ -245,12 +245,17 @@ class Person(object):
 
         else:
             return jsonify("Role Not found"), 404
-        result_list = []
+        result = []
         for row in info:
-
-            obj = self.build_room1(row=row)
-            result_list.append(obj)
-        return jsonify(result_list)
+            print(row)
+            result.append({
+                "r_id": row[0],
+                "r_building": row[1],
+                "r_department": row[2],
+                "r_type": row[3],
+                "r_name": row[4]
+            })
+        return jsonify(result), 200
 
 
     def role_to_get_access_to_room_info(self, json):
@@ -273,5 +278,5 @@ class Person(object):
 
             obj = self.build_room1(row=row)
             result_list.append(obj)
-        return jsonify(result_list)
+        return jsonify(result_list), 200
 
