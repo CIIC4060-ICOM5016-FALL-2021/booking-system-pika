@@ -38,7 +38,7 @@ function RoomManagement(){
     function getRooms(){
         axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/rooms`).then((res) => {
                 setRooms(res.data);
-                    console.log(rooms)
+                    console.log(res.data)
 
             }, (error) => {
                 console.log(error);
@@ -48,6 +48,7 @@ function RoomManagement(){
     useEffect(() => {
         getAuthentication();
         getRooms();
+        console.log(rooms)
     }, []);
 
     if(isAuth) {

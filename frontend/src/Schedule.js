@@ -23,21 +23,22 @@ function Schedule(){
     const localizer = momentLocalizer(moment)
 
     function getpersonschedule(){
-            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule', {
-                person_id: dat.p_id
-            }).then(res => {
+            axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule/${dat.p_id}`
+            ).then(res => {
                 let t = []
                 let i =0
-                for  (let meet of res.data.st_dt) {
+                console.log(res.data)
+                for  (let meet of res.data) {
 
-                    const st =` ${res.data.st_dt[i]}-0400 (Atlantic Standard Time)`
-                    const et = ` ${res.data.et_dt[i]}-0400 (Atlantic Standard Time)`
+                    const st =` ${meet.st_dt}-0400 (Atlantic Standard Time)`
+                    const et = ` ${meet.et_dt}-0400 (Atlantic Standard Time)`
                     let tile =""
-                  //  if ( res.data.booking_name[i]===""){
-                        tile = "Unavailable"
-                  //  }else{
-                  //     tile = res.data.booking_name[i]
-                  //  }
+                   if ( meet.name===null){
+                       tile = "Unavailable"
+                   }else{
+                       tile = ` ${meet.name}`
+                       console.log(tile)
+                   }
 
                 const w = {title: tile, start:  new Date(st), end :  new Date(et), room: 4}
                 t.push(w)
