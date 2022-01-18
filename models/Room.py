@@ -32,7 +32,7 @@ class RoomDAO:
         # Returns a query of all rooms
     def get_all_rooms(self, limit_thingy: int) -> list:
         cursor = self.conn.cursor()
-        query = 'select r_id, r_name, r_type ' \
+        query = 'select r_id, r_name, r_type, r_building, r_dept ' \
                 'from room limit %s;'
         cursor.execute(query, (limit_thingy,))
         result: list = []

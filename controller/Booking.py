@@ -239,7 +239,7 @@ class Booking(object):
 
     def get_shared_free_timeslot(self, json):
         booking_dao = BookingDAO()
-        booking_id = json['b_id']
+        # booking_id = json['b_id']
         date = json['date']
         existent_booking = self.get_meetings_by_id(json).json
         print(existent_booking)
@@ -279,23 +279,13 @@ class Booking(object):
 
     def get_shared_free_timeslot_users(self, json):
         booking_dao = BookingDAO()
-        booking_id = json['b_id']
+        person_tupple = json['invited_id']
         date = json['date']
-        existent_booking = self.get_meetings_by_id(json).json
-        print(existent_booking)
-        person_dao = PersonDAO()
-        person_tupple = []
-        for value in existent_booking.values():
-            person = person_dao.get_person_by_id(value['invited_id'])
-            if not person:
-                return jsonify("Person not found"), 404
-            # hours = AvailablePersonDAO().get_all_day_schedule(value['invited_id'], date)
-            person_tupple.append(value['invited_id'])
+
         free_time = booking_dao.get_free_time_of_day(tuple(person_tupple),date)
-        mega_map = {}
+        mega_map = []
         print(free_time, "This is the free time")
-        for i, b in enumerate(free_time):
-            print(b)
-            mega_map[i] = {'free_start': str(b[0]), 'free_end': str(b[1]), 'delta_time': str(b[2])}
+        for b in free_time:
+            mega_map.append({'free_start': str(b[0]), 'free_end': str(b[1]), 'delta_time': str(b[2])})
         print(mega_map)
         return jsonify(mega_map)

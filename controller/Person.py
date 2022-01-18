@@ -1,4 +1,3 @@
-import datetime as dt
 from flask import jsonify
 
 
@@ -7,7 +6,8 @@ from controller.Room import Room
 from models.Room import RoomDAO
 from models.AvailablePerson import AvailablePersonDAO
 
-class Person:
+
+class Person(object):
 
     def build_person_map(self, row):
         result = {'p_id': row[0], 'p_fname': row[1], 'p_lname': row[2], 'p_role': row[3], 'p_email': row[4],
@@ -72,6 +72,7 @@ class Person:
     def build_account_info(self, row):
         result = { 'p_email': row[0], 'p_password': row[1], "p_id" : row[2]}
         return result
+
     def create_new_person(self, json):
         p_fname = json['p_fname']
         p_lname = json['p_lname']
@@ -132,15 +133,23 @@ class Person:
         else:
             return True
 
-    def get_person_role_by_id(self, p_id):
-        dao = PersonDAO()
-        person_role = dao.get_person_role_by_id(p_id)
-        if not person_role:
-            return jsonify("Person Not Found"), 404
+    def get_persons_by_role(self, r_id: int):
+        method = PersonDAO()
+        count = method.count_person_by_role(r_id)
+        if count != 0:
+            data = method.get_all_person_by_role(r_id)
+            result: list = []
+            for row in data:
+                result.append({
+                    'p_id': row[0],
+                    'fname': row[1],
+                    'lname': row[2],
+                    'p_email': row[4],
+                    'p_gender': row[6]
+                })
+            return jsonify(result), 200
         else:
-            result = self.build_role_map_dict(person_role)
-            print(result)
-            return result
+            return jsonify("There are no Persons around"), 404
 
     def get_most_booked_persons(self, limit_thingy=10):
         method = PersonDAO()
@@ -205,8 +214,6 @@ class Person:
             result = self.build_account_info(person_tuple)
             return jsonify(result), 200
 
-
-
     def delete_person(self, p_id):
         method = PersonDAO()
         result = method.delete_person(p_id)
@@ -258,7 +265,6 @@ class Person:
             5: (5)
         }
 
-
         if p_role not in role_access_dict.keys():
             return jsonify("Role Not found"), 404
 
@@ -269,3 +275,4 @@ class Person:
             obj = self.build_room1(row=row)
             result_list.append(obj)
         return jsonify(result_list)
+
