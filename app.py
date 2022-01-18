@@ -37,7 +37,7 @@ def main():
 # Create a new room (json)
 # Delete an existing room given a room id
 # Update an existing room also by a given id
-@app.route('/pika-booking/rooms', methods=['GET', 'POST', 'DELETE', 'PUT'])
+@app.route('/pika-booking/rooms', methods=['GET', 'POST', 'PUT'])
 def handle_rooms():
     args = request.json
     if request.method == 'POST':
@@ -49,19 +49,16 @@ def handle_rooms():
             return Room().update_room(args)
         else:
             return jsonify("Args not found"), 405
-    elif request.method == 'DELETE':
-        if args and "r_id" in args:
-            return Room().delete_room(args["r_id"])
-        else:
-            return jsonify("Args not found: r_id"), 405
     else:
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/rooms/<int:r_id>', methods=['GET'])
+@app.route('/pika-booking/rooms/<int:r_id>', methods=['GET', 'DELETE'])
 def handle_room_getter_post(r_id):
     if request.method == 'GET':
         return Room().get_room_by_id(r_id)
+    elif request.method == 'DELETE':
+        return Room().delete_room(r_id)
     else:
         return jsonify("Method Not Allowed"), 405
 

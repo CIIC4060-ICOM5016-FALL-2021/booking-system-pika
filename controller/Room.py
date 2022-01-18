@@ -1,4 +1,6 @@
 from flask import jsonify
+
+from models.AvailableRoom import AvailableRoomDAO
 from models.Room import RoomDAO
 
 
@@ -47,13 +49,13 @@ class Room:
             return jsonify("There's no rooms! It feels, lonely.."), 404
         else:
             result = []
-            for r_id, r_name, r_type, r_building, r_department in all_rooms:
+            for r_id, r_name, r_type, r_building, r_dept in all_rooms:
                 result.append({
                         "r_id": r_id,
                         "r_name": r_name,
                         "r_type": r_type,
                         "r_building": r_building,
-                        "r_department": r_department
+                        "r_department": r_dept
                     })
             return jsonify(result), 200
 
@@ -66,10 +68,11 @@ class Room:
             return jsonify("There's either no Bookings or no Rooms created"), 404
         else:
             result = []
-            for row in booked_rooms:
+            for r_id, r_name, count in booked_rooms:
                 result.append({
-                    "r_id": row[0],
-                    "timed_booked": row[1]
+                    "r_id": r_id,
+                    'r_name': r_name,
+                    "timed_booked": count
                 })
             return jsonify(result), 200
 
@@ -95,10 +98,12 @@ class Room:
         #     return jsonify("A room with that ID already exists"), 409
 
     # Delete
-    def delete_room(self, r_id):
-        dao = RoomDAO()
-        result = dao.delete_room(r_id)
+    def delete_room(self, r_id: int):
+        method = RoomDAO()
+        result = method.delete_room(r_id)
         if result:
+            method2 = AvailableRoomDAO()
+            method2.delete_unavailable_room(r_id)
             return jsonify("Room Deleted Successfully"), 200
         else:
             return jsonify("Room Not Found"), 404
