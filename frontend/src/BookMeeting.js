@@ -57,7 +57,7 @@ function BookMeeting(){
 
 
     function getpersonschedule(){
-        if (info==false) {
+        if (info===false) {
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule', {
                 person_id: dat.p_id
             }).then(res => {
@@ -186,11 +186,7 @@ function run(){
         return false
 }
     function first() {
-        if (st_dt === "" || et_dt === "" || room_id === "" || invitee === []) {
-            return false
-        } else {
-            return true
-        }
+        return !(st_dt === "" || et_dt === "" || room_id === "" || invitee === []);
     }
     function check() {
         if (st_dt === "" || et_dt === "" || room_id === "" || invitee === []||!y){
@@ -219,7 +215,7 @@ function run(){
         }
     }
     function unavailablecheck(){
-        if (st_dt == "" || et_dt == "" ||!y){
+        if (st_dt === "" || et_dt === "" ||!y){
             return false
         }else {
             let e = localStorage.getItem("login-data");
@@ -237,7 +233,7 @@ getbooking()
       run()
   })
     function Time(year,month, date, hours, minutes){
-        if (minutes==0)
+        if (minutes===0)
        return `${year}-${month +1}-${date} ${hours}:00:00-04`;
         else if (minutes< 10)
             return `${year}-${month +1}-${date} ${hours}:0${minutes}:00-04`;
@@ -261,7 +257,7 @@ getbooking()
                         'startTimeDisplay': Time(selected.start.getFullYear(), selected.start.getMonth(),selected.start.getDate(), selected.start.getHours(),selected.start.getMinutes()),
                          'endTimeDisplay': Time(selected.start.getFullYear(), selected.start.getMonth(),selected.start.getDate(),selected.end.getHours(),selected.end.getMinutes())
                     }])
-            { console.log(selected.end)};SetSelect(true)} }
+            { console.log(selected.end)}SetSelect(true)} }
 
     >
     </Calendar>
@@ -672,7 +668,7 @@ getbooking()
                     <Button onClick={() => updateunavailablecheck()&& setb(true)}>Yes</Button>
                 </Modal.Actions>
             </Modal>
-            <Modal open={t}
+            <Modal open={b}
                    onClose={() => setb(false)}
                    onOpen={() => setb(true)}>
                 <Modal.Header>You have updated your unavailable timeslot</Modal.Header>
@@ -702,7 +698,6 @@ getbooking()
                 <Modal.Actions>
                     <Button onClick={() => setdeleteupunavailable(false)}>cancel</Button>
                     <Button onClick={()=> setund(true)}>Confirm</Button>
-                    {console.log(und)}
                 </Modal.Actions>>
             </Modal>
             <Modal open ={und}
