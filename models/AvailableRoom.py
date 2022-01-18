@@ -99,9 +99,8 @@ class AvailableRoomDAO:
         result = []
         for row in cursor:
             result.append(row)
+        cursor.close()
         return result
-
-
 
     def get_all_unavailable_room(self):
         cursor = self.conn.cursor()
@@ -109,9 +108,9 @@ class AvailableRoomDAO:
                 'from "availableroom";'
         cursor.execute(query)
         result = []
-        # ok
         for row in cursor:
             result.append(row)
+        cursor.close()
         return result
 
     def delete_unavailable_room(self, r_id):

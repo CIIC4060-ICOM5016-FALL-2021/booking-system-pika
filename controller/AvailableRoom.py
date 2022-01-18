@@ -35,7 +35,7 @@ def create_unavailable_room_dt(json: dict):
     # add entry and return back
     method3 = AvailableRoomDAO()
     ra_id = method3.create_unavailable_room_time(room_id, start_time, end_time)
-    return jsonify({'ra_id': ra_id})
+    return jsonify({'ra_id': ra_id}), 200
 
 
 #############################
@@ -140,3 +140,41 @@ def get_all_day_schedule(json: dict):
     else:
         return jsonify("Room doesn't exist"), 404
 
+
+# returns the entire available rooms query
+def get_all_unavailable_rooms():
+    method = AvailableRoomDAO()
+    available_rooms_list = method.get_all_unavailable_room()
+    result = []
+    for ra_id, st_dt, et_dt, room_id in available_rooms_list:
+        result.append({
+            'ra_id': ra_id,
+            'room_id': room_id,
+            'room_url': 'https://booking-system-pika.herokuapp.com/pika-booking/rooms/' + str(room_id),
+            'url': 'https://booking-system-pika.herokuapp.com/pika-booking/rooms/unavailable-schedule/' + str(ra_id)
+        })
+    return jsonify(result), 200
+
+
+def verify_available_room_at_timeframe(args):
+    return None
+
+
+def get_schedule(r_id):
+    return None
+
+
+def get_all_schedule(args):
+    return None
+
+
+def get_unavailable_by_ra_id(ra_id):
+    return None
+
+
+def get_unavailable_room_by_id(room_id):
+    return None
+
+
+def update_room_availability(args):
+    return None
