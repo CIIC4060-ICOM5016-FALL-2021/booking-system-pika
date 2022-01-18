@@ -168,10 +168,10 @@ def handle_unavailable_person_pa_id(pa_id):
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/person/unavailable/person_id/<int:pa_id>', methods=['GET'])
-def handle_unavailable_person_by_person_id(pa_id):
+@app.route('/pika-booking/person/unavailable/person_id/<int:p_id>', methods=['GET'])
+def handle_unavailable_person_by_person_id(p_id):
     if request.method == 'GET':
-        return AvailablePerson().get_unavailable_person_by_person_id(pa_id)
+        return AvailablePerson().get_unavailable_person_by_person_id(p_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
