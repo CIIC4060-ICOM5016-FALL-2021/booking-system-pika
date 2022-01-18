@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Navbar from "./components/Navbar/Navbar";
 import {Button} from 'semantic-ui-react';
-import {Container, Grid, Card} from 'semantic-ui-react';
+import {Container, Grid} from 'semantic-ui-react';
 import {Link} from "react-router-dom";
 
 import axios from "axios";
@@ -17,14 +17,14 @@ function RoomManagement(){
 
     function getAuthentication() {
 
-        if (user.role == 3) {
+        if (user.role === 3) {
             setIsAuth(true);
         }
     }
 
     function fetchRooms(){
-        axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/rooms`).then((response) => {
-                setRooms(response.data);
+        axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/rooms`).then((res) => {
+                setRooms(res.data);
             }, (error) => {
                 console.log(error);
             }
@@ -45,7 +45,7 @@ function RoomManagement(){
                         {Array.from(Array(rooms.length)).map((_, i) => (
                             <Rooms
 
-
+                                Room_ID = {`${rooms[i].r_id}`}
                                 Building= {`${rooms[i].r_building}`}
                                 Department= {`${rooms[i].r_dept}`}
                                 Type= {`${rooms[i].r_type}`}

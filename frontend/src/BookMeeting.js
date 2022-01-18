@@ -49,13 +49,15 @@ function BookMeeting(){
     const[un,setun] =  useState("");
     const [ba_id,setba_id] = useState("");
     const [New,setnew] = useState("");
+    const[und,setund]= useState(false);
+    const[delebook,setdelebook] = useState(false);
     const y = ()=>{
         setr(true)
     }
 
 
     function getpersonschedule(){
-        if (info==false) {
+        if (info===false) {
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule', {
                 person_id: dat.p_id
             }).then(res => {
@@ -103,6 +105,8 @@ function getbooking(){
         setuserfree(false)
         setget("")
         setnew("")
+        setund(false)
+        setdelebook(false)
 }
     function updatebookingcheck(){
         let e = localStorage.getItem("login-data");
@@ -182,14 +186,10 @@ function run(){
         return false
 }
     function first() {
-        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == []) {
-            return false
-        } else {
-            return true
-        }
+        return !(st_dt === "" || et_dt === "" || room_id === "" || invitee === []);
     }
     function check() {
-        if (st_dt == "" || et_dt == "" || room_id == "" || invitee == []||!y){
+        if (st_dt === "" || et_dt === "" || room_id === "" || invitee === []||!y){
             return false
         }else {
             let e = localStorage.getItem("login-data");
@@ -208,14 +208,14 @@ function run(){
         }
     }
     function first1() {
-        if (st_dt == "" || et_dt == "" ) {
+        if (st_dt ==="" || et_dt === "" ) {
             return false
         } else {
             return true
         }
     }
     function unavailablecheck(){
-        if (st_dt == "" || et_dt == "" ||!y){
+        if (st_dt === "" || et_dt === "" ||!y){
             return false
         }else {
             let e = localStorage.getItem("login-data");
@@ -233,7 +233,7 @@ getbooking()
       run()
   })
     function Time(year,month, date, hours, minutes){
-        if (minutes==0)
+        if (minutes===0)
        return `${year}-${month +1}-${date} ${hours}:00:00-04`;
         else if (minutes< 10)
             return `${year}-${month +1}-${date} ${hours}:0${minutes}:00-04`;
@@ -257,7 +257,7 @@ getbooking()
                         'startTimeDisplay': Time(selected.start.getFullYear(), selected.start.getMonth(),selected.start.getDate(), selected.start.getHours(),selected.start.getMinutes()),
                          'endTimeDisplay': Time(selected.start.getFullYear(), selected.start.getMonth(),selected.start.getDate(),selected.end.getHours(),selected.end.getMinutes())
                     }])
-            { console.log(selected.end)};SetSelect(true)} }
+            { console.log(selected.end)}SetSelect(true)} }
 
     >
     </Calendar>
@@ -578,8 +578,8 @@ getbooking()
                         <Form.Field>
                             <Form.Input
                                 fluid
-                                name="Ba_id"
-                                placeholder=" Insert Booking id"
+                                name="Booking_Name"
+                                placeholder=" Insert Booking Name"
                                 label="ba_id"
                                 value={ba_id}
                                 onChange={e => setba_id(e.target.value)}
@@ -591,7 +591,7 @@ getbooking()
 
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button content='Confirm'/>
+                    <Button content='Confirm' onClick={()=> setdelebook(true)}/>
                     <Button onClick={() => setdeletebooking(false)}>cancel</Button>
                 </Modal.Actions>>
 
@@ -668,7 +668,7 @@ getbooking()
                     <Button onClick={() => updateunavailablecheck()&& setb(true)}>Yes</Button>
                 </Modal.Actions>
             </Modal>
-            <Modal open={t}
+            <Modal open={b}
                    onClose={() => setb(false)}
                    onOpen={() => setb(true)}>
                 <Modal.Header>You have updated your unavailable timeslot</Modal.Header>
@@ -697,8 +697,22 @@ getbooking()
                 </Modal.Content>
                 <Modal.Actions>
                     <Button onClick={() => setdeleteupunavailable(false)}>cancel</Button>
-                    <Button content='Confirm'/>
+                    <Button onClick={()=> setund(true)}>Confirm</Button>
                 </Modal.Actions>>
+            </Modal>
+            <Modal open ={und}
+                   onClose={() => setund(false)}
+                   onOpen={() => setund(true)}
+            >
+                <Modal.Header> You have deleted a unavailable time slot</Modal.Header>
+                <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
+            </Modal>
+            <Modal open ={delebook}
+                   onClose={() => setdelebook(false)}
+                   onOpen={() => setdelebook(true)}
+            >
+                <Modal.Header> You have deleted a unavailable time slot</Modal.Header>
+                <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
             </Modal>
             <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
             <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
