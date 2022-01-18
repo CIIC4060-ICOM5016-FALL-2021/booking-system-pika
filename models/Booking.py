@@ -104,6 +104,16 @@ class BookingDAO:
         cursor.close()
         return result
 
+    def get_bookings_by_host(self,host_id):
+        cursor = self.conn.cursor()
+        query = 'select * from booking where host_id = %s;'
+        cursor.execute(query,(host_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+
     # returns a query of all hosts who have booked inside the given timeframe
     def get_host_at_dt(self, room_id, st_dt, et_dt: int):
         cursor = self.conn.cursor()

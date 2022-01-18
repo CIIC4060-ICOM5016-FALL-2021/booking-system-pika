@@ -157,7 +157,25 @@ class Booking(object):
             return jsonify(result), 200
         else:
             return jsonify("No Bookings Found"), 404
+    def get_bookings_by_host(self,host_id):
+        method = BookingDAO()
+        booked_rooms = method.get_bookings_by_host(host_id)
+        if not booked_rooms:
+            return jsonify("There's either no Bookings with this host"), 404
+        else:
+            result = []
+            for b_id, st_dt, et_dt, invited_id, host_id, room_id, b_name in booked_rooms:
+                result.append({
+                    'b_id': b_id,
 
+                    'st_dt': st_dt,
+                    'et_dt': et_dt,
+                    'invited_id': invited_id,
+                    'host_id': host_id,
+                    'room_id': room_id,
+                    'b_name': b_name
+                })
+            return jsonify(result), 200
     # Returns a single booking entry according to its id
 
     def get_meetings_by_id(self, json):

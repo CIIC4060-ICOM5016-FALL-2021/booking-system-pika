@@ -411,6 +411,14 @@ def handle_booking_by_id(b_id):
         return jsonify("Method Not Allowed"), 405
 
 
+@app.route('/pika-booking/booking/host/<int:host_id>', methods=['GET'])
+def get_bookings_by_host(host_id):
+    if request.method == 'GET':
+        return Booking().get_bookings_by_host(host_id)
+
+    else:
+        return jsonify("Method Not Allowed"), 405
+
 @app.route('/pika-booking/booking/busiesthour', methods=['GET'])
 def get_busiest_hours():
     if request.method == 'GET':
