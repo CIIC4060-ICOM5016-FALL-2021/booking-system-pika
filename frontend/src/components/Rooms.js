@@ -27,7 +27,7 @@ function Rooms(props) {
     const [invalidTimeSlot, setInvalidTimeSlot] = useState(false)
     const [roomSchedule, setRoomSchedule] = useState(new Date());
     const [allDayRS, setallDayRS] = useState([]);
-    const [canShowSched, setCanShowSched] = useState(false);
+    const [ setCanShowSched] = useState(false);
     const roomID = props.Room_id;
     console.log(roomID)
     const [st, setst_dt] = useState("");
@@ -174,11 +174,10 @@ function Rooms(props) {
             headers: {'Content-Type': 'application/json' }})
             .then(
                 (response) => {
-                    // console.log(`Time Slot fetched for ${roomID}: `, JSON.stringify(response.data))
+
                     let unavailableTS = []
-                    // console.log("Response: ", response.data)
                     const days = Object.keys(response.data)
-                    for(let day of days){ // day: [ {timeBlock1}, {timeBlock2}, {...} ]
+                    for(let day of days){
                         let tempDate = day.split('-');
                         const blockStart = response.data[day][0].start.split(":");
                         const startDate = new Date(tempDate[0], tempDate[1] - 1, tempDate[2], parseInt(blockStart[0]), parseInt(blockStart[1]), parseInt(blockStart[2]));
