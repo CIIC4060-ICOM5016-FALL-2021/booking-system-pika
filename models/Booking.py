@@ -31,14 +31,19 @@ class BookingDAO:
                                                                             db_root_config['host'])
         self.conn = psycopg2.connect(connection_url)
 
+
+    def __del__(self):
+        self.conn.close()
+
     # creates a new booking entry, no checks here btw
-    def create_new_booking(self, st_dt, et_dt, invited_id, host_id, room_id):
+    def create_new_booking(self, b_name: str, st_dt, et_dt, invited_id: int, host_id: int, room_id: int):
         cursor = self.conn.cursor()
-        query = 'insert into "booking" (st_dt, et_dt, invited_id, host_id, room_id) ' \
-                'values (%s,%s,%s,%s,%s) returning b_id; '
-        cursor.execute(query, (st_dt, et_dt, invited_id, host_id, room_id,))
+        query = 'insert into "booking" (b_name, st_dt, et_dt, invited_id, host_id, room_id) ' \
+                'values (%s,%s,%s,%s,%s,%s) returning b_id; '
+        cursor.execute(query, (b_name, st_dt, et_dt, invited_id, host_id, room_id,))
         b_id = cursor.fetchone()[0]
         self.conn.commit()
+        cursor.close()
         return b_id
 
     def get_meetings_by_id(self, b_id):
@@ -55,44 +60,49 @@ class BookingDAO:
         result = []
         for row in cursor:
             result.append(row)
+        cursor.close()
         return result
 
     # Updates existing entry
-    def update_booking(self, b_id, st_dt, et_dt, invited_id, host_id, room_id):
+    def update_booking(self, b_id, b_name, st_dt, et_dt, invited_id, host_id, room_id):
         cursor = self.conn.cursor()
         query = 'update "booking" ' \
-                'set st_dt = %s, et_dt= %s, invited_id = %s, host_id= %s , room_id = %s ' \
+                'set b_name = %s, st_dt = %s, et_dt= %s, invited_id = %s, host_id= %s , room_id = %s ' \
                 'where b_id = %s '
-        cursor.execute(query, (st_dt, et_dt, invited_id, host_id, room_id, b_id))
+        cursor.execute(query, (b_name, st_dt, et_dt, invited_id, host_id, room_id, b_id))
         self.conn.commit()
+        cursor.close()
         return True
 
     # deletes an entry
     def delete_booking(self, b_id):
         cursor = self.conn.cursor()
-        query = 'delete from "booking" where b_id in %s;'
-        cursor.execute(query, (tuple(b_id),))
+        query = 'delete from "booking" where b_id = %s;'
+        cursor.execute(query, (b_id,))
         deleted_rows = cursor.rowcount
         self.conn.commit()
+        cursor.close()
         return deleted_rows != 0
 
     # returns the whole booking query
-    def get_all_booking(self):
+    def get_all_booking(self, limit_thingy: int):
         cursor = self.conn.cursor()
-        query = 'select b_id, st_dt, et_dt, invited_id, host_id, room_id from "booking";'
-        cursor.execute(query)
+        query = 'select b_id, st_dt, et_dt, invited_id, host_id, room_id from "booking" limit %s;'
+        cursor.execute(query, (limit_thingy,))
         result = []
         for row in cursor:
             result.append(row)
+        cursor.close()
         return result
 
     # return a single column entry of the booking with given id
-    def get_booking_by_id(self, b_id):
+    def get_booking_by_id(self, b_id: int):
         cursor = self.conn.cursor()
-        query = 'select st_dt, et_dt, invited_id, host_id, room_id ' \
+        query = 'select b_name, st_dt, et_dt, invited_id, host_id, room_id ' \
                 'from "booking" where b_id = %s;'
         cursor.execute(query, (b_id,))
         result = cursor.fetchone()
+        cursor.close()
         return result
 
     # returns a query of all hosts who have booked inside the given timeframe
@@ -101,14 +111,16 @@ class BookingDAO:
         query = 'select host_id from booking where booking.room_id = %s && tsrange(st_dt, et_dt) && tsrange(%s, %s);'
         cursor.execute(query, (room_id, st_dt, et_dt,))
         result = cursor.fetchone()
+        cursor.close()
         return result
 
     # returns a query of all invitees whose booking is inside the given timeframe
-    def get_invited_at_dt(self, room_id, st_dt, et_dt):
+    def get_invited_at_dt(self, st_dt, et_dt):
         cursor = self.conn.cursor()
         query = 'select invited_id, room_id from booking where tsrange(st_dt, et_dt) && tsrange(%s, %s);'
         cursor.execute(query, (st_dt, et_dt,))
         result = cursor.fetchone()
+        cursor.close()
         return result
 
     # returns all invitees found in all booking
@@ -118,6 +130,7 @@ class BookingDAO:
                 'from "booking" where b_id = %s;'
         cursor.execute(query, (b_id,))
         result = cursor.fetchone()
+        cursor.close()
         return result
 
     def get_host_by_id(self, b_id):
@@ -126,6 +139,7 @@ class BookingDAO:
                 'from "booking" where b_id = %s;'
         cursor.execute(query, (b_id,))
         result = cursor.fetchone()
+        cursor.close()
         return result
 
     def get_free_time_of_day(self,p_id,date):
@@ -153,14 +167,15 @@ class BookingDAO:
         result = []
         for row in cursor:
             result.append(row)
+        cursor.close()
         return result
 
     # returns a single row who would be the most booked room
     def get_most_booked_rooms(self):
         cursor = self.conn.cursor()
-        query = 'select r_id ,r_dept,r_building, count(booking.room_id) as bookings ' \
+        query = 'select r_id ,r_dept, r_building, count(booking.room_id) as bookings ' \
                 'from booking inner join room on room.r_id = booking.room_id ' \
-                'GROUP BY r_id ,r_dept,r_building order by bookings desc limit 10; '
+                'GROUP BY r_id ,r_dept, r_building order by bookings desc limit 10; '
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -168,7 +183,6 @@ class BookingDAO:
         return result
 
     # Returns the timeframe of the most busiest hour around
-    # TODO FIX NOW!!!!!!!!!!
     def get_busiest_hours(self):
         cursor = self.conn.cursor()
         query = 'select st_dt, et_dt, count(*) as activeinthehour' \
@@ -180,3 +194,4 @@ class BookingDAO:
         for row in cursor:
             result.append(row)
         return result
+

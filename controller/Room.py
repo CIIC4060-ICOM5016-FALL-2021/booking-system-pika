@@ -43,14 +43,19 @@ class Room:
 
     def get_all_rooms(self):
         dao = RoomDAO()
-        all_rooms = dao.get_all_rooms()
+        all_rooms = dao.get_all_rooms(125)
         if not all_rooms:
             return jsonify("There's no rooms! It feels, lonely.."), 404
         else:
             result = []
-            for row in all_rooms:
-                result.append(self.build_room1(row))
-            return jsonify(result)
+            for r_id, r_name, r_type, r_building in all_rooms:
+                result.append({
+                        "r_id": r_id,
+                        "r_building": r_name,
+                        "r_dept": r_type,
+                        "r_type": r_building
+                    })
+            return jsonify(result), 200
 
     # Returns a query of most booked rooms
     # example: {r_id: serial, r_count: int}, in descending order

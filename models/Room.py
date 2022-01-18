@@ -19,14 +19,15 @@ class RoomDAO:
         self.conn = psycopg2.connect(connection_url)
 
     # Returns a query of all rooms
-    def get_all_rooms(self):
+    def get_all_rooms(self, limit_thingy: int) -> list:
         cursor = self.conn.cursor()
-        query = 'select r_id, r_building, r_type, r_dept ' \
-                'from room;'
-        cursor.execute(query)
-        result = []
+        query = 'select r_id, r_name, r_type, r_building ' \
+                'from room limit %s;'
+        cursor.execute(query, (limit_thingy,))
+        result: list = []
         for row in cursor:
             result.append(row)
+        cursor.close()
         return result
 
     # GET Target Room using its id
