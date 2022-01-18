@@ -469,6 +469,16 @@ def get_free_time_for_meeting_users():
     else:
         return jsonify("Method Not Allowed"), 405
 
+@app.route('/pika-booking/persons/email',methods=['POST'])
+def get_persons_id_by_email():
+    args = request.json
+    if request.method == 'POST':
+        if args:
+            return Person.get_person_ids_by_email(request.json)
+        else:
+            return jsonify("Args not found"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
 
 if __name__ == "__main__":
     app.debug = True

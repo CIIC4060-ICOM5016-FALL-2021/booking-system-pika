@@ -71,6 +71,16 @@ class PersonDAO(object):
         result = cursor.fetchone()
         return result
 
+    def get_person_id_by_email(self,p_email):
+        cursor = self.conn.cursor()
+        query = 'select p_id from person where p_email in %s; '
+        cursor.execute(query,(p_email,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+
     def get_account_by_email(self, p_email):
         cursor = self.conn.cursor()
 

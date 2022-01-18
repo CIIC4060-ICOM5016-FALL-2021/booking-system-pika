@@ -214,6 +214,16 @@ class Person(object):
             result = self.build_account_info(person_tuple)
             return jsonify(result), 200
 
+    def get_person_ids_by_email(self,json):
+        p_email = json['p_email']
+        method = PersonDAO()
+        person_tuple = method.get_person_id_by_email(p_email)
+        if not person_tuple:
+            return jsonify("Not Found"), 404
+        else:
+            result = {"person_id": person_tuple}
+            return jsonify(result), 200
+
     def delete_person(self, p_id):
         method = PersonDAO()
         result = method.delete_person(p_id)
