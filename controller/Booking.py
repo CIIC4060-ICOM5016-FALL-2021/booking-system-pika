@@ -99,7 +99,7 @@ class Booking(object):
                     if type(invited_id) == list:
                         b_id: list = []
                         for inv in invited_id:
-                            if method5.verify_available_person_at_timeframe(inv, st_dt, et_dt):
+                            if not method5.verify_available_person_at_timeframe(inv, st_dt, et_dt):
                                 return jsonify("Person has conflict"), 404
                             b_id.append(method4.create_new_booking(b_name, st_dt, et_dt, inv, host_id, room_id))
 

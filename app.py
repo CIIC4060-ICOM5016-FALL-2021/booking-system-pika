@@ -322,8 +322,7 @@ def handle_unavailable_person():
         return AvailablePerson().get_all_unavailable_persons()
     elif request.method == 'POST':
         if args:
-            return AvailablePerson().create_unavaila
-            ble_time_schedule(args)
+            return AvailablePerson().create_unavailable_time_schedule(args)
         else:
             return jsonify("Missing Arguments"), 405
     elif request.method == 'DELETE':
