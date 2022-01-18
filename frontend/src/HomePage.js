@@ -31,21 +31,23 @@ function HomePage() {
 
     const navigate = useNavigate();
     function check() {
-
+if (email===""||password==="") {
+    return false
+}
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/accounts', {
                 "p_email": email,
                 "p_password": password
             }).then(res => {
                 setdata(res.data);
-
+            console.log(data)
             })
             if (data === "") {
-                return false
+                return true
             }
-            localStorage.removeItem("login-data")
+        localStorage.clear()
             localStorage.setItem("login-data", JSON.stringify(data))
-            console.log(localStorage.getItem("login-data"))
-            return true
+            console.log(JSON.parse(localStorage.getItem("login-data")))
+            return false
         }
 
 
@@ -92,7 +94,7 @@ function HomePage() {
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                               />
-                                  <Button content='Login' primary onClick={check?handleLogin:handleChange}/>
+                                  <Button content='Login' primary onClick={check()?handleLogin:handleChange}/>
 
                           </Form>
                       </Grid.Column>

@@ -33,7 +33,6 @@ function BookMeeting(){
     const [g,setg]= useState(false);
     const [its,setits] = useState(false)
     const [Selected,SetSelect] = useState(false)
-    const [schedule,setschedule] = useState( [])
     const [info, setinfo] = useState(false);
     const [Edit,setEdit]= useState("")
     const [free, setfree] = useState(false);

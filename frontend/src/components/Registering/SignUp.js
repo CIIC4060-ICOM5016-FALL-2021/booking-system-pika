@@ -1,9 +1,9 @@
-import React, {Component, useState} from "react";
+import React, {Component, useRef, useState} from "react";
 import axios from "axios";
 import {Button, Card, Form, Grid, Header as SemanticHeader, Modal, Segment} from "semantic-ui-react";
 import Navbar from "../Navbar/Navbar";
 import {useNavigate} from "react-router-dom";
-
+import {Link} from "react-router-dom";
 
 function SignUp () {
 
@@ -22,9 +22,10 @@ function SignUp () {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   let [data,setdata] =  useState("");
-  const navigate = useNavigate();
+const [pen, setopen]= useState(false)
+
 function handlesubmit(){
-  navigate("./Dashboard")
+setopen(true)
 }
   const handleChange = () => {
     setOpen(true);
@@ -243,6 +244,15 @@ const y = ()=>{
 
           </Grid.Column>
         </Grid>
+          <Modal
+          open = {pen
+          }onClose={() => setopen(false)}
+          onOpen={() => setopen(true)}>
+              <Modal.Header> You have made an account, Please Login</Modal.Header>
+              <Link to = "/">
+              <Button>Ok</Button>
+              </Link>
+          </Modal>
       </>
  )
 
