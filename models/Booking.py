@@ -180,3 +180,6 @@ class BookingDAO:
         for row in cursor:
             result.append(row)
         return result
+
+    def get_booking_by_person(self, person_id):
+        pass
