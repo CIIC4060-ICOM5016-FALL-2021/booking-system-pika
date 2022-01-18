@@ -1,17 +1,11 @@
-import React, {Component, useRef, useState} from "react";
+import React, { useState} from "react";
 import axios from "axios";
-import {Button, Card, Form, Grid, Header as SemanticHeader, Modal, Segment} from "semantic-ui-react";
+import {Button,  Form, Grid, Header as SemanticHeader, Modal, Segment} from "semantic-ui-react";
 import Navbar from "../Navbar/Navbar";
-import {useNavigate} from "react-router-dom";
 import {Link} from "react-router-dom";
 
 function SignUp () {
 
- const  options = [
-    { key: 1, text: "Male", value: 1 },
-    { key: 2, text: "Female", value: 2 },
-    { key: 3, text: "Other", value: 3 }
-  ];
   const [open, setOpen] = useState(false);
     const [r, setr] = useState(false);
   const [fname, setfname] = useState("");
@@ -50,7 +44,7 @@ const y = ()=>{
         "p_role": role,
         "p_email": email,
         "p_phone": phone,
-        "p_gender": gender,
+        "p_gender": gender2(gender),
         "p_password": password
 
       }).then(res=>
@@ -62,7 +56,15 @@ const y = ()=>{
     }
   }
 
+    function gender2(parameter){
+        switch(parameter) {
+            case "male":
+                return 1
+            case "female":
+                return 2
 
+        }
+    }
 
 
   // componentDidMount() {
