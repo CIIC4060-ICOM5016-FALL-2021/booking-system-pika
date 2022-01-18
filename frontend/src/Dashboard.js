@@ -19,8 +19,8 @@ function Dashboard(){
     const [ BusiestHours, setBusiestHours] = useState([]);
     const [t,sett]= useState(false);
    function  componentDidMount() {
-if (t==false) {
-    axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons/top-bookers').then(res => {
+if (t===false) {
+    axios.get('https://booking-system-pika.herokuapp.com/pika-booking/persons/most-booked').then(res => {
 
         setBookedPerson(res.data);
 
@@ -58,9 +58,9 @@ if (t==false) {
                                 <h5> Most Booked Person:    {Array.from(Array(BookedPersons.length)).map((_, i) => (
                                     <li>
 
-                                        Bookings:{BookedPersons[i].bookings},
-                                       {BookedPersons[i].first_name }  _
-                                         {BookedPersons[i].last_name }</li>))}  </h5>
+                                        Bookings:{BookedPersons[i].count},
+                                       {BookedPersons[i].p_fname }  _
+                                         {BookedPersons[i].p_lname }</li>))}  </h5>
                             </Grid.Column>
                             <h5> Busiest Hours: <ul>{Array.from(Array(BusiestHours.length)).map((_, i) =>(
                                 <li>
@@ -71,7 +71,7 @@ if (t==false) {
                             <Grid.Column>
                                 <h5>Most Booked Room: <ul>{Array.from(Array(BookedRooms.length)).map((_, i) =>(
                                     <li>
-                                        r_id:{BookedRooms[i].r_id},
+                                        Room Name:{BookedRooms[i].r_id},
                                         number of bookings: {BookedRooms[i].timed_booked}
                                     </li>))} </ul> </h5>
                                 <Link to = "/UserView" > <button>

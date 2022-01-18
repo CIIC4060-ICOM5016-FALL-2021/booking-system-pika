@@ -1,18 +1,16 @@
-import {Link, useLinkClickHandler, useNavigate} from "react-router-dom";
-import React, {Component, createContext, useEffect, useState} from 'react';
+import {Link} from "react-router-dom";
+import React, {useEffect, useState} from 'react';
 import {
     Button,
-    Divider,
+
     Form,
     Grid, Header as SemanticHeader,
-    Header,
+
     Modal,
-    Segment,
-    Tab
+    Segment
 } from 'semantic-ui-react';
 import axios from "axios";
 import Navbar from "./components/Navbar/Navbar";
-import HomePage from "./HomePage";
 
 
 function Settings() {
@@ -44,7 +42,7 @@ function Settings() {
     }
 
     function getinfo() {
-        if (info==false) {
+        if (info===false) {
             let e = localStorage.getItem("login-data");
             let dat = JSON.parse(e)
             axios.get( `https://booking-system-pika.herokuapp.com/pika-booking/persons/${dat.p_id}`).then(res => {
@@ -53,13 +51,11 @@ function Settings() {
             setinfo(true)
             console.log(name)
         }
-        else {
-            return
-        }
+
     }
 
     function deleteact() {
-        if (t == true) {
+        if (t === true) {
             let e = localStorage.getItem("login-data");
             let dat = JSON.parse(e)
             axios.delete(`https://booking-system-pika.herokuapp.com/pika-booking/persons/${dat.p_id}`)
@@ -94,31 +90,32 @@ function Settings() {
                 "p_role": name.p_role,
                 "p_email": email,
                 "p_phone": phone,
-                "p_gender": gender,
+                "p_gender": gender2(gender),
                 "p_password": password}
             if (fname ==="") {
               data.p_fname= name.p_fname
               console.log(fname);
             }
-            if (lname==""){
+            if (lname===""){
                 data.p_lname=name.p_lname;
             }
-            if (email==""){
+            if (email===""){
                 data.p_email=name.p_email;
 
             }
-            if (phone==""){
+            if (phone===""){
                 data.p_phone=name.p_phone;
             }
-            if (gender==""){
+            if (gender===""){
                 data.p_gender=name.p_gender;
             }
-            if (password==""){
+            if (password===""){
                 data.p_password=name.p_password;
             }
             axios.put('https://booking-system-pika.herokuapp.com/pika-booking/persons', data).then(res => {
                 setdata(res.data);
             })
+            window.location.reload(false);
             console.log(data);
             return true
         }
@@ -134,9 +131,9 @@ function Settings() {
     }
     function gender2(parameter){
         switch(parameter) {
-            case "Male":
+            case "male":
                 return 1
-            case "Female":
+            case "female":
                 return 2
 
         }
@@ -153,13 +150,11 @@ function Settings() {
                 return "Visitor"
         }
     }
+    useEffect(()=>{getinfo()})
         return (
             <>
                 <Navbar/>
 
-                <p>
-                    {getinfo()}
-                </p>
                 <Modal
                     centered={false}
                     open={open}

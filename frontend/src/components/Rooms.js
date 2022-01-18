@@ -28,11 +28,14 @@ function Rooms(props) {
     const [roomSchedule, setRoomSchedule] = useState(new Date());
     const [allDayRS, setallDayRS] = useState([]);
     const [ setCanShowSched] = useState(false);
+    const [name,setname] = useState("");
+    const[i,seti] = useState("");
     const roomID = props.Room_id;
     console.log(roomID)
     const [st, setst_dt] = useState("");
     let [et, setet_dt] = useState("");
    const [roompermission,setroompermision] =useState("");
+    const [permission,setpermision] =useState("");
     console.log("All day",allDayRS)
     function createRoom(){
         if(  type==="" || Building==="" || dept===""){
@@ -41,6 +44,7 @@ function Rooms(props) {
         } else {
             console.log("Creating Room")
             let data = { "r_building": Building,
+                "r_name": name,
                 "r_dept": dept,
                 "r_type": type}
             axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/rooms`, data
@@ -79,19 +83,22 @@ function Rooms(props) {
             console.log("No changes")
             setEditMessage("No changes where made");
         } else {
-            let data = {"r_id": 1,
-                "r_building": Building,
-                "r_dept": dept,
-                "r_type": type}
-            // console.log(data);
-            if (Building === "") {
+            let data = {"r_id": roomID,
+                "r_name" : name,
+                "r_building": i,
+                "r_dept": permission,
+                "r_type": roompermission}
+            if (name===""){
+                data.r_name= roomData.r_name
+            }
+            if (i === "") {
                 data.r_building = roomData.r_building;
             }
             if (dept === "") {
                 data.r_dept= roomData.r_dept;
             }
-            if (dept === "") {
-                data.r_dept= roomData.r_dept;
+            if (type === "") {
+                data.r_type= roomData.r_type;
             }
             axios.put(`https://booking-system-pika.herokuapp.com/pika-booking/rooms`,
                 data
@@ -262,7 +269,7 @@ function Rooms(props) {
                     />
                 }
                 <CardContent>
-
+                    <Typography variant="body2" color="textSecondary">Room Name: {props.RoomName}</Typography>
                     <Typography variant="body2" color="textSecondary">Building: {props.Building}</Typography>
                     <Typography variant="body2" color="textSecondary">Department: {props.Department}</Typography>
                     <Typography variant="body2" color="textSecondary">Type: {props.Type}</Typography>
@@ -304,15 +311,20 @@ function Rooms(props) {
                             <Grid.Column>
                                 <Form>
                                     <Form.Input
-                                        onChange={(e) => {setdept(e.target.value);}}
-                                        label='Department'
+                                        label="Room Name"
+                                        value={name}
+                                        onChange={e => setname(e.target.value)}
+                                    />
+                                    <Form.Input
+                                        onChange={(e) => {settype(e.target.value);}}
+                                        label='type'
                                     />
                                     <Form.Input
                                         onChange={(e) => {setBuilding(e.target.value)}}
                                         label='Building Name'
                                     />
-                                    <Form.Input label='Type'>
-                                        <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {settype(e.target.value);}}>
+                                    <Form.Input label='Deptarment'>
+                                        <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setdept(e.target.value);}}>
                                             <option key={0} value={"0"}>Select Type</option>
                                             {
                                                 [ "ece","mate", "adem","fisi"].map((item) => {return <option>{item}</option>})
@@ -333,16 +345,38 @@ function Rooms(props) {
                             <Grid.Column>
                                 <Form>
 
-                                    <h5 style={{paddingTop: "5px"}}>Building Name</h5>
-                                    <p style={{paddingBottom: "5px"}}>{`${props.Building}`}</p>
-                                    <h5 style={{paddingTop: "5px"}}>Department</h5>
-                                    <p style={{paddingBottom: "5px"}}>{`${props.Department}`}</p>
+                                    <Form.Input
+                                        fluid
+                                        name="Room Name"
+                                        placeholder="Insert Room Name"
+                                        label="Room Name"
+                                        value={name}
+                                        onChange={e => setname(e.target.value)}
+                                    />
+                                    <Form.Input
+                                        fluid
+                                        name="Building"
+                                        placeholder="Insert Building"
+                                        label="building"
+                                        value={i}
+                                        onChange={e => seti(e.target.value)}
+                                    />
+                                    <Form.Input label='Department'>
+                                        <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setpermision(e.target.value);}}>
+                                            <option key={0} value={"0"}>Select Type</option>
+                                            {
+
+                                                ["ece","mate", "adem","fisi"].map((item) => {return <option>{item}</option>})
+                                            }
+                                        </select>
+
+                                    </Form.Input>
                                     <Form.Input label='Type'>
                                         <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setroompermision(e.target.value);}}>
                                             <option key={0} value={"0"}>Select Type</option>
                                             {
 
-                                                    ["ece","mate", "adem","fisi"].map((item) => {return <option>{item}</option>})
+                                                    [1,2, 3,4].map((item) => {return <option>{item}</option>})
                                             }
                                         </select>
 
