@@ -31,7 +31,6 @@ class BookingDAO:
                                                                             db_root_config['host'])
         self.conn = psycopg2.connect(connection_url)
 
-
     def __del__(self):
         self.conn.close()
 
@@ -87,7 +86,7 @@ class BookingDAO:
     # returns the whole booking query
     def get_all_booking(self, limit_thingy: int):
         cursor = self.conn.cursor()
-        query = 'select b_id, st_dt, et_dt, invited_id, host_id, room_id from "booking" limit %s;'
+        query = 'select b_id, b_name, st_dt, et_dt, invited_id, host_id, room_id from "booking" limit %s;'
         cursor.execute(query, (limit_thingy,))
         result = []
         for row in cursor:
@@ -142,7 +141,7 @@ class BookingDAO:
         cursor.close()
         return result
 
-    def get_free_time_of_day(self,p_id,date):
+    def get_free_time_of_day(self, p_id, date):
         cursor = self.conn.cursor()
         query = "with allday as " \
                 "(select booking.invited_id, booking.st_dt, booking.et_dt " \
@@ -163,7 +162,7 @@ class BookingDAO:
                 "union select null as invited_id, allday.st_dt::date + interval '1 day - 1 second' as st_dt, " \
                 "allday.st_dt::date + interval '1 day - 1 second' as et_dt from allday) as allday2) as gaps " \
                 "where gaps.ValidGap=true ; "
-        cursor.execute(query,(date,date,p_id,date,date,p_id,))
+        cursor.execute(query, (date, date, p_id, date, date, p_id,))
         result = []
         for row in cursor:
             result.append(row)
@@ -173,7 +172,7 @@ class BookingDAO:
     # returns a single row who would be the most booked room
     def get_most_booked_rooms(self):
         cursor = self.conn.cursor()
-        query = 'select r_id ,r_dept, r_building, count(booking.room_id) as bookings ' \
+        query = 'select r_id, r_dept, r_building, count(booking.room_id) as bookings ' \
                 'from booking inner join room on room.r_id = booking.room_id ' \
                 'GROUP BY r_id ,r_dept, r_building order by bookings desc limit 10; '
         cursor.execute(query)
@@ -195,3 +194,19 @@ class BookingDAO:
             result.append(row)
         return result
 
+    def check_if_booking_exists(self, b_id: int):
+        cursor = self.conn.cursor()
+        query = 'select exists(select 1 from booking where b_id = %s);'
+        cursor.execute(query, (b_id,))
+        result = cursor.fetchone()[0]
+        cursor.close()
+        return result
+
+    def count_booking(self):
+        cursor = self.conn.cursor()
+        query = 'select count(*) as "count" ' \
+                'from booking;'
+        cursor.execute(query,)
+        result = cursor.fetchone()[0]
+        cursor.close()
+        return result

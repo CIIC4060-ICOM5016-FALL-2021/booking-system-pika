@@ -142,9 +142,9 @@ class Person:
             print(result)
             return result
 
-    def get_most_booked_persons(self):
+    def get_most_booked_persons(self, limit_thingy=10):
         method = PersonDAO()
-        bookedperson_tuple = method.get_most_booked_persons()
+        bookedperson_tuple = method.get_person_who_booked_most(limit_thingy)
         if not bookedperson_tuple:
             return jsonify("Not Found"), 404
         else:

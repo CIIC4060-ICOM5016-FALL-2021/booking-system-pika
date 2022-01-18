@@ -10,6 +10,14 @@ class RoomDAO:
     T_OFFICE = 4
     T_STY_SPACE = 5
 
+    rooms = {
+        T_LAB: 'laboratory',
+        T_CLASSROOM: 'classroom',
+        T_OFFICE: 'office',
+        T_STY_SPACE: 'study_space',
+        T_CONFERENCE: 'conference_hall'
+    }
+
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (db_root_config['dbname'],
                                                                             db_root_config['user'],
@@ -18,10 +26,13 @@ class RoomDAO:
                                                                             db_root_config['host'])
         self.conn = psycopg2.connect(connection_url)
 
-    # Returns a query of all rooms
+    def __del__(self):
+        self.conn.close()
+
+        # Returns a query of all rooms
     def get_all_rooms(self, limit_thingy: int) -> list:
         cursor = self.conn.cursor()
-        query = 'select r_id, r_name, r_type, r_building, r_dept ' \
+        query = 'select r_id, r_name, r_type ' \
                 'from room limit %s;'
         cursor.execute(query, (limit_thingy,))
         result: list = []
@@ -30,6 +41,7 @@ class RoomDAO:
         cursor.close()
         return result
 
+    # NOT IN USE
     # GET Target Room using its id
     def get_room(self, r_id: int):
         # Open Cursor for operations
@@ -38,6 +50,26 @@ class RoomDAO:
         # Execute commands n close
         cursor.execute(query, (r_id,))
         result = cursor.fetchone()
+        return result
+
+    def get_room_by_id(self, r_id: int):
+        # Open Cursor for operations
+        cursor = self.conn.cursor()
+        query = "select r_name, r_building, r_dept, r_type " \
+                "from room where r_id = %s;"
+        # Execute commands n close
+        cursor.execute(query, (r_id,))
+        result = cursor.fetchone()
+        cursor.close()
+        return result
+
+    def get_room_by_name(self, r_name: str):
+        cursor = self.conn.cursor()
+        query = 'select r_id, r_building, r_dept, r_type ' \
+                'from room where r_name = %s;'
+        cursor.execute(query, (r_name,))
+        result = cursor.fetchone()
+        cursor.close()
         return result
 
     # Returns a query of all available rooms
@@ -64,11 +96,12 @@ class RoomDAO:
         return r_id
 
     # Updates an existing entry
-    def update_room(self, r_id, new_r_building, new_r_dept, new_r_type):
+    def update_room(self, r_id, new_room_name, new_r_building, new_r_dept, new_r_type):
         cursor = self.conn.cursor()
-        query = "update room set r_building = %s, r_dept = %s, r_type = %s where r_id = %s;"
-        cursor.execute(query, (new_r_building, new_r_dept, new_r_type, r_id,))
+        query = "update room set r_name = %s, r_building = %s, r_dept = %s, r_type = %s where r_id = %s;"
+        cursor.execute(query, (new_room_name, new_r_building, new_r_dept, new_r_type, r_id,))
         self.conn.commit()
+        cursor.close()
         return True
 
     # Deletes an entry
@@ -91,5 +124,22 @@ class RoomDAO:
         result = []
         for row in cursor:
             result.append(row)
+        cursor.close()
+        return result
+
+    def check_if_room_exists(self, r_id: int):
+        cursor = self.conn.cursor()
+        query = 'select exists(select 1 from room where r_id = %s);'
+        cursor.execute(query, (r_id,))
+        result = cursor.fetchone()[0]
+        cursor.close()
+        return result
+
+    def count_rooms(self):
+        cursor = self.conn.cursor()
+        query = 'select count(*) as "count" ' \
+                'from room;'
+        cursor.execute(query, )
+        result = cursor.fetchone()[0]
         cursor.close()
         return result

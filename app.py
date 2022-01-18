@@ -54,11 +54,19 @@ def handle_rooms():
 
 
 @app.route('/pika-booking/rooms/<int:r_id>', methods=['GET', 'DELETE'])
-def handle_room_getter_post(r_id):
+def handle_rooms_by_id(r_id):
     if request.method == 'GET':
-        return Room().get_room_by_id(r_id)
+        return Room().get_room(r_id)
     elif request.method == 'DELETE':
         return Room().delete_room(r_id)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/rooms/<string:r_name>', methods=['GET'])
+def handle_rooms_by_name(r_name):
+    if request.method == 'GET':
+        return Room().get_room(r_name)
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -229,7 +237,6 @@ def get_all_persons_by_role(role_id):
 
 @app.route('/pika-booking/persons/<int:p_id>', methods=['GET', 'DELETE'])
 def handle_person_getter_post(p_id):
-
     if request.method == 'GET':
         return Person().get_persons_by_id(p_id)
     elif request.method == 'DELETE':
@@ -385,21 +392,19 @@ def handle_bookings():
             return jsonify("Missing Arguments"), 405
     elif request.method == 'DELETE':
         if args and "b_id" in args:
-            return Booking().delete_booking(args)
+            return Booking().delete_booking(args['b_id'])
         else:
             return jsonify("Args not found: b_id"), 405
     else:
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/booking/id', methods=['POST'])
-def handle_booking_id_getter_post():
-    args = request.json
-    if request.method == 'POST':
-        if args and "b_id" in args:
-            return Booking().get_booking_by_id(args)
-        else:
-            return jsonify("Args not found: b_id"), 405
+@app.route('/pika-booking/booking/<int:b_id>', methods=['GET', 'DELETE'])
+def handle_booking_by_id(b_id):
+    if request.method == 'GET':
+        return Booking().get_booking_by_id(b_id)
+    elif request.method == 'DELETE':
+        return Booking().delete_booking(b_id)
     else:
         return jsonify("Method Not Allowed"), 405
 

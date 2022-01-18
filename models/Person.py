@@ -1,13 +1,40 @@
 import psycopg2
 from config.dbcondig import db_root_config
+from models.Room import RoomDAO as Room
 
 
-class PersonDAO:
+class PersonDAO(object):
     R_STUDENT = 1
     R_PROF = 2
     R_STAFF = 3
     R_INSTRUCTOR = 4
     R_VISITOR = 5
+
+    MALE = 1
+    FEMALE = 2
+    NON_BINARY = 3
+
+    genders = {
+        MALE: "male",
+        FEMALE: "female",
+        NON_BINARY: "non_binary"
+    }
+
+    roles = {
+        R_STUDENT: "student",
+        R_PROF: "professor",
+        R_STAFF: "staff",
+        R_INSTRUCTOR: "instructor",
+        R_VISITOR: "visitor"
+    }
+
+    access = {
+        R_STUDENT: (Room.T_STY_SPACE, Room.T_LAB),
+        R_PROF: (Room.T_LAB, Room.T_CLASSROOM, Room.T_OFFICE, Room.T_STY_SPACE),
+        R_STAFF: (Room.T_LAB, Room.T_CLASSROOM, Room.T_CONFERENCE, Room.T_OFFICE, Room.T_STY_SPACE),
+        R_INSTRUCTOR: (Room.T_LAB, Room.T_OFFICE, Room.T_STY_SPACE),
+        R_VISITOR: (Room.T_STY_SPACE)
+    }
 
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (db_root_config['dbname'],
@@ -121,16 +148,16 @@ class PersonDAO:
         return result
 
     # retrieves the people who booked most and the times this person has booked
-    def get_most_booked_persons(self):
+    def get_person_who_booked_most(self, limit_thingy: int):
         cursor = self.conn.cursor()
-        query = 'select p_id, p_fname , p_lname,  count(booking.host_id) as bookings ' \
+        query = 'select p_id, p_fname, p_lname, count(booking.host_id) as bookings ' \
                 'from booking inner join person on person.p_id = booking.host_id ' \
-                'GROUP BY p_id  order by bookings desc limit 10; '
-        cursor.execute(query)
+                'GROUP BY p_id  order by bookings desc limit %s; '
+        cursor.execute(query, (limit_thingy,))
         result = []
         for row in cursor:
-            print(row)
             result.append(row)
+        cursor.close()
         return result
 
     # Retrieves the most used room
@@ -148,10 +175,16 @@ class PersonDAO:
         return result
 
     # Retrieves the person that has been most invited and the amount of times
-    def get_person_that_most_share_with_person(self, p_id):
+    def get_person_that_most_share_with_person(self, p_id: int):
         cursor = self.conn.cursor()
         query = "with bomeeting as " \
-                "(select booking.b_id,booking.st_dt,booking.et_dt,booking.invited_id,booking.host_id,booking. room_id, subt.meeting " \
+                "(select booking.b_id, " \
+                "booking.st_dt, " \
+                "booking.et_dt, " \
+                "booking.invited_id, " \
+                "booking.host_id, " \
+                "booking.room_id, " \
+                "subt.meeting " \
                 "from booking inner join " \
                 "(select b.host_id,b.st_dt,b.et_dt, row_number() over (order by st_dt) as meeting " \
                 "from booking as b " \
@@ -163,7 +196,8 @@ class PersonDAO:
                 "(select bomeeting.meeting from bomeeting where bomeeting.invited_id = %s) " \
                 "group by bomeeting.invited_id order by count(bomeeting.invited_id) desc limit 1 offset 1;"
         cursor.execute(query, (p_id,))
-        result = cursor.fetchone()
+        result = cursor.fetchone()[0]
+        cursor.close()
         return result
 
     # Retrieves the host id, and full name and the times this host has invited the given invitee's id
@@ -261,4 +295,31 @@ class PersonDAO:
         result = []
         for row in cursor:
             result.append(row)
+        return result
+
+    # --- Helper Methods --- #
+
+    def check_if_person_exists(self, p_id: int):
+        cursor = self.conn.cursor()
+        query = 'select exists(select 1 from person where p_id = %s);'
+        cursor.execute(query, (p_id,))
+        result = cursor.fetchone()[0]
+        cursor.close()
+        return result
+
+    def count_person(self):
+        cursor = self.conn.cursor()
+        query = 'select count(*) as "count" from person;'
+        cursor.execute(query, )
+        result = cursor.fetchone()[0]
+        cursor.close()
+        return result
+
+    def count_person_by_role(self, r_id):
+        cursor = self.conn.cursor()
+        query = 'select count(*) as count ' \
+                'from "person" where p_role= %s;'
+        cursor.execute(query, (r_id,))
+        result = cursor.fetchone()[0]
+        cursor.close()
         return result
