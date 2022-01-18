@@ -438,8 +438,8 @@ def get_shared_person_for_id():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/bookings/shared-time', methods=['POST'])
-def get_free_time_for_meeting_users():
+@app.route('/pika-booking/bookings/shared-time-booking', methods=['POST']) # json args: int -> b_id (booking id) and date -> date (not timestamp)
+def get_free_time_for_meeting_booking():
     # This gets the most booked room in general
     args = request.json
     if request.method == 'POST':
@@ -450,6 +450,18 @@ def get_free_time_for_meeting_users():
     else:
         return jsonify("Method Not Allowed"), 405
 
+
+@app.route('/pika-booking/bookings/shared-time-users', methods=['POST']) # json args: list -> invited_id (list of p_id) and date -> date (not timestamp)
+def get_free_time_for_meeting_users():
+    # This gets the most booked room in general
+    args = request.json
+    if request.method == 'POST':
+        if args:
+            return Booking().get_shared_free_timeslot_users(request.json)
+        else:
+            return jsonify("Args not found"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
 
 if __name__ == "__main__":
     app.debug = True
