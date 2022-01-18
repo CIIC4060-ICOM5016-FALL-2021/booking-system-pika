@@ -17,19 +17,18 @@ class AvailableRoomDAO:
         query = 'insert into "availableroom" ' \
                 '(st_dt, et_dt, room_id) values (%s, %s, %s) returning ra_id;'
         cursor.execute(query, (st_dt, et_dt, r_id,))
-        ra_id = cursor.fetchone()[0]
+        pa_id = cursor.fetchone()[0]
         self.conn.commit()
-        cursor.close()
-        return ra_id
+        return pa_id
 
     # Returns the timeframe for a room (all day)
-    def get_all_day_schedule(self, r_id: int, date):
+    def get_all_day_schedule(self, r_id, date):
         
         cursor = self.conn.cursor()
-        query = "select st_dt, et_dt, ra_id, \'unavailable\' from availableroom " \
+        query = "select st_dt, et_dt from availableroom " \
                 "where (availableroom.room_id = %s) " \
                 "and (availableroom.st_dt::date <= date %s AND availableroom.et_dt::date >= date %s) " \
-                "UNION select st_dt, et_dt, b_id, b_name " \
+                "UNION select st_dt, et_dt " \
                 "from booking where (booking.room_id = %s) " \
                 "and (booking.st_dt::date <= date %s AND booking.et_dt::date >= date %s) ;"
         cursor.execute(query, (r_id, date, date, r_id, date, date,))
@@ -99,8 +98,9 @@ class AvailableRoomDAO:
         result = []
         for row in cursor:
             result.append(row)
-        cursor.close()
         return result
+
+
 
     def get_all_unavailable_room(self):
         cursor = self.conn.cursor()
@@ -108,9 +108,9 @@ class AvailableRoomDAO:
                 'from "availableroom";'
         cursor.execute(query)
         result = []
+        # ok
         for row in cursor:
             result.append(row)
-        cursor.close()
         return result
 
     def delete_unavailable_room(self, r_id):
@@ -128,6 +128,3 @@ class AvailableRoomDAO:
         deleted_rows = cursor.rowcount
         self.conn.commit()
         return deleted_rows != 0
-
-    def update_unavailability_room(self, ra_id, p_id, room_id, st_dt, et_dt):
-        pass

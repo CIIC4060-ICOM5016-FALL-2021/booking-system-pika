@@ -11,9 +11,6 @@ class AvailablePersonDAO:
                                                                             db_root_config['host'])
         self.conn = psycopg2.connect(connection_url)
 
-    def __del__(self):
-        self.conn.close()
-
     def create_unavailable_person_time(self, st_dt, et_dt, person_id):
         cursor = self.conn.cursor()
         query = 'insert into "availableperson" ' \
@@ -21,7 +18,6 @@ class AvailablePersonDAO:
         cursor.execute(query, (st_dt, et_dt, person_id,))
         pa_id = cursor.fetchone()[0]
         self.conn.commit()
-        cursor.close()
         return pa_id
 
     def get_all_unavailable_person(self):
@@ -29,10 +25,10 @@ class AvailablePersonDAO:
         query = 'select  pa_id, st_dt, et_dt, person_id ' \
                 'from "availableperson";'
         cursor.execute(query)
-        result: list = []
+        result = []
+        # ok
         for row in cursor:
             result.append(row)
-        cursor.close()
         return result
 
     def get_unavailable_person_by_id(self, pa_id):
@@ -42,19 +38,16 @@ class AvailablePersonDAO:
                 'where pa_id = %s'
         cursor.execute(query, (pa_id,))
         result = cursor.fetchone()
-        cursor.close()
         return result
-
     def get_unavailable_person_by_person_id(self, person_id):
         cursor = self.conn.cursor()
-        query = 'select  st_dt, et_dt, pa_id ' \
+        query = 'select  st_dt, et_dt ' \
                 'from "availableperson"' \
                 'where person_id = %s'
         cursor.execute(query, (person_id,))
-        result: list = []
+        result = []
         for row in cursor:
             result.append(row)
-        cursor.close()
         return result
 
     def get_unavailable_time_of_person_by_id_in_booking(self, p_id):
@@ -65,7 +58,6 @@ class AvailablePersonDAO:
                 'or host_id = %s;'
         cursor.execute(query, (p_id,))
         result = cursor.fetchone()
-        cursor.close()
         return result
 
     def get_unavailable_time_of_person_by_id(self, pa_id):
@@ -75,7 +67,6 @@ class AvailablePersonDAO:
                 'where pa_id = %s ;'
         cursor.execute(query, (pa_id,))
         result = cursor.fetchone()
-        cursor.close()
         return result
 
     def get_unavailable_time_of_person_by_person_id(self, p_id):
@@ -87,7 +78,6 @@ class AvailablePersonDAO:
         result = []
         for row in cursor:
             result.append(row)
-        cursor.close()
         return result
 
     def verify_available_person_at_timeframe(self, p_id, st_dt, et_dt):
@@ -104,7 +94,6 @@ class AvailablePersonDAO:
                 "as booleanresult;"
         cursor.execute(query, (st_dt, et_dt, p_id, p_id,st_dt, et_dt, p_id,))
         result = cursor.fetchone()
-        cursor.close()
         return result
 
     def verify_conflict_at_timeframe(self, p_id, st_dt, et_dt):
@@ -119,17 +108,15 @@ class AvailablePersonDAO:
         result = []
         for row in cursor:
             result.append(row)
-        cursor.close()
         return result
 
-    def update_unavailable_person(self, pa_id: int, st_dt, et_dt, person_id: int):
+    def update_unavailable_person(self, pa_id, st_dt, et_dt, person_id):
         cursor = self.conn.cursor()
         query = 'update "availableperson" ' \
                 'set st_dt= %s, et_dt= %s, person_id= %s ' \
                 'where pa_id = %s '
         cursor.execute(query, (st_dt, et_dt, person_id, pa_id))
         self.conn.commit()
-        cursor.close()
         return True
 
     def delete_all_unavailable_person_schedule(self, p_id):
@@ -139,23 +126,19 @@ class AvailablePersonDAO:
         cursor.execute(query, (p_id,))
         deleted_rows = cursor.rowcount
         self.conn.commit()
-        cursor.close()
         return deleted_rows != 0
 
-    def get_all_schedule(self, p_id: int):
+    def get_all_schedule(self, p_id):
 
         cursor = self.conn.cursor()
-        query = 'select st_dt, et_dt, pa_id, \'unavailable\' ' \
-                'as d from availableperson as av ' \
-                'where av.person_id = %s union ' \
-                'select st_dt, et_dt, b_id, b_name ' \
-                'from booking as bk ' \
-                'where bk.invited_id = %s or bk.host_id = %s;'
-        cursor.execute(query, (p_id, p_id, p_id,))
+        query = "select st_dt, et_dt from availableperson " \
+                "where (availableperson.person_id = %s) " \
+                "UNION select st_dt, et_dt " \
+                "from booking where (booking.invited_id = %s) ; "
+        cursor.execute(query, (p_id, p_id,))
         result = []
         for row in cursor:
             result.append(row)
-        cursor.close()
         return result
 
     def delete_unavailable_person_schedule(self, pa_id):
@@ -165,7 +148,6 @@ class AvailablePersonDAO:
         cursor.execute(query, (pa_id,))
         deleted_rows = cursor.rowcount
         self.conn.commit()
-        cursor.close()
         return deleted_rows != 0
 
     def delete_unavailable_person_schedule_at_certain_time(self, p_id, st_dt, et_dt):
@@ -175,21 +157,21 @@ class AvailablePersonDAO:
         cursor.execute(query, (p_id, st_dt, et_dt))
         deleted_rows = cursor.rowcount
         self.conn.commit()
-        cursor.close()
         return deleted_rows != 0
 
     # Returns the timeframe for any person (all_day)
     def get_all_day_schedule(self, p_id, date):
+
         cursor = self.conn.cursor()
-        query = "select st_dt, et_dt, pa_id, \'unavailable\' from availableperson " \
+        query = "select st_dt, et_dt from availableperson " \
                 "where (person_id = %s) " \
                 "and (availableperson.st_dt::date <= date %s AND availableperson.et_dt::date >= date %s) " \
-                "UNION select st_dt, et_dt, b_id, b_name " \
+                "UNION select st_dt, et_dt " \
                 "from booking where (host_id = %s or invited_id = %s) " \
                 "and (booking.st_dt::date <= date %s AND booking.et_dt::date >= date %s) ;"
-        cursor.execute(query, (p_id, date, date, p_id, p_id, date, date,))
-        result: list = []
+        cursor.execute(query, (p_id, date, date,p_id,p_id,date,date,))
+        result = []
         for row in cursor:
+            print(row, "ROW")
             result.append(row)
-        cursor.close()
         return result
