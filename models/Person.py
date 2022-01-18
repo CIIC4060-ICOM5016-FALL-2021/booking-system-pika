@@ -9,11 +9,9 @@ class PersonDAO(object):
     R_STAFF = 3
     R_INSTRUCTOR = 4
     R_VISITOR = 5
-
     MALE = 1
     FEMALE = 2
     NON_BINARY = 3
-
     genders = {
         MALE: "male",
         FEMALE: "female",

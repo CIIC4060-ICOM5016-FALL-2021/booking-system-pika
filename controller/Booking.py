@@ -69,11 +69,9 @@ class Booking(object):
                 elif type(invited_id) == int:
                     if not method3.check_if_person_exists(invited_id):
                         return jsonify("Invitee Not Found"), 404
-
                 # Check if Host exists
                 if not method3.check_if_person_exists(host_id):
                     return jsonify("Host Not Found"), 404
-
                 host = method3.get_person_by_id(host_id)
                 room = method.get_room_by_id(room_id)
 
@@ -94,7 +92,6 @@ class Booking(object):
                 # - Classroom
                 #
                 # Staff can host anything
-
                 if room[3] in method3.access[host[2]]:
                     method4 = BookingDAO()
                     method5 = AvailablePersonDAO()
