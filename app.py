@@ -111,6 +111,11 @@ def get_available_rooms_at_timeframe():
         return jsonify("Method Not Allowed"), 405
 
 
+
+
+
+
+
 # Gets all unavailable rooms by the room id, not the ra_id
 @app.route('/pika-booking/rooms/unavailable/<int:room_id>', methods=['GET'])
 def handle_room_unavailable_getter_post(room_id):
@@ -164,6 +169,8 @@ def handle_verify_available_room_getter_post():
 def handle_unavailable_person_pa_id(pa_id):
     if request.method == 'GET':
         return AvailablePerson().get_unavailable_person_by_id(pa_id)
+    elif request.method == 'DELETE':
+        return AvailablePerson().delete_unavailable_schedule(pa_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -318,7 +325,8 @@ def handle_unavailable_person():
         return AvailablePerson().get_all_unavailable_persons()
     elif request.method == 'POST':
         if args:
-            return AvailablePerson().create_unavailable_time_schedule(args)
+            return AvailablePerson().create_unavaila
+            ble_time_schedule(args)
         else:
             return jsonify("Missing Arguments"), 405
     elif request.method == 'DELETE':
@@ -333,6 +341,8 @@ def handle_unavailable_person():
             return jsonify("Missing Arguments"), 405
     else:
         return jsonify("Method Not Allowed"), 405
+
+
 
 
 @app.route('/pika-booking/persons/available/person', methods=['DELETE'])
