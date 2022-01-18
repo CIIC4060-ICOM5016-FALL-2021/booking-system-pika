@@ -48,15 +48,15 @@ function BookMeeting(){
     const[k,setk] = useState(false);
     const[y,sety] = useState(false);
     const[ts,sets]= useState([]);
-function getbooking(){
-
-            axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/${ba_id}`).then(res => {
-                    setget(res.data)
-                }
-            )
-
-
-}
+// function getbooking(){
+//
+//             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/${ba_id}`).then(res => {
+//                     setget(res.data)
+//                 }
+//             )
+//
+//
+// }
    function getfreeuser(){
 
    }
@@ -200,9 +200,9 @@ function run(){
         }else {
             let e = localStorage.getItem("login-data");
             let   dat = JSON.parse(e)
-            console.log(invitee)
+            console.log(invitee);console.log(ba_id);console.log(st_dt);console.log(et_dt);console.log(dat.p_id);console.log(room_id)
             axios.post('https://booking-system-pika.herokuapp.com//pika-booking/bookings', {
-                    "booking_name":ba_id,"st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": invitee, "room_id": room_id,
+                    "b_name":ba_id,"st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": invitee, "room_id": room_id,
 
             },
             (error) => {
@@ -238,7 +238,7 @@ function run(){
   {
       unavailableofperson()
       getRooms()
-getbooking()
+        // getbooking()
       run()
   })
     function Time(year,month, date, hours, minutes){
@@ -692,15 +692,15 @@ getbooking()
                     <Modal.Description>
                         <Form.Field>
 
-                            <Form.Input label='unavailable timeframe'>
-                                <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setun(e.target.value)}}>
-                                    <option key={0} value={"0"}>unavailable timeframe</option>
-                                    {ts.map(item => {
-                                        return (<option key={item.pa_id} value={item.pa_id}>{item.st_dt}-{item.et_dt}</option>)
-                                    })}
-                                </select>
+                            {/*<Form.Input label='unavailable timeframe'>*/}
+                            {/*    <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setun(e.target.value)}}>*/}
+                            {/*        <option key={0} value={"0"}>unavailable timeframe</option>*/}
+                            {/*        {ts.map(item => {*/}
+                            {/*            return (<option key={item.pa_id} value={item.pa_id}>{item.st_dt}-{item.et_dt}</option>)*/}
+                            {/*        })}*/}
+                            {/*    </select>*/}
 
-                                </Form.Input>
+                            {/*    </Form.Input>*/}
                         </Form.Field>
                     </Modal.Description>
                 </Modal.Content>
