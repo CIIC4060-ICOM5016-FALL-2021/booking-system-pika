@@ -82,6 +82,7 @@ function Rooms(props) {
     function editRoom() {
 
             let data = {"r_id": roomID,
+                "r_name": name,
                 "r_building": i,
                 "r_dept": permission,
                 "r_type": roompermission}

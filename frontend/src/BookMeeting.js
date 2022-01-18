@@ -50,6 +50,7 @@ function BookMeeting(){
     const [New,setnew] = useState("");
     const[und,setund]= useState(false);
     const[delebook,setdelebook] = useState(false);
+    const [rooms, setRooms] = useState([]);
     const y = ()=>{
         setr(true)
     }
@@ -65,7 +66,16 @@ function getbooking(){
    function getfreeuser(){
 
    }
+    function getRooms(){
+        axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/person/${dat.p_id}/role-access`).then((res) => {
+                setRooms(res.data);
+                console.log(rooms)
 
+            }, (error) => {
+                console.log(error);
+            }
+        );
+    }
     const returnallfalse=()=>{
         setr(false)
         setOpen(false)
@@ -217,6 +227,7 @@ function run(){
     }
   useEffect(()=>
   {
+      getRooms()
 getbooking()
       run()
   })
@@ -529,14 +540,14 @@ getbooking()
                                 />
                             </Form.Field>
                             <Form.Field>
-                                <Form.Input
-                                    fluid
-                                    name="r_id"
-                                    placeholder=" Insert r_id"
-                                    label="Room ID"
-                                    value={room_id}
-                                    onChange={e => setroom_id(e.target.value)}
-                                />
+                                <Form.Input label='Room'>
+                                    <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {room_id(e.target.value)}}>
+                                        <option key={0} value={"0"}>Select Room</option>
+                                        {rooms.map(item => {
+                                            return (<option key={item.r_id} value={item.r_id}>{item.r_name}</option>)
+                                        })}
+                                    </select>
+                                </Form.Input>
                             </Form.Field>
                             <Form.Field>
                                 <Form.Input
