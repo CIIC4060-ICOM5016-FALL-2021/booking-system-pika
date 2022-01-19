@@ -236,6 +236,9 @@ function run(){
             return true
         }
     }
+    function getbookingbyhost(){
+
+    }
   useEffect(()=>
   {
       unavailableofperson()
