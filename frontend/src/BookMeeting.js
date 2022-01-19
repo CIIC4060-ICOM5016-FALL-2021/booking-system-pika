@@ -48,15 +48,15 @@ function BookMeeting(){
     const[k,setk] = useState(false);
     const[y,sety] = useState(false);
     const[ts,sets]= useState([]);
-function getbooking(){
-
-            axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/${ba_id}`).then(res => {
-                    setget(res.data)
-                }
-            )
-
-
-}
+// function getbooking(){
+//
+//             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/${ba_id}`).then(res => {
+//                     setget(res.data)
+//                 }
+//             )
+//
+//
+// }
    function getfreeuser(){
 
    }
@@ -142,10 +142,12 @@ function getbooking(){
 
     }
     function unavailableofperson(){
-        axios.get(`https://booking-system-pika.herokuapp.com//pika-booking/person/unavailable/person_id/${dat.p_id}`).then(res=>{
-           sets(res.data)
-            console.log(ts)
-        })
+        if (k===false) {
+            axios.get(`https://booking-system-pika.herokuapp.com//pika-booking/person/unavailable/person_id/${dat.p_id}`).then(res => {
+                sets(res.data)
+                console.log(ts)
+            })
+        }
     }
     function updateunavailablecheck(){
 
@@ -238,8 +240,8 @@ function run(){
   {
       unavailableofperson()
       getRooms()
-getbooking()
       run()
+      setk(true)
   })
     function Time(year,month, date, hours, minutes){
         if (minutes===0)
