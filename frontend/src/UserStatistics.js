@@ -17,7 +17,7 @@ function UserStatistics (){
                 setdata(res.data);
                 console.log(res.data)
             })
-            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/shared', {"p_id": dat.p_id}).then(res => {
+            axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/${ dat.p_id}/shared`).then(res => {
                 setd(res.data);
                 console.log(d)
             })
