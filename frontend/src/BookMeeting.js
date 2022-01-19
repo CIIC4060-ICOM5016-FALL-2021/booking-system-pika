@@ -118,6 +118,8 @@ function getbooking(){
         sety(false)
         sets([])
         setl([])
+        seth(false)
+        setlh([])
 }
     function updatebookingcheck(){
         let e = localStorage.getItem("login-data");
@@ -127,7 +129,7 @@ function getbooking(){
         }else{
             let data = {
                 "new_booking_name":New ,
-                "booking_name": ba_id,
+                "b_name": ba_id,
                 "st_dt": st_dt,
                 "et_dt": et_dt,
                 "host_id": dat.p_id,
@@ -135,7 +137,7 @@ function getbooking(){
                 "room_id": room_id
             }
             if(New===""){
-                data.new_booking_name=get.booking_name
+                data.new_booking_name=get.b_name
             }
             if(room_id===""){
                 data.room_id =get.room_id
@@ -155,8 +157,9 @@ function getbooking(){
     }
     function getfreeinviteetime(){
     let data ={"invited_id":invitee, "date": date}
-axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/shared-time-user`,data).then(res=>{
+axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/shared-time-users`,data).then(res=>{
     setlistfree(res.data)
+    console.log(res.data)
     seth(true)
 })
     }
@@ -439,7 +442,7 @@ function run(){
                         fluid
                         name="End time"
                         placeholder="Insert date"
-                        label="mm-dd-yyyy"
+                        label="yyyy-mm-dd"
                         value={date}
                         onChange={e => setdate(e.target.value)}
                     />
@@ -756,31 +759,25 @@ function run(){
                 <Modal.Header> You have deleted a unavailable time slot</Modal.Header>
                 <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
             </Modal>
-            <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
-            <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
             <Modal open = {userfree}
                    onClose={() => setuserfree(false)}
                    onOpen={() => setuserfree(true)}>
                 <Button onClick={() => returnallfalse()}>ok</Button>
             </Modal>
-            {/*<Modal open ={h}*/}
-            {/*       onClose={() => setlh(false)}*/}
-            {/*       onOpen={() => setlh(true)}*/}
-            {/*>*/}
-            {/*    <Modal.Header> time slot</Modal.Header>*/}
-            {/*    <Modal.Description>{sh.map((item =>{*/}
-            {/*        {item.st_dt} {item.et_dt}*/}
-            {/*    }))*/}
-            {/*    } </Modal.Description>*/}
-            {/*    <Button fluid onClick={()=>returnallfalse()}>Ok</Button>*/}
-            {/*</Modal>*/}
+            <Modal open ={h}
+                   onClose={() => setlh(false)}
+                   onOpen={() => setlh(true)}
+            >
+                <Modal.Header> time slot</Modal.Header>
+                <Modal.Description>{sh.map(item =>{
+                    return(<header>{item.st_dt}-{item.et_dt}</header>)
+                })
+                } </Modal.Description>
+                <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
+            </Modal>
             <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
             <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
-            <Modal open = {userfree}
-                   onClose={() => setuserfree(false)}
-                   onOpen={() => setuserfree(true)}>
-                <Button onClick={() => returnallfalse()}>ok</Button>
-            </Modal>
+
     </Container>
     </Container>
 
