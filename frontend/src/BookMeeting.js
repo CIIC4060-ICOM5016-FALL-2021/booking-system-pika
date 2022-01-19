@@ -193,10 +193,16 @@ function BookMeeting(){
         }
     }
     function deleteunavailablegcheck(){
+        console.log(un)
+        console.log(ts)
         if (un===""){
+            console.log('something')
             return false
         }else{
-            axios.delete(` https://booking-system-pika.herokuapp.com/pika-booking/person/unavailable/pa_id/${un}`)
+            axios.delete(` https://booking-system-pika.herokuapp.com/pika-booking/person/unavailable/pa_id/${un}`).then(res=>{
+                console.log(res.data)
+            })
+            setund(true)
             return true
         }
     }
@@ -662,7 +668,7 @@ function BookMeeting(){
                                 <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setun(e.target.value)}}>
                                     <option key={0} value={"0"}>unavailable timeframe</option>
                                     {ts.map(item => {
-                                        return (<option key={item.pa_id} value={item.pa_id}>{item.st_dt}-{item.et_dt}</option>)
+                                        return (<option key={item.pa_id} value={item.pa_id}>{item.pa_id},{item.st_dt}-{item.et_dt}</option>)
                                     })}
                                 </select>
 
@@ -742,7 +748,7 @@ function BookMeeting(){
                 </Modal.Content>
                 <Modal.Actions>
                     <Button onClick={() => setdeleteupunavailable(false)}>cancel</Button>
-                    <Button onClick={()=> setund(true)&& deleteunavailablegcheck()}>Confirm</Button>
+                    <Button onClick={()=>  deleteunavailablegcheck()}>Confirm</Button>
                 </Modal.Actions>>
             </Modal>
             <Modal open ={und}

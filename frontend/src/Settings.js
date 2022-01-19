@@ -153,7 +153,6 @@ function Settings() {
     useEffect(()=>{getinfo()})
         return (
             <>
-                <Navbar/>
 
                 <Modal
                     centered={false}

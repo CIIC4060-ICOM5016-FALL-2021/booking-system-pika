@@ -54,7 +54,6 @@ function RoomManagement(){
     if(isAuth) {
         return (
             <>
-                <Navbar/>
                 <h1 style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>Rooms</h1>
                 <Container>
                     <Grid container spacing={3}>

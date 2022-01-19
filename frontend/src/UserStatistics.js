@@ -32,7 +32,7 @@ function UserStatistics (){
         r()
     })
         return <>
-            <Navbar/>
+
                 <h1>  Most Used Room By You:
              <h1> RoomName: {data.r_name} ,Building: {data.r_building} ,  Dept: {data.r_dept}  , Type: {data.r_type}  </h1>
                 </h1>

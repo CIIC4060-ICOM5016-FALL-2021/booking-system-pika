@@ -11,12 +11,12 @@ import {
 export default class Navbar extends Component {
   state = { activeItem: 'home' }
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
   render() {
-    const { activeItem } = this.state
+
 
     return (
+
       <Segment inverted>
       <Grid columns='equal'>
         <Grid.Column stretched>
@@ -28,24 +28,9 @@ export default class Navbar extends Component {
         <Grid.Column >
           <Segment compact inverted floated='right'>
             <Menu inverted pointing secondary>
-              <Menu.Item
-                name='home'
-                active={activeItem === 'home'}
-                onClick={this.handleItemClick}
-              />
-              <Menu.Item
-                name='statistics'
-                active={activeItem === 'statistics'}
-                onClick={this.handleItemClick}
-              />
-              <Menu.Item
-                name='signup'
-                active={activeItem === 'signup'}
-                onClick={this.handleItemClick}
-              />
+
             </Menu>
           </Segment>
-
         </Grid.Column>
       </Grid>
       </Segment>
