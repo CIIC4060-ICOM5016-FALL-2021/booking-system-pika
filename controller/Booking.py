@@ -69,11 +69,9 @@ class Booking(object):
                 elif type(invited_id) == int:
                     if not method3.check_if_person_exists(invited_id):
                         return jsonify("Invitee Not Found"), 404
-
                 # Check if Host exists
                 if not method3.check_if_person_exists(host_id):
                     return jsonify("Host Not Found"), 404
-
                 host = method3.get_person_by_id(host_id)
                 room = method.get_room_by_id(room_id)
 
@@ -94,7 +92,6 @@ class Booking(object):
                 # - Classroom
                 #
                 # Staff can host anything
-
                 if room[3] in method3.access[host[2]]:
                     method4 = BookingDAO()
                     method5 = AvailablePersonDAO()
@@ -102,7 +99,7 @@ class Booking(object):
                     if type(invited_id) == list:
                         b_id: list = []
                         for inv in invited_id:
-                            if method5.verify_available_person_at_timeframe(inv, st_dt, et_dt):
+                            if not method5.verify_available_person_at_timeframe(inv, st_dt, et_dt):
                                 return jsonify("Person has conflict"), 404
                             b_id.append(method4.create_new_booking(b_name, st_dt, et_dt, inv, host_id, room_id))
 
@@ -157,7 +154,25 @@ class Booking(object):
             return jsonify(result), 200
         else:
             return jsonify("No Bookings Found"), 404
+    def get_bookings_by_host(self,host_id):
+        method = BookingDAO()
+        booked_rooms = method.get_bookings_by_host(host_id)
+        if not booked_rooms:
+            return jsonify("There's either no Bookings with this host"), 404
+        else:
+            result = []
+            for b_id, st_dt, et_dt, invited_id, host_id, room_id, b_name in booked_rooms:
+                result.append({
+                    'b_id': b_id,
 
+                    'st_dt': st_dt,
+                    'et_dt': et_dt,
+                    'invited_id': invited_id,
+                    'host_id': host_id,
+                    'room_id': room_id,
+                    'b_name': b_name
+                })
+            return jsonify(result), 200
     # Returns a single booking entry according to its id
 
     def get_meetings_by_id(self, json):

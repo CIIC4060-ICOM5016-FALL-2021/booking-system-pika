@@ -129,13 +129,13 @@ class AvailablePersonDAO:
         return deleted_rows != 0
 
     def get_all_schedule(self, p_id):
-
         cursor = self.conn.cursor()
-        query = "select st_dt, et_dt from availableperson " \
-                "where (availableperson.person_id = %s) " \
-                "UNION select st_dt, et_dt " \
-                "from booking where (booking.invited_id = %s) ; "
-        cursor.execute(query, (p_id, p_id,))
+        query = 'select st_dt, et_dt, \'unavailable\' ' \
+                'from availableperson where (availableperson.person_id = %s) ' \
+                'UNION select st_dt, et_dt,  b_name from booking ' \
+                'where (booking.invited_id = %s ' \
+                'or booking.host_id = %s);'
+        cursor.execute(query, (p_id, p_id, p_id,))
         result = []
         for row in cursor:
             result.append(row)

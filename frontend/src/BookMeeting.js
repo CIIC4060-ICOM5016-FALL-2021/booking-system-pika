@@ -23,7 +23,7 @@ function BookMeeting(){
     const [st_dt, setst_dt] = useState("");
     let [et_dt, setet_dt] = useState("");
     const[room_id,setroom_id] = useState("");
-    const[invitee,setinvitee]=  useState(0);
+    const[invitee,setinvitee]=  useState("");
     const [g,setg]= useState(false);
     const [its,setits] = useState(false)
     const [Selected,SetSelect] = useState(false)
@@ -48,10 +48,6 @@ function BookMeeting(){
     const[k,setk] = useState(false);
     const[y,sety] = useState(false);
     const[ts,sets]= useState([]);
-    const[s,setl]= useState([]);
-    const[h,seth]= useState(false);
-    const[date,setdate]=useState("")
-    const[sh,setlh]= useState([]);
 function getbooking(){
 
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/${ba_id}`).then(res => {
@@ -75,14 +71,7 @@ function getbooking(){
                 }
             );
         }
-
-    }
-    function getallbookingsofuser(){
-        if (k===false) {
-            axios.get(`https://booking-system-pika.herokuapp.com//pika-booking/booking/host/${dat.p_id}`).then((res => {
-                setl(res.data)
-            }))
-        }
+        setk(true)
     }
     const returnallfalse=()=>{
 
@@ -114,12 +103,6 @@ function getbooking(){
         setnew("")
         setund(false)
         setdelebook(false)
-        setk(false)
-        sety(false)
-        sets([])
-        setl([])
-        seth(false)
-        setlh([])
 }
     function updatebookingcheck(){
         let e = localStorage.getItem("login-data");
@@ -129,7 +112,7 @@ function getbooking(){
         }else{
             let data = {
                 "new_booking_name":New ,
-                "b_name": ba_id,
+                "booking_name": ba_id,
                 "st_dt": st_dt,
                 "et_dt": et_dt,
                 "host_id": dat.p_id,
@@ -137,7 +120,7 @@ function getbooking(){
                 "room_id": room_id
             }
             if(New===""){
-                data.new_booking_name=get.b_name
+                data.new_booking_name=get.booking_name
             }
             if(room_id===""){
                 data.room_id =get.room_id
@@ -156,19 +139,13 @@ function getbooking(){
         }
     }
     function getfreeinviteetime(){
-    let data ={"invited_id":invitee, "date": date}
-axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/shared-time-users`,data).then(res=>{
-    setlistfree(res.data)
-    console.log(res.data)
-    seth(true)
-})
+
     }
-    function unavailableofperson(){ if (k===false) {
-        axios.get(`https://booking-system-pika.herokuapp.com//pika-booking/person/unavailable/person_id/${dat.p_id}`).then(res => {
-            sets(res.data)
+    function unavailableofperson(){
+        axios.get(`https://booking-system-pika.herokuapp.com//pika-booking/person/unavailable/person_id/${dat.p_id}`).then(res=>{
+           sets(res.data)
             console.log(ts)
         })
-    }
     }
     function updateunavailablecheck(){
 
@@ -193,10 +170,10 @@ axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/shar
         }
     }
     function deleteunavailablegcheck(){
-        if (un===""){
+        if (un===""||!r){
             return false
         }else{
-            axios.delete(` https://booking-system-pika.herokuapp.com/pika-booking/person/unavailable/pa_id/${un}`)
+            axios.delete(" https://booking-system-pika.herokuapp.com/pika-booking/persons/available")
             return true
         }
     }
@@ -218,14 +195,14 @@ function run(){
         return true
     }
     function check() {
-        if (ba_id===""||st_dt === "" || et_dt === "" || room_id === "" || invitee === 0||!y){
+        if (ba_id===""||st_dt === "" || et_dt === "" || room_id === "" || invitee === ""||!y){
             return false
         }else {
             let e = localStorage.getItem("login-data");
             let   dat = JSON.parse(e)
             console.log(invitee)
-            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', {
-                    "b_name":ba_id,"st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": parseInt(invitee), "room_id": room_id,
+            axios.post('https://booking-system-pika.herokuapp.com//pika-booking/bookings', {
+                    "booking_name":ba_id,"st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": invitee, "room_id": room_id,
 
             },
             (error) => {
@@ -243,11 +220,10 @@ function run(){
             return false
         } else {
             return true
-
         }
     }
     function unavailablecheck(){
-        if (st_dt === "" || et_dt === "" ||!unavail){
+        if (st_dt === "" || et_dt === "" ||!y){
             return false
         }else {
             let e = localStorage.getItem("login-data");
@@ -255,17 +231,15 @@ function run(){
             axios.post(' https://booking-system-pika.herokuapp.com/pika-booking/persons/available', {
                 "person_id": dat.p_id  ,"st_dt": st_dt, "et_dt": et_dt
             })
-            return setbook(true)
+            return true
         }
     }
   useEffect(()=>
   {
       unavailableofperson()
       getRooms()
+getbooking()
       run()
-      getallbookingsofuser()
-      console.log(s)
-      setk(true)
   })
     function Time(year,month, date, hours, minutes){
         if (minutes===0)
@@ -325,7 +299,7 @@ function run(){
                         <Form.Field>
                             <Form.Input
                         placeholder=" Insert Booking Name"
-                        label="Booking Name"
+                        label="ba_id"
                         value={ba_id}
                         onChange={e => setba_id(e.target.value)}
                             />
@@ -431,26 +405,26 @@ function run(){
                     <Form.Input
                         fluid
                         name="Start time"
-                        placeholder="Insert invitee"
-                        label="invitee"
-                        value={invitee}
-                        onChange={e => setinvitee(e.target.value)}
+                        placeholder="Insert Start time"
+                        label="Start time"
+                        value={st_dt}
+                        onChange={e => setst_dt(e.target.value)}
                     />
                 </Form.Field>
                 <Form.Field>
                     <Form.Input
                         fluid
                         name="End time"
-                        placeholder="Insert date"
-                        label="yyyy-mm-dd"
-                        value={date}
-                        onChange={e => setdate(e.target.value)}
+                        placeholder="Insert End time"
+                        label="End time"
+                        value={et_dt}
+                        onChange={e => setet_dt(e.target.value)}
                     />
                 </Form.Field>
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => getfreeinviteetime()}>OK</Button>
+                <Button onClick={() => setfree(false)}>OK</Button>
             </Modal.Actions>
         </Modal>
         <Modal
@@ -503,7 +477,7 @@ function run(){
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setavail(false)}>No</Button>
-                <Button onClick={() => unavailablecheck()}>Yes</Button>
+                <Button onClick={() => unavailablecheck()&& setbook(true)}>Yes</Button>
             </Modal.Actions>
         </Modal>
         <Modal centered={false}
@@ -542,28 +516,18 @@ function run(){
                 <Modal.Header>What do you want to change of booking?</Modal.Header>
                 <Modal.Content>
                     <Modal.Description>
-                        <Form>
                         <Form.Field>
-                            <Form.Input label='Booking Name'>
-                                <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setba_id(e.target.value)}}>
-                                    <option key={0} value={"0"}>Select Booking Name</option>
-                                    {s.map(item => {
-                                        return (<option key={item.b_name} value={item.b_name}>{item.b_name},{item.st_dt}-{item.et_dt}</option>)
-                                    })}
-                                </select>
+                            <Form.Input
+                                fluid
+                                name="Booking Name"
+                                placeholder=" Insert Booking Name"
+                                label="ba_id"
+                                value={ba_id}
+                                onChange={e => setba_id(e.target.value)}
 
-                            </Form.Input>
+                            />
                         </Form.Field>
-                            <Form.Field>
-                                <Form.Input
-                                    fluid
-                                    name="New name"
-                                    placeholder="Insert Name"
-                                    label="New Name"
-                                    value={New}
-                                    onChange={e => setnew(e.target.value)}
-                                />
-                            </Form.Field>
+                        <Form>
                             <Form.Field>
                                 <Form.Input
                                     fluid
@@ -620,15 +584,15 @@ function run(){
                 <Modal.Content>
                     <ModalDescription>
                         <Form.Field>
-                            <Form.Input label='Booking Name'>
-                                <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setba_id(e.target.value)}}>
-                                    <option key={0} value={"0"}>Select Booking Name</option>
-                                    {s.map(item => {
-                                        return (<option key={item.ba_id} value={item.ba_id}>{item.b_name},{item.st_dt}-{item.et_dt}</option>)
-                                    })}
-                                </select>
+                            <Form.Input
+                                fluid
+                                name="Booking_Name"
+                                placeholder=" Insert Booking Name"
+                                label="ba_id"
+                                value={ba_id}
+                                onChange={e => setba_id(e.target.value)}
 
-                            </Form.Input>
+                            />
                         </Form.Field>
 
                     </ModalDescription>
@@ -658,15 +622,15 @@ function run(){
                 <Modal.Content>
                     <Modal.Description>
                         <Form.Field>
-                            <Form.Input label='unavailable timeframe'>
-                                <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setun(e.target.value)}}>
-                                    <option key={0} value={"0"}>unavailable timeframe</option>
-                                    {ts.map(item => {
-                                        return (<option key={item.pa_id} value={item.pa_id}>{item.st_dt}-{item.et_dt}</option>)
-                                    })}
-                                </select>
+                            <Form.Input
+                                fluid
+                                name="unavailable id"
+                                placeholder=" Insert Unavailable Id"
+                                label="unavailable id"
+                                value={un}
+                                onChange={e => setun(e.target.value)}
 
-                            </Form.Input>
+                            />
                         </Form.Field>
                         <Form>
                             <Form.Field>
@@ -759,25 +723,13 @@ function run(){
                 <Modal.Header> You have deleted a unavailable time slot</Modal.Header>
                 <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
             </Modal>
+            <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
+            <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
             <Modal open = {userfree}
                    onClose={() => setuserfree(false)}
                    onOpen={() => setuserfree(true)}>
                 <Button onClick={() => returnallfalse()}>ok</Button>
             </Modal>
-            <Modal open ={h}
-                   onClose={() => setlh(false)}
-                   onOpen={() => setlh(true)}
-            >
-                <Modal.Header> time slot</Modal.Header>
-                <Modal.Description>{sh.map(item =>{
-                    return(<header>{item.st_dt}-{item.et_dt}</header>)
-                })
-                } </Modal.Description>
-                <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
-            </Modal>
-            <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
-            <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
-
     </Container>
     </Container>
 
