@@ -64,8 +64,7 @@ class PersonDAO(object):
     def get_account_by_email_and_password(self, p_email,p_password):
         cursor = self.conn.cursor()
 
-        query = "select p_email, p_password, p_id from person where p_email = %s and p_password=%s;"
-
+        query = "select p_email, p_password, p_id, p_role from person where p_email = %s and p_password=%s;"
         # Execute commands n close
         cursor.execute(query, (p_email, p_password,))
         result = cursor.fetchone()
