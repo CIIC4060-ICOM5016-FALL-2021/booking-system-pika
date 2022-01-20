@@ -68,22 +68,23 @@ class AvailablePerson:
             result = self.build_unavailable_time_person_info(person)
         return jsonify(result)
 
-    def get_unavailable_person_by_person_id(self, pa_id):
+    def get_unavailable_person_by_person_id(self, p_id):
         method = AvailablePersonDAO()
 
         person_dao = PersonDAO()
-        existing_person = person_dao.get_person_by_id(pa_id)
+        existing_person = person_dao.get_person_by_id(p_id)
 
         if not existing_person:
             return jsonify("That person is available")
         else:
-            res = method.get_unavailable_person_by_person_id(pa_id)
+            res = method.get_unavailable_person_by_person_id(p_id)
             result = []
-            for st_dt, et_dt in res:
-                result.append({"st_dt": st_dt,
-                               "et_dt": et_dt})
-
-
+            for pa_id, st_dt, et_dt in res:
+                result.append({
+                    "pa_id": pa_id,
+                    "st_dt": st_dt,
+                    "et_dt": et_dt
+                })
             return jsonify(result), 200
 ########
 

@@ -154,7 +154,8 @@ class Booking(object):
             return jsonify(result), 200
         else:
             return jsonify("No Bookings Found"), 404
-    def get_bookings_by_host(self,host_id):
+
+    def get_bookings_by_host(self, host_id):
         method = BookingDAO()
         booked_rooms = method.get_bookings_by_host(host_id)
         if not booked_rooms:

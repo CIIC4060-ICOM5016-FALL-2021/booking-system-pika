@@ -69,9 +69,6 @@ class Person(object):
         result = {'b_id': row[0], 'start_time': row[1], 'finish_time': row[2], 'invited_id': row[3],
                   'host_id': row[4], 'room_id': row[5]}
         return result
-    def build_account_info(self, row):
-        result = { 'p_email': row[0], 'p_password': row[1], "p_id" : row[2]}
-        return result
 
     def create_new_person(self, json):
         p_fname = json['p_fname']
@@ -176,15 +173,15 @@ class Person(object):
                                                most_used_room[2])
             return jsonify(result), 200
 
-    def get_person_that_most_share_with_person(self, json):
-        p_id = json["p_id"]
+    def get_person_that_most_share_with_person(self, p_id):
         method = PersonDAO()
-        mostshared = method.get_person_that_most_share_with_person(p_id)
-        if not mostshared:
-            return jsonify("you don't share class with anyone")
-
-        result = self.build_mostsharedperson_attrdict(mostshared)
-        return jsonify(result)
+        most_shared = method.get_person_that_most_share_with_person(p_id)
+        if not most_shared:
+            return jsonify("Person does not share any booking"), 404
+        return jsonify({
+            "p_id": p_id,
+            "shared": most_shared
+        }), 200
 
     def update_person(self, json):
         p_id = json['p_id']
@@ -207,14 +204,17 @@ class Person(object):
         p_email = json['p_email']
         p_password = json['p_password']
         method = PersonDAO()
-        person_tuple = method.get_account_by_email_and_password(p_email,p_password)
+        person_tuple = method.get_account_by_email_and_password(p_email, p_password)
         if not person_tuple:
             return jsonify("Not Found"), 404
         else:
-            result = self.build_account_info(person_tuple)
-            return jsonify(result), 200
+            return jsonify({
+                'p_email': person_tuple[0],
+                'p_password': person_tuple[1],
+                "p_id": person_tuple[2]
+            }), 200
 
-    def get_person_ids_by_email(self,json):
+    def get_person_ids_by_email(self, json: dict):
         p_email = json['p_email']
         method = PersonDAO()
         person_tuple = method.get_person_id_by_email(p_email)
