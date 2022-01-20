@@ -15,7 +15,6 @@ function SignUp () {
   const [gender, setgender] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  let [data,setdata] =  useState("");
 const [pen, setopen]= useState(false)
 
 function handlesubmit(){
@@ -28,29 +27,24 @@ const y = ()=>{
     setr(true)
 }
     function first() {
-        if (fname == "" || lname == "" || role == "" || phone == "" || gender == "" || email == "" || password == "") {
-            return false
-        } else {
-        return true
-        }
+        return !(fname === "" || lname === "" || role === "" || phone === "" || gender === "" || email === "" || password === "");
     }
   function check() {
-    if (fname==""||lname==""||role==""||phone==""||gender==""||email==""||password==""||!y){
+    if (fname===""||lname===""||role===""||phone===""||gender===""||email===""||password===""||!y){
       return false
     }else {
-      axios.post('http://127.0.0.1:5000//pika-booking/persons', {
-        "p_fname": fname,
-        "p_lname": lname,
-        "p_role": role,
-        "p_email": email,
-        "p_phone": phone,
-        "p_gender": gender2(gender),
-        "p_password": password
+        let dat = {
+            "p_fname": fname,
+            "p_lname": lname,
+            "p_role": role1(role),
+            "p_email": email,
+            "p_phone": phone,
+            "p_gender": gender2(gender),
+            "p_password": password
 
-      }).then(res=>
-      {
-        setdata(res.data);
-      })
+        }
+        console.log(dat)
+      axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons', dat)
         handlesubmit()
       return true
     }
@@ -66,6 +60,17 @@ const y = ()=>{
         }
     }
 
+    function role1(parameter){
+        switch(parameter) {
+            case "Student":
+                return 1
+            case "Professor":
+                return 2
+            case "Staff":
+                return 3
+
+        }
+    }
 
   // componentDidMount() {
   //
@@ -206,25 +211,28 @@ const y = ()=>{
                   />
                 </Form.Field>
                 <Form.Field>
-                  <Form.Input
-                    fluid
-                    value={role}
-                    onChange={e => setrole(e.target.value)}
-                    name="role"
-                    placeholder="Your role in School"
-                    label="Role"
-                  />
+                    <Form.Input label='Role'>
+                        <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setrole(e.target.value);}}>
+                            <option key={0} value={"0"}>Select Type</option>
+                            {
+
+                                ['Student','Professor', 'Staff'].map((item) => {return <option>{item}</option>})
+                            }
+                        </select>
+
+                    </Form.Input>
                 </Form.Field>
                 <Form.Field>
-                  <Form.Input
-                    fluid
-                    value={gender}
-                    onChange={e => setgender(e.target.value)}
-                    name="gender"
-                    icon='other gender'
-                    placeholder="I Identify As"
-                    label="Gender"
-                  />
+                    <Form.Input label='Gender'>
+                        <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setgender(e.target.value);}}>
+                            <option key={0} value={"0"}>Select Type</option>
+                            {
+
+                                ['male','female'].map((item) => {return <option>{item}</option>})
+                            }
+                        </select>
+
+                    </Form.Input>
                 </Form.Field>
                 <Form.Field>
                   <Form.Input
@@ -247,8 +255,7 @@ const y = ()=>{
           </Grid.Column>
         </Grid>
           <Modal
-          open = {pen
-          }onClose={() => setopen(false)}
+          open = {pen} onClose={() => setopen(false)}
           onOpen={() => setopen(true)}>
               <Modal.Header> You have made an account, Please Login</Modal.Header>
               <Link to = "/">

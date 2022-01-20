@@ -10,7 +10,7 @@ import {
     Segment
 } from 'semantic-ui-react';
 import axios from "axios";
-import Navbar from "./components/Navbar/Navbar";
+
 
 
 function Settings() {
@@ -212,15 +212,16 @@ function Settings() {
                                         />
                                     </Form.Field>
                                     <Form.Field>
-                                        <Form.Input
-                                            fluid
-                                            value={gender}
-                                            onChange={e => setgender(e.target.value)}
-                                            name="gender"
-                                            icon='other gender'
-                                            placeholder="I Identify As"
-                                            label="Gender"
-                                        />
+                                        <Form.Input label='Gender'>
+                                            <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setgender(e.target.value);}}>
+                                                <option key={0} value={"0"}>Select Type</option>
+                                                {
+
+                                                    ['male','female'].map((item) => {return <option>{item}</option>})
+                                                }
+                                            </select>
+
+                                        </Form.Input>
                                     </Form.Field>
                                     <Form.Field>
                                         <Form.Input
