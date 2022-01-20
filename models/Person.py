@@ -65,7 +65,6 @@ class PersonDAO(object):
         cursor = self.conn.cursor()
 
         query = "select p_email, p_password, p_id, p_role from person where p_email = %s and p_password=%s;"
-
         # Execute commands n close
         cursor.execute(query, (p_email, p_password,))
         result = cursor.fetchone()

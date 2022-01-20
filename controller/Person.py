@@ -215,7 +215,8 @@ class Person(object):
             return jsonify({
                 'p_email': person_tuple[0],
                 'p_password': person_tuple[1],
-                "p_id": person_tuple[2]
+                "p_id": person_tuple[2],
+                "p_role": person_tuple[3]
             }), 200
 
     def get_person_ids_by_email(self, json: dict):
