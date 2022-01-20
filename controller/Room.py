@@ -118,12 +118,11 @@ class Room:
         r_dept = json['r_dept']
         r_type = json['r_type']
         dao = RoomDAO()
-        if not dao.check_if_room_exists(r_id):
-            return jsonify("Room Not Found"), 404
-        else:
+        if dao.check_if_room_exists(r_id):
             dao.update_room(r_id, r_name, r_building, r_dept, r_type)
-            result = self.build_room_attr_dict(r_id, r_building, r_dept, r_type)
-            return jsonify(result), 200
+            return jsonify(True), 200
+        else:
+            return jsonify("Room Not Found"), 404
 
     # Put a number and get some room thingy
     def get_room(self, room):
