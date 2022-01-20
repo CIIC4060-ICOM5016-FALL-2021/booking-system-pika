@@ -162,16 +162,20 @@ class Person(object):
 
     def get_most_used_room(self, p_id):
         method = PersonDAO()
-        most_used = method.get_most_used_room(p_id, )
+        most_used = method.get_most_used_room(p_id)
         method2 = RoomDAO()
         if not most_used:
             return jsonify("Not Found"), 404
         else:
             room = Room()
-            most_used_room = method2.get_room(most_used[0])
-            result = room.build_room_attr_dict(most_used[0], most_used_room[0], most_used_room[1],
-                                               most_used_room[2])
-            return jsonify(result), 200
+            most_used_room = method2.get_room_by_id(most_used[0])
+            return(jsonify({
+                "r_id": most_used[0],
+                "r_name": most_used_room[0],
+                "r_dept": most_used_room[2],
+                "r_building": most_used_room[1],
+                "r_type": most_used_room[3]
+            })), 200
 
     def get_person_that_most_share_with_person(self, p_id):
         method = PersonDAO()

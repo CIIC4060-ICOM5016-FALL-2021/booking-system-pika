@@ -239,14 +239,10 @@ def get_most_booked_persons():
 
 
 # Retrieves most booked room by a person
-@app.route('/pika-booking/persons/person/most-booked-room', methods=['POST'])
-def get_person_most_used_room():
-    args = request.json
-    if request.method == 'POST':
-        if args and "p_id" in args:
-            return Person().get_most_used_room(args["p_id"])
-        else:
-            return jsonify("Args not found: p_id"), 405
+@app.route('/pika-booking/persons/<int:p_id>/most-booked-room', methods=['GET'])
+def get_person_most_used_room(p_id):
+    if request.method == 'GET':
+        return Person().get_most_used_room(p_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
