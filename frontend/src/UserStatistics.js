@@ -12,8 +12,8 @@ function UserStatistics (){
     console.log(dat.p_id);
     function r() {
 
-            axios.post(
-                `https://booking-system-pika.herokuapp.com//pika-booking/persons/person/most-booked-room`, {"p_id": dat.p_id}).then(res => {
+            axios.get(
+                `https://booking-system-pika.herokuapp.com//pika-booking/persons/${ dat.p_id}/most-booked-room`).then(res => {
                 setdata(res.data);
                 console.log(res.data)
             })

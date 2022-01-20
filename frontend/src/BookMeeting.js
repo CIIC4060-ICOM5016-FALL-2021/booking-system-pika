@@ -668,7 +668,7 @@ function BookMeeting(){
                                 <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setun(e.target.value)}}>
                                     <option key={0} value={"0"}>unavailable timeframe</option>
                                     {ts.map(item => {
-                                        return (<option key={item.pa_id} value={item.pa_id}>{item.pa_id},{item.st_dt}-{item.et_dt}</option>)
+                                        return (<option key={item.pa_id} value={item.pa_id}>{item.st_dt}-{item.et_dt}</option>)
                                     })}
                                 </select>
 
