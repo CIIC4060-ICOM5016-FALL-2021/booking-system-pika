@@ -111,11 +111,6 @@ def get_available_rooms_at_timeframe():
         return jsonify("Method Not Allowed"), 405
 
 
-
-
-
-
-
 # Gets all unavailable rooms by the room id, not the ra_id
 @app.route('/pika-booking/rooms/unavailable/<int:room_id>', methods=['GET'])
 def handle_room_unavailable_getter_post(room_id):
@@ -161,24 +156,6 @@ def handle_verify_available_room_getter_post():
             return AvailableRoom().verify_available_room_at_timeframe(args)
         else:
             return jsonify("Args not found"), 405
-    else:
-        return jsonify("Method Not Allowed"), 405
-
-
-@app.route('/pika-booking/person/unavailable/pa_id/<int:pa_id>', methods=['GET','DELETE'])
-def handle_unavailable_person_pa_id(pa_id):
-    if request.method == 'GET':
-        return AvailablePerson().get_unavailable_person_by_id(pa_id)
-    elif request.method == 'DELETE':
-        return AvailablePerson().delete_unavailable_schedule(pa_id)
-    else:
-        return jsonify("Method Not Allowed"), 405
-
-
-@app.route('/pika-booking/person/unavailable/person_id/<int:p_id>', methods=['GET'])
-def handle_unavailable_person_by_person_id(p_id):
-    if request.method == 'GET':
-        return AvailablePerson().get_unavailable_person_by_person_id(p_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -262,14 +239,10 @@ def get_most_booked_persons():
 
 
 # Retrieves most booked room by a person
-@app.route('/pika-booking/persons/person/most-booked-room', methods=['POST'])
-def get_person_most_used_room():
-    args = request.json
-    if request.method == 'POST':
-        if args and "p_id" in args:
-            return Person().get_most_used_room(args["p_id"])
-        else:
-            return jsonify("Args not found: p_id"), 405
+@app.route('/pika-booking/persons/<int:p_id>/most-booked-room', methods=['GET'])
+def get_person_most_used_room(p_id):
+    if request.method == 'GET':
+        return Person().get_most_used_room(p_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -302,14 +275,11 @@ def get_account_by_email_and_password():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/persons/person/all-schedule', methods=['POST'])
-def handle_get_all_person_schedule_getter_post():
-    args = request.json
-    if request.method == 'POST':
-        if args:
-            return AvailablePerson().get_schedule(args)
-        else:
-            return jsonify("Args not found"), 405
+@app.route('/pika-booking/persons/person/all-schedule/<int:p_id>', methods=['GET'])
+def handle_get_all_person_schedule_getter_post(p_id):
+    if request.method == 'GET':
+        return AvailablePerson().get_schedule(p_id)
+
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -325,8 +295,7 @@ def handle_unavailable_person():
         return AvailablePerson().get_all_unavailable_persons()
     elif request.method == 'POST':
         if args:
-            return AvailablePerson().create_unavaila
-            ble_time_schedule(args)
+            return AvailablePerson().create_unavailable_time_schedule(args)
         else:
             return jsonify("Missing Arguments"), 405
     elif request.method == 'DELETE':
@@ -343,6 +312,22 @@ def handle_unavailable_person():
         return jsonify("Method Not Allowed"), 405
 
 
+@app.route('/pika-booking/person/unavailable/pa_id/<int:pa_id>', methods=['GET', 'DELETE'])
+def handle_unavailable_person_pa_id(pa_id):
+    if request.method == 'GET':
+        return AvailablePerson().get_unavailable_person_by_id(pa_id)
+    elif request.method == 'DELETE':
+        return AvailablePerson().delete_unavailable_schedule(pa_id)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/person/unavailable/person_id/<int:p_id>', methods=['GET'])
+def handle_unavailable_person_by_person_id(p_id):
+    if request.method == 'GET':
+        return AvailablePerson().get_unavailable_person_by_person_id(p_id)
+    else:
+        return jsonify("Method Not Allowed"), 405
 
 
 @app.route('/pika-booking/persons/available/person', methods=['DELETE'])
@@ -411,6 +396,22 @@ def handle_booking_by_id(b_id):
         return jsonify("Method Not Allowed"), 405
 
 
+@app.route('/pika-booking/booking/meet/<b_id>', methods=['GET'])
+def get_full_booking_by_b_id(b_id):
+    if request.method == 'GET':
+        return Booking().get_meetings_by_id(b_id)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/booking/host/<int:host_id>', methods=['GET'])
+def get_bookings_by_host(host_id):
+    if request.method == 'GET':
+        return Booking().get_bookings_by_host(host_id)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
 @app.route('/pika-booking/booking/busiesthour', methods=['GET'])
 def get_busiest_hours():
     if request.method == 'GET':
@@ -431,11 +432,11 @@ def get_most_booked_room():
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/persons/shared', methods=['POST'])
-def get_shared_person_for_id():
+@app.route('/pika-booking/persons/<int:p_id>/shared', methods=['GET'])
+def get_shared_person_for_id(p_id):
     # This gets the most booked room in general
-    if request.method == 'POST':
-        return Person().get_person_that_most_share_with_person(request.json)
+    if request.method == 'GET':
+        return Person().get_person_that_most_share_with_person(p_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -460,6 +461,18 @@ def get_free_time_for_meeting_users():
     if request.method == 'POST':
         if args:
             return Booking().get_shared_free_timeslot_users(request.json)
+        else:
+            return jsonify("Args not found"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
+@app.route('/pika-booking/persons/email', methods=['POST'])
+def get_persons_id_by_email():
+    args = request.json
+    if request.method == 'POST':
+        if args:
+            return Person().get_person_ids_by_email(request.json)
         else:
             return jsonify("Args not found"), 405
     else:

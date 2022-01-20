@@ -112,7 +112,7 @@ function type1(parameter){
                 data.r_dept= roomData.r_dept;
             }
             if (roompermission=== "") {
-                data.r_type= roomData.r_type;
+                data.r_type= type1(roomData.r_type);
             }
             console.log(data)
             axios.put(`https://booking-system-pika.herokuapp.com/pika-booking/rooms`,
@@ -191,7 +191,7 @@ function type1(parameter){
     }
 
     function fetchUnavailableTimeSlots(){
-        const url = `https://booking-system-pika.herokuapp.com/pika-booking/rooms/available/schedule${roomID}`;
+        const url = `https://booking-system-pika.herokuapp.com/pika-booking/rooms/available/schedule/${roomID}`;
         axios.get(url, {
             headers: {'Content-Type': 'application/json' }})
             .then(

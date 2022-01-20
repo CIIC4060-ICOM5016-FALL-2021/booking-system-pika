@@ -1,11 +1,9 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import axios, {Axios} from "axios";
-import {Button,
-    Divider,
+import axios from "axios";
+import {
     Grid,
     Segment,
-    Input
 } from 'semantic-ui-react'
 import {Link} from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
@@ -39,14 +37,14 @@ if (t===false) {
 }
     }
 
-
+useEffect(()=> {
+    componentDidMount()
+})
         return <>
             <Navbar/>
-            {componentDidMount()}
             <Segment>
                 <Segment placeholder>
-                    <Grid columns={3}stackable textAlign='center'>
-                        <Divider></Divider>
+                    <Grid columns={3} stackable textAlign='center'>
                         <Grid.Row verticalAlign='middle'>
                             <Grid.Column>
                                 <h5> Most Booked Person:    {Array.from(Array(BookedPersons.length)).map((_, i) => (

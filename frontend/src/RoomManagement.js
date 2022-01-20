@@ -1,16 +1,14 @@
 import React, {useEffect, useState} from "react";
-import Navbar from "./components/Navbar/Navbar";
 import {Button} from 'semantic-ui-react';
 import {Container, Grid} from 'semantic-ui-react';
 import {Link} from "react-router-dom";
-
 import axios from "axios";
 import Rooms from "./components/Rooms";
 
 
 
 function RoomManagement(){
-    const [isAuth, setIsAuth] = useState(true)
+    const [isAuth, setIsAuth] = useState(false)
     const [rooms, setRooms] = useState([]);
     const data = localStorage.getItem('login-data');
     const user = JSON.parse(data);
@@ -38,7 +36,7 @@ function RoomManagement(){
     function getRooms(){
         axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/rooms`).then((res) => {
                 setRooms(res.data);
-                    console.log(rooms)
+                    console.log(res.data)
 
             }, (error) => {
                 console.log(error);
@@ -48,12 +46,12 @@ function RoomManagement(){
     useEffect(() => {
         getAuthentication();
         getRooms();
+        console.log(rooms)
     }, []);
 
     if(isAuth) {
         return (
             <>
-                <Navbar/>
                 <h1 style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>Rooms</h1>
                 <Container>
                     <Grid container spacing={3}>
@@ -82,12 +80,12 @@ function RoomManagement(){
     } else {
         return (
             <>
-                <Navbar/>
+
                 <h3 style={{color: "red", display: 'flex', justifyContent: 'center', alignItems: 'center'}}>You are not
                     allowed to manage rooms, please contact a Department Staff to make any changes</h3>
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <Link to={"/"}>
-                        <Button content='Go Home' icon='home' size='big' color="violet"/>
+                        <Button content='Go to HomePage' icon='home' size='big' color="violet"/>
                     </Link>
                 </div>
             </>

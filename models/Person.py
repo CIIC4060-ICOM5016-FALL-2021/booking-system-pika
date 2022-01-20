@@ -9,11 +9,9 @@ class PersonDAO(object):
     R_STAFF = 3
     R_INSTRUCTOR = 4
     R_VISITOR = 5
-
     MALE = 1
     FEMALE = 2
     NON_BINARY = 3
-
     genders = {
         MALE: "male",
         FEMALE: "female",
@@ -72,6 +70,16 @@ class PersonDAO(object):
         cursor.execute(query, (p_email, p_password,))
         result = cursor.fetchone()
         return result
+
+    def get_person_id_by_email(self,p_email):
+        cursor = self.conn.cursor()
+        query = 'select p_id from person where p_email in %s; '
+        cursor.execute(query,(p_email,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
 
     def get_account_by_email(self, p_email):
         cursor = self.conn.cursor()
@@ -196,7 +204,7 @@ class PersonDAO(object):
                 "(select bomeeting.meeting from bomeeting where bomeeting.invited_id = %s) " \
                 "group by bomeeting.invited_id order by count(bomeeting.invited_id) desc limit 1 offset 1;"
         cursor.execute(query, (p_id,))
-        result = cursor.fetchone()[0]
+        result = cursor.fetchone()
         cursor.close()
         return result
 
@@ -213,7 +221,7 @@ class PersonDAO(object):
 
     def get_most_used_room(self,p_id):
         cursor = self.conn.cursor()
-        query = 'select room_id,count(invited_id) ' \
+        query = 'select room_id, count(invited_id) ' \
                 'from booking where invited_id = %s ' \
                 'group by room_id order by count(invited_id) ' \
                 'desc limit 1;'

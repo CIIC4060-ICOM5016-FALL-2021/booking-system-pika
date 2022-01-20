@@ -8,6 +8,7 @@ import Schedule from "./Schedule";
 import UserStatistics from "./UserStatistics";
 import Settings from "./Settings";
 import RoomManagement from "./RoomManagement";
+import Navbar from "./components/Navbar/Navbar";
 function UserView(){
     const [isAuth, setIsAuth] = useState(false)
     const panes = [
@@ -29,7 +30,9 @@ function UserView(){
         }
     ]
 
-    return <Tab panes={panes}/>
+    return <>
+        <Navbar/>
+        <Tab panes={panes}/></>
 
 }
 export default UserView;

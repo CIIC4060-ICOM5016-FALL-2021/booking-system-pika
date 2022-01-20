@@ -175,12 +175,15 @@ class AvailableRoom:
             res = dao.get_unavailable_room_by_id(room_id)
             result_st_dt = []
             result_et_dt = []
-            for st_dt, et_dt in res:
+            result_ra_id = []
+            for st_dt, et_dt,ra_id in res:
                 result_et_dt.append(et_dt)
                 result_st_dt.append(st_dt)
+                result_ra_id.append(ra_id)
             result = {
                 "st_dt": result_st_dt,
-                "et_dt": result_et_dt
+                "et_dt": result_et_dt,
+                "ra_id": result_ra_id
             }
             return jsonify(result), 200
 

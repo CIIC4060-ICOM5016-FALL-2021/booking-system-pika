@@ -69,9 +69,6 @@ class Person(object):
         result = {'b_id': row[0], 'start_time': row[1], 'finish_time': row[2], 'invited_id': row[3],
                   'host_id': row[4], 'room_id': row[5]}
         return result
-    def build_account_info(self, row):
-        result = { 'p_email': row[0], 'p_password': row[1], "p_id" : row[2], 'p_role': row[3]}
-        return result
 
     def create_new_person(self, json):
         p_fname = json['p_fname']
@@ -165,26 +162,30 @@ class Person(object):
 
     def get_most_used_room(self, p_id):
         method = PersonDAO()
-        most_used = method.get_most_used_room(p_id, )
+        most_used = method.get_most_used_room(p_id)
         method2 = RoomDAO()
         if not most_used:
             return jsonify("Not Found"), 404
         else:
             room = Room()
-            most_used_room = method2.get_room(most_used[0])
-            result = room.build_room_attr_dict(most_used[0], most_used_room[0], most_used_room[1],
-                                               most_used_room[2])
-            return jsonify(result), 200
+            most_used_room = method2.get_room_by_id(most_used[0])
+            return(jsonify({
+                "r_id": most_used[0],
+                "r_name": most_used_room[0],
+                "r_dept": most_used_room[2],
+                "r_building": most_used_room[1],
+                "r_type": most_used_room[3]
+            })), 200
 
-    def get_person_that_most_share_with_person(self, json):
-        p_id = json["p_id"]
+    def get_person_that_most_share_with_person(self, p_id):
         method = PersonDAO()
-        mostshared = method.get_person_that_most_share_with_person(p_id)
-        if not mostshared:
-            return jsonify("you don't share class with anyone")
-
-        result = self.build_mostsharedperson_attrdict(mostshared)
-        return jsonify(result)
+        most_shared = method.get_person_that_most_share_with_person(p_id)
+        if not most_shared:
+            return jsonify("Person does not share any booking"), 404
+        return jsonify({
+            "p_id": p_id,
+            "shared": most_shared
+        }), 200
 
     def update_person(self, json):
         p_id = json['p_id']
@@ -207,11 +208,24 @@ class Person(object):
         p_email = json['p_email']
         p_password = json['p_password']
         method = PersonDAO()
-        person_tuple = method.get_account_by_email_and_password(p_email,p_password)
+        person_tuple = method.get_account_by_email_and_password(p_email, p_password)
         if not person_tuple:
             return jsonify("Not Found"), 404
         else:
-            result = self.build_account_info(person_tuple)
+            return jsonify({
+                'p_email': person_tuple[0],
+                'p_password': person_tuple[1],
+                "p_id": person_tuple[2]
+            }), 200
+
+    def get_person_ids_by_email(self, json: dict):
+        p_email = json['p_email']
+        method = PersonDAO()
+        person_tuple = method.get_person_id_by_email(p_email)
+        if not person_tuple:
+            return jsonify("Not Found"), 404
+        else:
+            result = {"person_id": person_tuple}
             return jsonify(result), 200
 
     def delete_person(self, p_id):

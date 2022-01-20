@@ -24,15 +24,16 @@ class Room:
         }
         return result
     # Overloading
-    def build_room_attr_dict(self, r_id, r_building, r_dept, r_type):
-        return self.build_room((r_id, r_building, r_dept, r_type))
+    def build_room_attr_dict(self, r_id, r_building, r_dept, r_type,r_name):
+        return self.build_room((r_id, r_building, r_dept, r_type,r_name))
 
     def build_timeslot(self, row: tuple):
         print(row, "ROW")
         result = {
             "r_id": row[0],
             "st_dt": row[1],
-            "et_dt": row[2]
+            "et_dt": row[2],
+            "r_name": row[3]
         }
         return result
 
@@ -83,6 +84,7 @@ class Room:
     #
     def create_new_room(self, json):
         # r_id = json['r_id']
+        r_name = json['r_name']
         r_building = json['r_building']
         r_dept = json['r_dept']
         r_type = json['r_type']
@@ -91,8 +93,8 @@ class Room:
 
         # Room with such name dos not exist
         # if not existing_room:
-        room_id = dao.create_new_room(r_building, r_dept, r_type)
-        result = self.build_room_attr_dict(room_id, r_building, r_dept, r_type)
+        room_id = dao.create_new_room(r_building, r_dept, r_type,r_name)
+        result = self.build_room_attr_dict(room_id, r_building, r_dept, r_type,r_name)
         return jsonify(result), 201
         # else:
         #     return jsonify("A room with that ID already exists"), 409
@@ -116,12 +118,11 @@ class Room:
         r_dept = json['r_dept']
         r_type = json['r_type']
         dao = RoomDAO()
-        if not dao.check_if_room_exists(r_id):
-            return jsonify("Room Not Found"), 404
-        else:
+        if dao.check_if_room_exists(r_id):
             dao.update_room(r_id, r_name, r_building, r_dept, r_type)
-            result = self.build_room_attr_dict(r_id, r_building, r_dept, r_type)
-            return jsonify(result), 200
+            return jsonify(True), 200
+        else:
+            return jsonify("Room Not Found"), 404
 
     # Put a number and get some room thingy
     def get_room(self, room):
