@@ -396,11 +396,18 @@ def handle_booking_by_id(b_id):
         return jsonify("Method Not Allowed"), 405
 
 
+@app.route('/pika-booking/booking/meet/<b_id>', methods=['GET'])
+def get_full_booking_by_b_id(b_id):
+    if request.method == 'GET':
+        return Booking().get_meetings_by_id(b_id)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
 @app.route('/pika-booking/booking/host/<int:host_id>', methods=['GET'])
 def get_bookings_by_host(host_id):
     if request.method == 'GET':
         return Booking().get_bookings_by_host(host_id)
-
     else:
         return jsonify("Method Not Allowed"), 405
 
