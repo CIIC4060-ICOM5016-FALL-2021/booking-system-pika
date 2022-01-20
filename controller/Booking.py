@@ -51,22 +51,24 @@ class Booking(object):
         invited_id = json['invited_id']
         host_id = json['host_id']
         room_id = json['room_id']
-
+        print(json)
         # Checking if the room exists
         method = RoomDAO()
         if method.check_if_room_exists(room_id):
             # Checking if the room is available
             method2 = AvailableRoomDAO()
             if method2.verify_available_room_at_timeframe(room_id, st_dt, et_dt):
-
+                print("WRKS HERE")
                 # Check if both the host and the invitee exist
                 method3 = PersonDAO()
 
                 if type(invited_id) == list:
+                    print("invited_id IS LIST")
                     for i in invited_id:
                         if not method3.check_if_person_exists(i):
                             return jsonify("Invitee Not Found"), 404
                 elif type(invited_id) == int:
+                    print("invited_id IS INT")
                     if not method3.check_if_person_exists(invited_id):
                         return jsonify("Invitee Not Found"), 404
                 # Check if Host exists
@@ -92,6 +94,7 @@ class Booking(object):
                 # - Classroom
                 #
                 # Staff can host anything
+                print("Still working hehe")
                 if room[3] in method3.access[host[2]]:
                     method4 = BookingDAO()
                     method5 = AvailablePersonDAO()
