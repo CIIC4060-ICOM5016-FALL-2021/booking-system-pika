@@ -176,32 +176,41 @@ class Booking(object):
             return jsonify(result), 200
     # Returns a single booking entry according to its id
 
-    def get_meetings_by_id(self, json):
-
-        booking_id = json['b_id']
+    def get_meetings_by_id(self, booking_id):
         booking_dao = BookingDAO()
         meeting_by_id = booking_dao.get_meetings_by_id(booking_id)
 
         if not meeting_by_id:
             return jsonify("There's no meetings by such booking id!"), 404
         else:
-            mega_map = {}
-            for i, meet in enumerate(meeting_by_id):
-                mega_map[i] = self.build_booking_map_dict(meet)
+            result: list = []
+            for b_id, b_name, st_dt, et_dt, invited_id, host_id, room_id in meeting_by_id:
+                result.append({
+                    "b_id": b_id,
+                    "b_name": b_name,
+                    "st_dt": st_dt,
+                    "et_dt": et_dt,
+                    "invited_id": invited_id,
+                    "host_id": host_id,
+                    "room_id": room_id
+                })
+            return jsonify(result), 200
 
-            return jsonify(mega_map)
-
-    def get_booking_by_id(self, json):
-        b_id = json["b_id"]
+    def get_booking_by_id(self, b_id):
 
         method = BookingDAO()
-        booking_tuple = method.get_booking_by_id(b_id)
-        if not booking_tuple:
+        b_name, st_dt, et_dt, invited_id, host_id, room_id = method.get_booking_by_id(b_id)
+        if not room_id:
             return jsonify("Not Found"), 404
         else:
-            result = self.build_booking_map_dict([b_id, booking_tuple[0], booking_tuple[1], booking_tuple[2],
-                                                  booking_tuple[3], booking_tuple[4]])
-            return jsonify(result), 200
+            return jsonify({
+                "b_name": b_name,
+                "st_dt": st_dt,
+                "et_dt": et_dt,
+                "invited_id": invited_id,
+                "host_id": host_id,
+                "room_id": room_id
+            }), 200
 
     def get_host_at_dt(self, json):
         room_id = json['room_id']
@@ -257,7 +266,7 @@ class Booking(object):
         booking_dao = BookingDAO()
         # booking_id = json['b_id']
         date = json['date']
-        existent_booking = self.get_meetings_by_id(json).json
+        existent_booking = self.get_meetings_by_id(json)
         print(existent_booking)
         person_dao = PersonDAO()
         person_tupple = []

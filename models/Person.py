@@ -204,7 +204,7 @@ class PersonDAO(object):
                 "(select bomeeting.meeting from bomeeting where bomeeting.invited_id = %s) " \
                 "group by bomeeting.invited_id order by count(bomeeting.invited_id) desc limit 1 offset 1;"
         cursor.execute(query, (p_id,))
-        result = cursor.fetchone()[0]
+        result = cursor.fetchone()
         cursor.close()
         return result
 
