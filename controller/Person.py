@@ -70,7 +70,7 @@ class Person(object):
                   'host_id': row[4], 'room_id': row[5]}
         return result
     def build_account_info(self, row):
-        result = { 'p_email': row[0], 'p_password': row[1], "p_id" : row[2]}
+        result = { 'p_email': row[0], 'p_password': row[1], "p_id" : row[2], 'p_role': row[3]}
         return result
 
     def create_new_person(self, json):
