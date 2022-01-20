@@ -11,14 +11,16 @@ function RoomManagement(){
     const [isAuth, setIsAuth] = useState(false)
     const [rooms, setRooms] = useState([]);
     const data = localStorage.getItem('login-data');
-    const user = JSON.parse(data);
+    const dat = JSON.parse(data);
+
 
     function getAuthentication() {
 
-        if (user.role === 3) {
+        if (dat.p_role === 3) {
             setIsAuth(true);
         }
     }
+
     function type1(parameter) {
         switch (parameter) {
             case 1:
