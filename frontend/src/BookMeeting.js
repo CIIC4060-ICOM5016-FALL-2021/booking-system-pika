@@ -23,7 +23,7 @@ function BookMeeting(){
     const [st_dt, setst_dt] = useState("");
     let [et_dt, setet_dt] = useState("");
     const[room_id,setroom_id] = useState("");
-    const[invitee,setinvitee]=  useState(0);
+    const[invitee,setinvitee]=  useState([]);
     const [g,setg]= useState(false);
     const [its,setits] = useState(false)
     const [Selected,SetSelect] = useState(false)
@@ -61,9 +61,6 @@ function BookMeeting(){
 
 
     }
-    function getfreeuser(){
-
-    }
     function getRooms(){
         if (k===false) {
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/person/${dat.p_id}/role-access`).then((res) => {
@@ -90,7 +87,7 @@ function BookMeeting(){
         setst_dt("")
         setet_dt("")
         setroom_id("")
-        setinvitee("")
+        setinvitee([])
         setg(false)
         setbooking(false)
         setbook(false)
@@ -148,7 +145,7 @@ function BookMeeting(){
             if(et_dt===""){
                 data.et_dt =get.et_dt
             }
-            if (invitee===""){
+            if (invitee===[]){
                 data.invited_id = get.invited_id
             }
             axios.put("https://booking-system-pika.herokuapp.com/pika-booking/booking", data)
@@ -164,7 +161,7 @@ function BookMeeting(){
         })
     }
     function unavailableofperson(){ if (k===false) {
-        axios.get(`https://booking-system-pika.herokuapp.com//pika-booking/person/unavailable/person_id/${dat.p_id}`).then(res => {
+        axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/person/unavailable/person_id/${dat.p_id}`).then(res => {
             sets(res.data)
             console.log(ts)
         })
@@ -217,19 +214,21 @@ function BookMeeting(){
         return false
     }
     function first() {
-        if(st_dt === "" || et_dt === "" || room_id === "" || invitee === ""){
+        if(st_dt === "" || et_dt === "" || room_id === "" || invitee === []){
             return false
         }
 
         return true
     }
     function check() {
-        if (ba_id===""||st_dt === "" || et_dt === "" || room_id === "" || invitee === 0||!y){
+
+        if (ba_id===""||st_dt === "" || et_dt === "" || room_id === "" || invitee === []||!y){
             return false
         }else {
             let e = localStorage.getItem("login-data");
             let   dat = JSON.parse(e)
             console.log(invitee)
+            console.log(room_id)
             axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', {
                     "b_name":ba_id,"st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": parseInt(invitee), "room_id": room_id,
 

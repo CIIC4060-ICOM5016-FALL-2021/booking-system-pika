@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import axios from "axios";
 import {Link} from "react-router-dom";
-import Navbar from "./components/Navbar/Navbar";
 function UserStatistics (){
     let [data,setdata] =  useState("");
     let [d,setd] =  useState("");
@@ -18,10 +17,14 @@ function UserStatistics (){
                 setdata(res.data);
                 console.log(res.data)
             })
-            axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/${ dat.p_id}/shared`).then(res => {
+            axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/${dat.p_id}/shared`).then(res => {
                 setd(res.data);
                 console.log(d)
-            })
+
+
+
+
+                    })
 
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/${d.p_id}`).then(res => {
                 setname(res.data)
