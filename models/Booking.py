@@ -220,3 +220,14 @@ class BookingDAO:
         result = cursor.fetchone()[0]
         cursor.close()
         return result
+
+    def get_all_meetings(self):
+        cursor = self.conn.cursor()
+        query = 'select et_dt, st_dt, b_name, host_id, room_id, count(host_id) as invitees ' \
+                'from booking group by host_id, b_name, st_dt, et_dt, room_id;'
+        cursor.execute(query,)
+        result = []
+        for row in cursor:
+            result.append(row)
+        cursor.close()
+        return result
