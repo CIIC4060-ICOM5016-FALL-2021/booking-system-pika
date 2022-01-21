@@ -99,7 +99,7 @@ class Booking(object):
                     method4 = BookingDAO()
                     method5 = AvailablePersonDAO()
                     print("Also working over here")
-                    print("invited datatype", invited_id)
+                    print("invited datatype", type(invited_id))
                     if type(invited_id) == list:
                         b_id: list = []
                         for inv in invited_id:
@@ -308,7 +308,7 @@ class Booking(object):
                 result_list.append(obj)
             return jsonify(result_list)
 
-    def get_shared_free_timeslot_users(self, json):
+    def get_shared_free_timeslot_users(self, json): ### PROB HERE
         booking_dao = BookingDAO()
         person_tupple = json['invited_id']
         date = json['date']
