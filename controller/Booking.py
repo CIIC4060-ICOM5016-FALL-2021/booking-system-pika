@@ -131,9 +131,9 @@ class Booking(object):
                             'url': 'https://booking-system-pika.herokuapp.com/pika-booking/bookings/' + str(b_id)
                         }), 200
                 else:
-                    return jsonify("Host does not have access to this room"), 404
+                    return jsonify("Host does not have access to this room"), 406
             else:
-                return jsonify("Room has conflict"), 404
+                return jsonify("Room has conflict"), 406
         else:
             return jsonify("Room Not Found"), 404
 
