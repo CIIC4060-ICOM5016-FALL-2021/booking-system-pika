@@ -71,6 +71,7 @@ class AvailableRoomDAO:
         result = []
         for row in cursor:
             result.append(row)
+        cursor.close()
         return result
 
     def verify_available_room_at_timeframe(self, r_id, st_dt, et_dt):

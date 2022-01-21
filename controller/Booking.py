@@ -98,14 +98,14 @@ class Booking(object):
                 if room[3] in method3.access[host[2]]:
                     method4 = BookingDAO()
                     method5 = AvailablePersonDAO()
-
+                    print("Also working over here")
                     if type(invited_id) == list:
                         b_id: list = []
                         for inv in invited_id:
                             if not method5.verify_available_person_at_timeframe(inv, st_dt, et_dt):
                                 return jsonify("Person has conflict"), 404
                             b_id.append(method4.create_new_booking(b_name, st_dt, et_dt, inv, host_id, room_id))
-
+                        print("working on the list case")
                         result = []
                         for index, row in enumerate(b_id):
                             result.append({
@@ -118,8 +118,10 @@ class Booking(object):
                             })
                         return jsonify(result), 200
                     elif type(invited_id) == int:
+                        print("case for int")
                         if AvailablePersonDAO().verify_available_person_at_timeframe(invited_id, st_dt, et_dt):
-                            return jsonify("Person has conflict"), 404
+                            return jsonify("Person has conflict"), 406
+                        print("No explosions on the checks (int)")
                         b_id = method4.create_new_booking(b_name, st_dt, et_dt, invited_id, host_id, room_id)
                         return jsonify({
                             'booking_name': b_name,
