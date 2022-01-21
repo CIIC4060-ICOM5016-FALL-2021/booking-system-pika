@@ -98,14 +98,15 @@ class Booking(object):
                 if room[3] in method3.access[host[2]]:
                     method4 = BookingDAO()
                     method5 = AvailablePersonDAO()
-
+                    print("Also working over here")
+                    print("invited datatype", type(invited_id))
                     if type(invited_id) == list:
                         b_id: list = []
                         for inv in invited_id:
                             if not method5.verify_available_person_at_timeframe(inv, st_dt, et_dt):
                                 return jsonify("Person has conflict"), 404
                             b_id.append(method4.create_new_booking(b_name, st_dt, et_dt, inv, host_id, room_id))
-
+                        print("working on the list case")
                         result = []
                         for index, row in enumerate(b_id):
                             result.append({
@@ -118,8 +119,10 @@ class Booking(object):
                             })
                         return jsonify(result), 200
                     elif type(invited_id) == int:
+                        print("case for int")
                         if AvailablePersonDAO().verify_available_person_at_timeframe(invited_id, st_dt, et_dt):
-                            return jsonify("Person has conflict"), 404
+                            return jsonify("Person has conflict"), 406
+                        print("No explosions on the checks (int)")
                         b_id = method4.create_new_booking(b_name, st_dt, et_dt, invited_id, host_id, room_id)
                         return jsonify({
                             'booking_name': b_name,
@@ -131,9 +134,9 @@ class Booking(object):
                             'url': 'https://booking-system-pika.herokuapp.com/pika-booking/bookings/' + str(b_id)
                         }), 200
                 else:
-                    return jsonify("Host does not have access to this room"), 404
+                    return jsonify("Host does not have access to this room"), 406
             else:
-                return jsonify("Room has conflict"), 404
+                return jsonify("Room has conflict"), 406
         else:
             return jsonify("Room Not Found"), 404
 
@@ -305,7 +308,7 @@ class Booking(object):
                 result_list.append(obj)
             return jsonify(result_list)
 
-    def get_shared_free_timeslot_users(self, json):
+    def get_shared_free_timeslot_users(self, json): ### PROB HERE
         booking_dao = BookingDAO()
         person_tupple = json['invited_id']
         date = json['date']
@@ -317,3 +320,21 @@ class Booking(object):
             mega_map.append({'free_start': str(b[0]), 'free_end': str(b[1]), 'delta_time': str(b[2])})
         print(mega_map)
         return jsonify(mega_map)
+
+    def get_all_meetings(self):
+        method = BookingDAO()
+        count = method.count_booking()
+        if count != 0:
+            data = method.get_all_meetings()
+            result = []
+            for et_dt, st_dt, b_name, host_id, room_id, num_invitees in data:
+                result.append({
+                    "b_name": b_name,
+                    "st_dt": st_dt,
+                    "et_dt": et_dt,
+                    "host_id": host_id,
+                    "room_id": room_id
+                })
+            return jsonify(result), 200
+        else:
+            return jsonify("No Bookings Found"), 404

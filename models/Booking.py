@@ -171,7 +171,7 @@ class BookingDAO:
                 "from allday " \
                 "union select null as invited_id, allday.st_dt::date + interval '1 day - 1 second' as st_dt, " \
                 "allday.st_dt::date + interval '1 day - 1 second' as et_dt from allday) as allday2) as gaps " \
-                "where gaps.ValidGap=true ; "
+                "where gaps.ValidGap=true ;"
         cursor.execute(query, (date, date, p_id, date, date, p_id,))
         result = []
         for row in cursor:
@@ -218,5 +218,16 @@ class BookingDAO:
                 'from booking;'
         cursor.execute(query,)
         result = cursor.fetchone()[0]
+        cursor.close()
+        return result
+
+    def get_all_meetings(self):
+        cursor = self.conn.cursor()
+        query = 'select et_dt, st_dt, b_name, host_id, room_id, count(host_id) as invitees ' \
+                'from booking group by host_id, b_name, st_dt, et_dt, room_id;'
+        cursor.execute(query,)
+        result = []
+        for row in cursor:
+            result.append(row)
         cursor.close()
         return result
