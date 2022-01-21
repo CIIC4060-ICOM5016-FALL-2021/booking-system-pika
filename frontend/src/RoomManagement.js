@@ -16,7 +16,7 @@ function RoomManagement(){
 
     function getAuthentication() {
 
-        if (dat.p_role === 2) {
+        if (dat.p_role === 3) {
             setIsAuth(true);
         }
     }
