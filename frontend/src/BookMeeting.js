@@ -23,12 +23,11 @@ function BookMeeting(){
     const [st_dt, setst_dt] = useState("");
     let [et_dt, setet_dt] = useState("");
     const[room_id,setroom_id] = useState("");
-    const[invitee,setinvitee]=  useState([]);
+    const[invitee,setinvitee]=  useState("");
     const [g,setg]= useState(false);
     const [its,setits] = useState(false)
     const [Selected,SetSelect] = useState(false)
     const [info, setinfo] = useState(false);
-    const [Edit,setEdit]= useState("")
     const [free, setfree] = useState(false);
     const [updatebooking,setupdatebooking] = useState(false);
     const[deletebooking,setdeletebooking] =useState(false)
@@ -52,6 +51,7 @@ function BookMeeting(){
     const[h,seth]= useState(false);
     const[date,setdate]=useState("")
     const[sh,setlh]= useState([]);
+    const[z,setz]=useState(false);
     function getbooking(){
 
         axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/${ba_id}`).then(res => {
@@ -87,7 +87,7 @@ function BookMeeting(){
         setst_dt("")
         setet_dt("")
         setroom_id("")
-        setinvitee([])
+        setinvitee("")
         setg(false)
         setbooking(false)
         setbook(false)
@@ -130,7 +130,7 @@ function BookMeeting(){
                 "st_dt": st_dt,
                 "et_dt": et_dt,
                 "host_id": dat.p_id,
-                "invited_id": invitee,
+                "invited_id": invitee.split(","),
                 "room_id": room_id
             }
             if(New===""){
@@ -145,7 +145,7 @@ function BookMeeting(){
             if(et_dt===""){
                 data.et_dt =get.et_dt
             }
-            if (invitee===[]){
+            if (invitee===""){
                 data.invited_id = get.invited_id
             }
             axios.put("https://booking-system-pika.herokuapp.com/pika-booking/booking", data)
@@ -153,7 +153,7 @@ function BookMeeting(){
         }
     }
     function getfreeinviteetime(){
-        let data ={"invited_id":invitee, "date": date}
+        let data ={"invited_id":invitee.split(","), "date": date}
         axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/shared-time-users`,data).then(res=>{
             setlistfree(res.data)
             console.log(res.data)
@@ -214,7 +214,7 @@ function BookMeeting(){
         return false
     }
     function first() {
-        if(st_dt === "" || et_dt === "" || room_id === "" || invitee === []){
+        if(st_dt === "" || et_dt === "" || room_id === "" || invitee === ""){
             return false
         }
 
@@ -222,25 +222,33 @@ function BookMeeting(){
     }
     function check() {
 
-        if (ba_id===""||st_dt === "" || et_dt === "" || room_id === "" || invitee === []||!y){
+        if (ba_id === "" || st_dt === "" || et_dt === "" || room_id === "" || invitee === ""|| !y) {
             return false
-        }else {
+        } else {
             let e = localStorage.getItem("login-data");
-            let   dat = JSON.parse(e)
+            let dat = JSON.parse(e)
             console.log(invitee)
-            console.log(room_id)
-            axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', {
-                    "b_name":ba_id,"st_dt": st_dt, "et_dt": et_dt, "host_id": dat.p_id , "invited_id": parseInt(invitee), "room_id": room_id,
 
-                },
-                (error) => {
-                    console.log(error);
-                    setEdit("You can't make booking")
-                    console.log(Edit);
+                axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', {
+                    "b_name": ba_id,
+                    "st_dt": st_dt,
+                    "et_dt": et_dt,
+                    "host_id": dat.p_id,
+                    "invited_id": invitee.split(','),
+                    "room_id": room_id,
 
-                })
-            setg(true)
+                }).then((response) => {
+
+                    }, (error) => {
+                        console.log(error);
+                        setg(false)
+                        setz(true)
+                    }
+                );
+
+
             return true
+
         }
     }
     function first1() {
@@ -396,7 +404,7 @@ function BookMeeting(){
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => sety(false)}>No</Button>
-                <Button onClick={() => check()}>Yes</Button>
+                <Button onClick={() => check()? setg(true):setz(true)}>Yes</Button>
             </Modal.Actions>
         </Modal>
         <Modal
@@ -774,11 +782,18 @@ function BookMeeting(){
                    onOpen={() => setlh(true)}
             >
                 <Modal.Header> time slot</Modal.Header>
-                <Modal.Description>{sh.map(item =>{
-                    return(<header>{item.st_dt}-{item.et_dt}</header>)
+                <Modal.Description> {listfree.map(item =>{
+                    return(<p><header1>{item. free_start}-{item.free_end}</header1></p>)
                 })
                 } </Modal.Description>
                 <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
+            </Modal>
+            <Modal open ={z}
+                   onClose={() => setz(false)}
+                   onOpen={() => setz(true)}
+            >
+                <Modal.Header> There is a conflict in your booking, Please select another time or room.</Modal.Header>
+                <Button fluid onClick={()=>setz(false)}>Ok</Button>
             </Modal>
             <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
             <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
