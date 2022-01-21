@@ -783,7 +783,7 @@ function BookMeeting(){
             >
                 <Modal.Header> time slot</Modal.Header>
                 <Modal.Description> {listfree.map(item =>{
-                    return(<p><header1>{item. free_start}-{item.free_end}</header1></p>)
+                    return(<p><header1>{item.free_start}-{item.free_end}</header1></p>)
                 })
                 } </Modal.Description>
                 <Button fluid onClick={()=>returnallfalse()}>Ok</Button>

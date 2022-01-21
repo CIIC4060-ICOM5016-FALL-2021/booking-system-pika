@@ -26,7 +26,6 @@ function Schedule(){
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule/${dat.p_id}`
             ).then(res => {
                 let t = []
-                let i =0
                 console.log(res.data)
                 for  (let meet of res.data) {
 
@@ -41,8 +40,9 @@ function Schedule(){
                    }
 
                 const w = {title: tile, start:  new Date(st), end :  new Date(et), room: 4}
+
                 t.push(w)
-                    i=i+1
+
             }
                 setmeetings(t)
         })

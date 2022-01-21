@@ -198,12 +198,18 @@ function type1(parameter){
                 (response) => {
 
                     let unavailableTS = []
-                    const days = Object.keys(response.data)
-                    for(let day of days){
-                        let tempDate = day.split('-');
-                        const blockStart = response.data[day][0].st_dt;
-                        const startDate = new Date(tempDate[0], tempDate[1] - 1, tempDate[2], parseInt(blockStart[0]), parseInt(blockStart[1]), parseInt(blockStart[2]));
-                        unavailableTS.push(startDate)
+
+                    for(let day of response.data){
+                        const st =` ${day.st_dt}-0400 (Atlantic Standard Time)`
+                        const et = ` ${day.et_dt}-0400 (Atlantic Standard Time)`
+                        console.log(response.data)
+                        if (st=== ' undefined-0400 (Atlantic Standard Time)'){
+
+                        }else {
+                            const w = {start: st, end: et}
+                            console.log(w)
+                            unavailableTS.push(w)
+                        }
                     }
                     setUnavailableTimeSlots(unavailableTS);
                     // console.log(unavailableTimeSlots)
@@ -422,13 +428,14 @@ function type1(parameter){
                                 <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {
                                     if (e.target.value !== 0) {
                                         setToMarkAvailable(new Date(e.target.value));
+
                                         setInvalidTimeSlot(false);
 
                                     } else setInvalidTimeSlot(true)
                                 }}>
                                     <option key={0} value={"0"}>Select Time Slot</option>
                                     {Array.from(Array(unavailableTimeSlots.length)).map((_, i) => (
-                                        <option>{`${unavailableTimeSlots[i].toDateString()}, ${unavailableTimeSlots[i].toLocaleTimeString()}`}</option>
+                                        <option>{`${unavailableTimeSlots[i].start} - ${unavailableTimeSlots[i].end}`}</option>
                                     ))}
                                 </select>
                             }
