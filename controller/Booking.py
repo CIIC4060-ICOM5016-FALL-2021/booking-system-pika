@@ -99,6 +99,7 @@ class Booking(object):
                     method4 = BookingDAO()
                     method5 = AvailablePersonDAO()
                     print("Also working over here")
+                    print("invited datatype", invited_id)
                     if type(invited_id) == list:
                         b_id: list = []
                         for inv in invited_id:
