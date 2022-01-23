@@ -112,18 +112,22 @@ def get_available_rooms_at_timeframe():
 
 
 # Gets all unavailable rooms by the room id, not the ra_id
-@app.route('/pika-booking/rooms/unavailable/<int:room_id>', methods=['GET'])
-def handle_room_unavailable_getter_post(room_id):
+@app.route('/pika-booking/rooms/unavailable/<int:room_id>', methods=['GET', 'DELETE'])
+def handle_unavailable_room_by_room_id(room_id):
     if request.method == 'GET':
-        return AvailableRoom().get_unavailable_room_by_id(room_id)
+        return AvailableRoom().get_unavailable_room_by_room_id(room_id)
+    elif request.method == 'DELETE':
+        return AvailableRoom().delete_unavailable_room_by_room_id(room_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/rooms/unavailable/ra-id/<int:ra_id>', methods=['GET'])
-def handle_room_id_unavailable_getter_ra_id(ra_id):
+@app.route('/pika-booking/rooms/unavailable/ra-id/<int:ra_id>', methods=['GET', 'DELETE'])
+def handle_unavailable_room_by_ra_id(ra_id):
     if request.method == 'GET':
         return AvailableRoom().get_unavailable_by_ra_id(ra_id)
+    elif request.method == 'DELETE':
+        return AvailableRoom().delete_unavailable_room_by_ra_id(ra_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -133,7 +137,7 @@ def handle_get_room_all_day_schedule_getter_post():
     args = request.json
     if request.method == 'POST':
         if args:
-            return AvailableRoom().get_all_schedule(args)
+            return AvailableRoom().get_all_day_schedule(args)
         else:
             return jsonify("Args not found"), 405
     else:
@@ -404,6 +408,14 @@ def get_full_booking_by_b_id(b_id):
         return jsonify("Method Not Allowed"), 405
 
 
+@app.route('/pika-booking/booking/meet/host/<int:host_id>', methods=['GET'])
+def get_meeting_by_host_id(host_id):
+    if request.method == 'GET':
+        return Booking().get_meetings_by_host_id(host_id)
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
 @app.route('/pika-booking/booking/host/<int:host_id>', methods=['GET'])
 def get_bookings_by_host(host_id):
     if request.method == 'GET':
@@ -460,6 +472,7 @@ def handle_meeting():
         return Booking().get_all_meetings()
     else:
         return jsonify("Method Not Allowed"), 405
+
 
 @app.route('/pika-booking/bookings/shared-time-users', methods=['POST']) # json args: list -> invited_id (list of p_id) and date -> date (not timestamp)
 def get_free_time_for_meeting_users():

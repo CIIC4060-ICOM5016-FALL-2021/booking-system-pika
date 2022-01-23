@@ -315,7 +315,6 @@ class Booking(object):
 
         free_time = booking_dao.get_free_time_of_day(tuple(person_tupple),date)
         mega_map = []
-        print(free_time, "This is the free time")
         for b in free_time:
             mega_map.append({'free_start': str(b[0]), 'free_end': str(b[1]), 'delta_time': str(b[2])})
         print(mega_map)
@@ -338,3 +337,18 @@ class Booking(object):
             return jsonify(result), 200
         else:
             return jsonify("No Bookings Found"), 404
+
+    def get_meetings_by_host_id(self, host_id):
+        method = BookingDAO()
+        data = method.get_meetings_by_host(host_id)
+        if not data:
+            return jsonify("Not Found"), 404
+        result = []
+        for b_id, b_name, st_dt, et_dt in data:
+            result.append({
+                "b_id": b_id,
+                "b_name": b_name,
+                "st_dt": st_dt,
+                "et_dt": et_dt
+            })
+        return jsonify(result), 200
