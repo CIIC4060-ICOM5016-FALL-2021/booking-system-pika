@@ -35,7 +35,7 @@ function BookMeeting(){
     const [deleteunavailable,setdeleteupunavailable]= useState(false);
     const [userfree,setuserfree]= useState(false);
     const [listfree,setlistfree]=useState([]);
-    const[get,setget] = useState("");
+
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
     const[un,setun] =  useState("");
@@ -100,7 +100,7 @@ const [he,sethe]=useState([])
         setdeleteupunavailable(false)
         sett(false)
         setuserfree(false)
-        setget("")
+
         setnew("")
         setund(false)
         setdelebook(false)
@@ -111,21 +111,29 @@ const [he,sethe]=useState([])
         seth(false)
         setlh(false)
         setall([])
+        sethe([])
+    }
+    const handler= ()=>{
+    allbidofmeeting()
     }
     function allbidofmeeting(){
 
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/booking/meet/${ba_id}`).then(res=>{
-                console.log(res.data)
-                setall(res.data)
-                console.log(all)
-                sethe(res.data)
-                console.log(he)
+                let hello =[]
+                for(let m of res.data){
+                    console.log(m)
+                    hello.push(m)
+                }
+                console.log(hello)
+                setall(hello)
             })
-
+        console.log(all)
+        if(deletebooking===true&& all.length>=1){
+            deletebookingcheck()
+        }
     }
     function updatebookingcheck(){
 
-        allbidofmeeting()
         let e = localStorage.getItem("login-data");
         let   dat = JSON.parse(e)
         if (!sh){
@@ -190,16 +198,17 @@ const [he,sethe]=useState([])
         }
     }
     function deletebookingcheck(){
-        allbidofmeeting()
-        console.log(all)
-        if (all===[]){
+        console.log(all.length)
+        if (ba_id===""){
             return false
-        }else {
+        }else if (all.length>=1) {
+            console.log("ok")
             for (let m of all) {
                 console.log(m.b_id)
                 axios.delete(`https://booking-system-pika.herokuapp.com/pika-booking/booking/${m.b_id}`)
             }
         }
+setdelebook(true)
         return true
     }
     function deleteunavailablegcheck(){
@@ -675,7 +684,7 @@ const [he,sethe]=useState([])
 
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button content='Confirm' onClick={()=> deletebookingcheck()&&setdelebook(true)}/>
+                    <Button content='Confirm' onClick={()=> handler()}/>
                     <Button onClick={() => setdeletebooking(false)}>cancel</Button>
                 </Modal.Actions>>
 
@@ -796,7 +805,7 @@ const [he,sethe]=useState([])
                    onClose={() => setdelebook(false)}
                    onOpen={() => setdelebook(true)}
             >
-                <Modal.Header> You have deleted a unavailable time slot</Modal.Header>
+                <Modal.Header> You have deleted a booking time slot</Modal.Header>
                 <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
             </Modal>
             <Modal open = {userfree}
