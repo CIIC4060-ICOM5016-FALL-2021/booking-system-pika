@@ -105,7 +105,7 @@ class Room:
         result = method.delete_room(r_id)
         if result:
             method2 = AvailableRoomDAO()
-            method2.delete_unavailable_room(r_id)
+            method2.delete_all_unavailable_room_by_room_id(r_id)
             return jsonify("Room Deleted Successfully"), 200
         else:
             return jsonify("Room Not Found"), 404

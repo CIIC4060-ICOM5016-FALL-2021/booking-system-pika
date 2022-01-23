@@ -1,6 +1,5 @@
 from flask import jsonify
 
-from controller.AvailableRoom import schedule_stuff
 from controller.Person import Person
 from models.AvailablePerson import AvailablePersonDAO
 from models.Person import PersonDAO

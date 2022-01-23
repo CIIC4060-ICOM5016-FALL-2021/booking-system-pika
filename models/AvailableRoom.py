@@ -113,9 +113,17 @@ class AvailableRoomDAO:
             result.append(row)
         return result
 
-    def delete_unavailable_room(self, r_id):
+    def delete_all_unavailable_room_by_ra_id(self, ra_id):
         cursor = self.conn.cursor()
         query = 'delete from "availableroom" where ra_id = %s;'
+        cursor.execute(query, (ra_id,))
+        deleted_rows = cursor.rowcount
+        self.conn.commit()
+        return deleted_rows != 0
+
+    def delete_all_unavailable_room_by_room_id(self, r_id):
+        cursor = self.conn.cursor()
+        query = 'delete from "availableroom" where room_id = %s;'
         cursor.execute(query, (r_id,))
         deleted_rows = cursor.rowcount
         self.conn.commit()

@@ -112,18 +112,22 @@ def get_available_rooms_at_timeframe():
 
 
 # Gets all unavailable rooms by the room id, not the ra_id
-@app.route('/pika-booking/rooms/unavailable/<int:room_id>', methods=['GET'])
-def handle_room_unavailable_getter_post(room_id):
+@app.route('/pika-booking/rooms/unavailable/<int:room_id>', methods=['GET', 'DELETE'])
+def handle_unavailable_room_by_room_id(room_id):
     if request.method == 'GET':
-        return AvailableRoom().get_unavailable_room_by_id(room_id)
+        return AvailableRoom().get_unavailable_room_by_room_id(room_id)
+    elif request.method == 'DELETE':
+        return AvailableRoom().delete_unavailable_room_by_room_id(room_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
 
-@app.route('/pika-booking/rooms/unavailable/ra-id/<int:ra_id>', methods=['GET'])
-def handle_room_id_unavailable_getter_ra_id(ra_id):
+@app.route('/pika-booking/rooms/unavailable/ra-id/<int:ra_id>', methods=['GET', 'DELETE'])
+def handle_unavailable_room_by_ra_id(ra_id):
     if request.method == 'GET':
         return AvailableRoom().get_unavailable_by_ra_id(ra_id)
+    elif request.method == 'DELETE':
+        return AvailableRoom().delete_unavailable_room_by_ra_id(ra_id)
     else:
         return jsonify("Method Not Allowed"), 405
 
@@ -460,6 +464,16 @@ def handle_meeting():
         return Booking().get_all_meetings()
     else:
         return jsonify("Method Not Allowed"), 405
+
+
+# @app.route('/pika-booking/meetings/<string:meeting_name>', methods=['GET', 'DELETE'])
+# def handle_meeting_by_name(meeting_name):
+#     if request.method == 'GET':
+#         return Booking().get_meeting_by_name(meeting_name)
+#     elif request.method == 'DELETE':
+#         return Booking().delete_meeting_by_name(meeting_name)
+#     else:
+#         return jsonify("Method Not Allowed"), 405
 
 
 @app.route('/pika-booking/bookings/shared-time-users', methods=['POST']) # json args: list -> invited_id (list of p_id) and date -> date (not timestamp)

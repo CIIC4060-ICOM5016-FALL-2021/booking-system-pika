@@ -164,7 +164,7 @@ class AvailableRoom:
             result = schedule_stuff(res)
             return jsonify(result), 200
 
-    def get_unavailable_room_by_id(self, room_id):
+    def get_unavailable_room_by_room_id(self, room_id):
         dao = AvailableRoomDAO()
         room_dao = RoomDAO()
 
@@ -201,3 +201,19 @@ class AvailableRoom:
                 "et_dt": result_et_dt
             }
             return jsonify(result), 200
+
+    def delete_unavailable_room_by_room_id(self, room_id):
+        method = AvailableRoomDAO()
+        result = method.delete_all_unavailable_room_by_room_id(room_id)
+        if result:
+            return jsonify("DELETED"), 201
+        else:
+            return jsonify("NOT FOUND"), 404
+
+    def delete_unavailable_room_by_ra_id(self, ra_id):
+        method = AvailableRoomDAO()
+        result = method.delete_all_unavailable_room_by_ra_id(ra_id)
+        if result:
+            return jsonify("DELETED"), 201
+        else:
+            return jsonify("NOT FOUND"), 404
