@@ -16,7 +16,7 @@ function RoomManagement(){
 
     function getAuthentication() {
 
-        if (dat.p_role === 3) {
+        if (dat.p_role === 2) {
             setIsAuth(true);
         }
     }
@@ -83,8 +83,8 @@ function RoomManagement(){
         return (
             <>
 
-                <h3 style={{color: "red", display: 'flex', justifyContent: 'center', alignItems: 'center'}}>You are not
-                    allowed to manage rooms, please contact a Department Staff to make any changes</h3>
+                <h3 style={{color: "red", display: 'flex', justifyContent: 'center', alignItems: 'center'}}>You don't have the authority
+                     to manage rooms, please contact a Staff to make any changes</h3>
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <Link to={"/"}>
                         <Button content='Go to HomePage' icon='home' size='big' color="violet"/>

@@ -191,7 +191,7 @@ function type1(parameter){
     }
 
     function fetchUnavailableTimeSlots(){
-        const url = `https://booking-system-pika.herokuapp.com/pika-booking/rooms/available/schedule/${roomID}`;
+        const url = `https://booking-system-pika.herokuapp.com/pika-booking/rooms/available/all-schedule/${roomID}`;
         axios.get(url, {
             headers: {'Content-Type': 'application/json' }})
             .then(
@@ -201,7 +201,7 @@ function type1(parameter){
                     const days = Object.keys(response.data)
                     for(let day of days){
                         let tempDate = day.split('-');
-                        const blockStart = response.data[day][0].start.split(":");
+                        const blockStart = response.data[day][0].st_dt;
                         const startDate = new Date(tempDate[0], tempDate[1] - 1, tempDate[2], parseInt(blockStart[0]), parseInt(blockStart[1]), parseInt(blockStart[2]));
                         unavailableTS.push(startDate)
                     }
@@ -214,10 +214,9 @@ function type1(parameter){
     function fetchRoomSchedule(){
         const url = `https://booking-system-pika.herokuapp.com/pika-booking/rooms/available/all-day-schedule`;
         let day = `${roomSchedule.getFullYear()}-${roomSchedule.getMonth() + 1}-${roomSchedule.getDate()}`;
-        console.log(day)
-        const inject = {"room_id": roomID, "date": day};
-        console.log(inject)
-        axios.post(url, inject,
+        const data = {"room_id": roomID, "date": day};
+
+        axios.post(url, data,
             {headers: {'Content-Type': 'application/json'}}//text/plain //application/json
         ).then((response) => {
             console.log("Response", response.data);
