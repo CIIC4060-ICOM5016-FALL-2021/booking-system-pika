@@ -231,3 +231,13 @@ class BookingDAO:
             result.append(row)
         cursor.close()
         return result
+
+    def get_meetings_by_host(self, host_id):
+        cursor = self.conn.cursor()
+        query = 'select distinct on (b_name) b_id, b_name, st_dt, et_dt from booking where host_id = %s;'
+        cursor.execute(query, (host_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        cursor.close()
+        return result
