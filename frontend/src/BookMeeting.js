@@ -53,7 +53,7 @@ function BookMeeting(){
     const[sh,setlh]= useState(false);
     const[z,setz]=useState(false);
     const[all,setall]= useState([]);
-const [he,sethe]=useState([])
+const [he,sethe]=useState(false)
     function getRooms(){
         if (k===false) {
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/person/${dat.p_id}/role-access`).then((res) => {
@@ -111,10 +111,15 @@ const [he,sethe]=useState([])
         seth(false)
         setlh(false)
         setall([])
-        sethe([])
+        sethe(false)
     }
     const handler= ()=>{
     allbidofmeeting()
+
+    }
+    const handler1= ()=>{
+        allbidofmeeting()
+        setlh(true)
     }
     function allbidofmeeting(){
 
@@ -130,6 +135,9 @@ const [he,sethe]=useState([])
         console.log(all)
         if(deletebooking===true&& all.length>=1){
             deletebookingcheck()
+        }
+        if ( updatebooking=== true && all.length>=1){
+            updatebookingcheck()
         }
     }
     function updatebookingcheck(){
@@ -161,12 +169,14 @@ const [he,sethe]=useState([])
                 if (et_dt === "") {
                     data.et_dt = m.et_dt
                 }
+                if (invitee===""){
+                    data.invited_id= m.invited_id
+                }
                 console.log(data)
                 axios.put("https://booking-system-pika.herokuapp.com/pika-booking/booking", data)
-                return true
             }
         }
-        returnallfalse()
+        sethe(true)
     }
     function getfreeinviteetime(){
         let data ={"invited_id":invitee.split(","), "date": date}
@@ -654,7 +664,7 @@ setdelebook(true)
 
                                 />
                             </Form.Field>
-                           <Button onClick={()=> setlh(true)}>Enter </Button>
+                           <Button onClick={()=> handler1()}>Enter </Button>
                         </Form>
                     </Modal.Description>
                 </Modal.Content>
@@ -765,6 +775,14 @@ setdelebook(true)
                    onClose={() => setb(false)}
                    onOpen={() => setb(true)}>
                 <Modal.Header>You have updated your unavailable timeslot</Modal.Header>
+                <Modal.Actions>
+                    <Button onClick={() => returnallfalse()}>Ok</Button>
+                </Modal.Actions>
+            </Modal>
+            <Modal open={he}
+                   onClose={() => sethe(false)}
+                   onOpen={() => sethe(true)}>
+                <Modal.Header>You have updated your booking </Modal.Header>
                 <Modal.Actions>
                     <Button onClick={() => returnallfalse()}>Ok</Button>
                 </Modal.Actions>
