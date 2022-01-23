@@ -38,7 +38,6 @@ class AvailableRoomDAO:
         return result
 
     def get_all_schedule(self, r_id):
-
         cursor = self.conn.cursor()
         query = "select st_dt, et_dt from availableroom " \
                 "where (availableroom.room_id = %s) " \
@@ -53,7 +52,7 @@ class AvailableRoomDAO:
     # retrieves the unavailable room according to room id
     def get_unavailable_room_by_id(self, room_id):
         cursor = self.conn.cursor()
-        query = 'select st_dt, et_dt,ra_id ' \
+        query = 'select st_dt, et_dt, ra_id ' \
                 'from availableroom ' \
                 'where room_id = %s; '
         cursor.execute(query, (room_id,))

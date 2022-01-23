@@ -133,7 +133,7 @@ def handle_get_room_all_day_schedule_getter_post():
     args = request.json
     if request.method == 'POST':
         if args:
-            return AvailableRoom().get_all_schedule(args)
+            return AvailableRoom().get_all_day_schedule(args)
         else:
             return jsonify("Args not found"), 405
     else:
@@ -460,6 +460,7 @@ def handle_meeting():
         return Booking().get_all_meetings()
     else:
         return jsonify("Method Not Allowed"), 405
+
 
 @app.route('/pika-booking/bookings/shared-time-users', methods=['POST']) # json args: list -> invited_id (list of p_id) and date -> date (not timestamp)
 def get_free_time_for_meeting_users():

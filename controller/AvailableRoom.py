@@ -55,7 +55,7 @@ class AvailableRoom:
 
         if not validhost:
             return jsonify("I'm sorry, but this person does not exists in our database"), 200
-        elif not(validhost == person_dao.R_STAFF):
+        elif not (validhost == person_dao.R_STAFF):
             return jsonify("I'm sorry, but this person is not a staff! "
                            "Only staff members can modify the availability of rooms"), 200
         # add entry and return back
@@ -129,7 +129,7 @@ class AvailableRoom:
             return jsonify("NOT FOUND")
 
     # Returns the timeframe for a room (all day)
-    def get_all_schedule(self, json):
+    def get_all_day_schedule(self, json):
         room_id = json['room_id']
         date = json['date']
 
@@ -173,18 +173,13 @@ class AvailableRoom:
             return jsonify("Room Not Found"), 404
         else:
             res = dao.get_unavailable_room_by_id(room_id)
-            result_st_dt = []
-            result_et_dt = []
-            result_ra_id = []
-            for st_dt, et_dt,ra_id in res:
-                result_et_dt.append(et_dt)
-                result_st_dt.append(st_dt)
-                result_ra_id.append(ra_id)
-            result = {
-                "st_dt": result_st_dt,
-                "et_dt": result_et_dt,
-                "ra_id": result_ra_id
-            }
+            result: list = []
+            for st_dt, et_dt, ra_id in res:
+                result.append({
+                    "st_dt": st_dt,
+                    "et_dt": et_dt,
+                    "ra_id": ra_id
+                })
             return jsonify(result), 200
 
     def get_unavailable_by_ra_id(self, room_id):
