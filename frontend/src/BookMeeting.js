@@ -50,17 +50,10 @@ function BookMeeting(){
     const[s,setl]= useState([]);
     const[h,seth]= useState(false);
     const[date,setdate]=useState("")
-    const[sh,setlh]= useState([]);
+    const[sh,setlh]= useState(false);
     const[z,setz]=useState(false);
-    function getbooking(){
-
-        axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/${ba_id}`).then(res => {
-                setget(res.data)
-            }
-        )
-
-
-    }
+    const[all,setall]= useState([]);
+const [he,sethe]=useState([])
     function getRooms(){
         if (k===false) {
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/person/${dat.p_id}/role-access`).then((res) => {
@@ -76,7 +69,7 @@ function BookMeeting(){
     }
     function getallbookingsofuser(){
         if (k===false) {
-            axios.get(`https://booking-system-pika.herokuapp.com//pika-booking/booking/host/${dat.p_id}`).then((res => {
+            axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/booking/meet/host/${dat.p_id}`).then((res => {
                 setl(res.data)
             }))
         }
@@ -116,41 +109,56 @@ function BookMeeting(){
         sets([])
         setl([])
         seth(false)
-        setlh([])
+        setlh(false)
+        setall([])
+    }
+    function allbidofmeeting(){
+
+            axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/booking/meet/${ba_id}`).then(res=>{
+                console.log(res.data)
+                setall(res.data)
+                console.log(all)
+                sethe(res.data)
+                console.log(he)
+            })
+
     }
     function updatebookingcheck(){
+
+        allbidofmeeting()
         let e = localStorage.getItem("login-data");
         let   dat = JSON.parse(e)
-        if (!r){
+        if (!sh){
             return false
-        }else{
-            let data = {
-                "new_booking_name":New ,
-                "b_name": ba_id,
-                "st_dt": st_dt,
-                "et_dt": et_dt,
-                "host_id": dat.p_id,
-                "invited_id": invitee.split(","),
-                "room_id": room_id
+        }else {
+            for (let m of all) {
+                let data = {
+                    "b_name": New,
+                    "b_id": m.b_id,
+                    "st_dt": st_dt,
+                    "et_dt": et_dt,
+                    "host_id": dat.p_id,
+                    "invited_id": invitee.split(","),
+                    "room_id": room_id
+                }
+                if (New === "") {
+                    data.b_name = m.b_name
+                }
+                if (room_id === "") {
+                    data.room_id = m.room_id
+                }
+                if (st_dt === "") {
+                    data.st_dt = m.st_dt
+                }
+                if (et_dt === "") {
+                    data.et_dt = m.et_dt
+                }
+                console.log(data)
+                axios.put("https://booking-system-pika.herokuapp.com/pika-booking/booking", data)
+                return true
             }
-            if(New===""){
-                data.new_booking_name=get.b_name
-            }
-            if(room_id===""){
-                data.room_id =get.room_id
-            }
-            if(st_dt===""){
-                data.st_dt =get.st_dt
-            }
-            if(et_dt===""){
-                data.et_dt =get.et_dt
-            }
-            if (invitee===""){
-                data.invited_id = get.invited_id
-            }
-            axios.put("https://booking-system-pika.herokuapp.com/pika-booking/booking", data)
-            return true
         }
+        returnallfalse()
     }
     function getfreeinviteetime(){
         let data ={"invited_id":invitee.split(","), "date": date}
@@ -182,16 +190,19 @@ function BookMeeting(){
         }
     }
     function deletebookingcheck(){
-        if (ba_id===""||!r){
+        allbidofmeeting()
+        console.log(all)
+        if (all===[]){
             return false
-        }else{
-            axios.delete(" https://booking-system-pika.herokuapp.com/pika-booking/booking")
-            return true
+        }else {
+            for (let m of all) {
+                console.log(m.b_id)
+                axios.delete(`https://booking-system-pika.herokuapp.com/pika-booking/booking/${m.b_id}`)
+            }
         }
+        return true
     }
     function deleteunavailablegcheck(){
-        console.log(un)
-        console.log(ts)
         if (un===""){
             console.log('something')
             return false
@@ -393,6 +404,22 @@ function BookMeeting(){
         </Modal>
         <Modal
             centered={false}
+            open={sh}
+            onClose={() => setlh(false)}
+            onOpen={() => setlh(true)}
+        >
+            <Modal.Header>Are you sure?</Modal.Header>
+            <Modal.Content>
+                <Modal.Description>
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => setlh(false)}>No</Button>
+                <Button onClick={() => updatebookingcheck()}>Yes</Button>
+            </Modal.Actions>
+        </Modal>
+        <Modal
+            centered={false}
             open={y}
             onClose={() => sety(false)}
             onOpen={() => sety(true)}
@@ -561,7 +588,7 @@ function BookMeeting(){
                                     <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setba_id(e.target.value)}}>
                                         <option key={0} value={"0"}>Select Booking Name</option>
                                         {s.map(item => {
-                                            return (<option key={item.b_name} value={item.b_name}>{item.b_name},{item.st_dt}-{item.et_dt}</option>)
+                                            return (<option key={item.b_id} value={item.b_id}>{item.b_name},{item.st_dt}-{item.et_dt}</option>)
                                         })}
                                     </select>
 
@@ -618,7 +645,7 @@ function BookMeeting(){
 
                                 />
                             </Form.Field>
-                            <Button content='Enter' icon='signup' size='big'/>
+                           <Button onClick={()=> setlh(true)}>Enter </Button>
                         </Form>
                     </Modal.Description>
                 </Modal.Content>
@@ -637,7 +664,7 @@ function BookMeeting(){
                                 <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setba_id(e.target.value)}}>
                                     <option key={0} value={"0"}>Select Booking Name</option>
                                     {s.map(item => {
-                                        return (<option key={item.ba_id} value={item.ba_id}>{item.b_name},{item.st_dt}-{item.et_dt}</option>)
+                                        return (<option key={item.b_id} value={item.b_id}>{item.b_name},{item.st_dt}-{item.et_dt}</option>)
                                     })}
                                 </select>
 
@@ -778,8 +805,8 @@ function BookMeeting(){
                 <Button onClick={() => returnallfalse()}>ok</Button>
             </Modal>
             <Modal open ={h}
-                   onClose={() => setlh(false)}
-                   onOpen={() => setlh(true)}
+                   onClose={() => seth(false)}
+                   onOpen={() => seth(true)}
             >
                 <Modal.Header> time slot</Modal.Header>
                 <Modal.Description> {listfree.map(item =>{
