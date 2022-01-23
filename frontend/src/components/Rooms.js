@@ -24,7 +24,7 @@ function Rooms(props) {
     const [unavailableTimeSlot, setUnavailableTimeSlot] = useState(new Date());
     const [unavailableTimeSlots, setUnavailableTimeSlots] = useState([]);
     const[]= useState(false);
-    const [toMarkAvailable, setToMarkAvailable] = useState(new Date())
+    const [toMarkAvailable, setToMarkAvailable] = useState("")
     const [invalidTimeSlot, setInvalidTimeSlot] = useState(false)
     const [roomSchedule, setRoomSchedule] = useState(new Date());
     const [allDayRS, setallDayRS] = useState([]);
@@ -145,15 +145,25 @@ function type1(parameter){
         );
     }
 
-
+    function Time(year,month, date, hours, minutes){
+        if (minutes===0)
+            return `${year}-${month +1}-${date} ${hours}:00:00`;
+        else if (minutes< 10)
+            return `${year}-${month +1}-${date} ${hours}:0${minutes}:00`;
+        else
+            return `${year}-${month +1}-${date} ${hours}:${minutes}:00`;
+    }
     function markRoom(){
-
-        const json = {rid: roomID,  "st_dt": st,
-            "et_dt": et, person_id: JSON.parse(localStorage.getItem('login-data')).p_id};
-
+        console.log(st.getMonth())
+        console.log(st.getDate())
+        let s =Time(st.getFullYear(),st.getMonth(),st.getDate(),st.getHours(),st.getMinutes())
+        console.log(s)
+       let e = Time(et.getFullYear(),et.getMonth(),et.getDate(),et.getHours(),et.getMinutes())
+        const json = {"room_id": roomID,  "st_dt": s,
+            "et_dt": e, person_id: JSON.parse(localStorage.getItem('login-data')).p_id};
+console.log(json)
         axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/rooms/available`,
-            json,
-            {headers: {'Content-Type': 'application/json'}}
+            json
         ).then((response) => {
             console.log(response);
             window.location.reload(false);
@@ -164,13 +174,9 @@ function type1(parameter){
 
     function markRoomAvailable(){
         console.log(toMarkAvailable)
-        const json = { "r_id": roomID,
-            "st_dt": st,
-            "et_dt": et}
 
-        axios.delete('https://booking-system-pika.herokuapp.com/pika-booking/rooms/available', {
-            data: json,
-            headers: {'Content-Type': 'application/json'}}//text/plain //application/json
+
+        axios.delete(`https://booking-system-pika.herokuapp.com//pika-booking/rooms/unavailable/ra-id/${toMarkAvailable}`
         ).then((response) => {
             console.log(response);
             window.location.reload(false);
@@ -181,35 +187,36 @@ function type1(parameter){
     }
 
     function handleChange(date){
-        setUnavailableTimeSlot(date)
+        setst_dt(date)
         // console.log(unavailableTimeSlot)
     }
-
+    function handleChange1(date){
+        setet_dt(date)
+        // console.log(unavailableTimeSlot)
+    }
     function handleScheduleChange(date){
         setRoomSchedule(date)
         setallDayRS([]);
     }
 
     function fetchUnavailableTimeSlots(){
-        const url = `https://booking-system-pika.herokuapp.com/pika-booking/rooms/available/all-schedule/${roomID}`;
+        const url = `https://booking-system-pika.herokuapp.com/pika-booking/rooms/unavailable/${roomID}`;
         axios.get(url, {
             headers: {'Content-Type': 'application/json' }})
             .then(
                 (response) => {
 
                     let unavailableTS = []
-
+console.log(response.data)
                     for(let day of response.data){
-                        const st =` ${day.st_dt}-0400 (Atlantic Standard Time)`
-                        const et = ` ${day.et_dt}-0400 (Atlantic Standard Time)`
+                        const st = day.st_dt
+                        const et =  day.et_dt
                         console.log(response.data)
-                        if (st=== ' undefined-0400 (Atlantic Standard Time)'){
 
-                        }else {
-                            const w = {start: st, end: et}
+                            const w = {start: st, end: et, ra_id: day.ra_id}
                             console.log(w)
                             unavailableTS.push(w)
-                        }
+
                     }
                     setUnavailableTimeSlots(unavailableTS);
                     // console.log(unavailableTimeSlots)
@@ -414,10 +421,15 @@ function type1(parameter){
                     {
                         props.type === "edit" && unavailabilityModalOpen && !scheduleModalOpen &&
                         <Modal.Description>
-                            Select Time Slot to mark unavailable: &nbsp;
+                            Select Time Slot to mark unavailable: Start: &nbsp;
                             <DateTimePicker
                                 onChange={(e) => handleChange(e)}
-                                value={unavailableTimeSlot}
+                                value={st}
+                            />
+                            End time:  &nbsp;
+                            <DateTimePicker
+                                onChange={(e) => handleChange1(e)}
+                                value={et}
                             />
                             <br/>
                             Are you sure you want to mark this room as unavailable in the chosen time slot? You will not be able to book any meetings with this room at this time if marked
@@ -427,7 +439,7 @@ function type1(parameter){
                             {unavailableTimeSlots.length > 0 &&
                                 <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {
                                     if (e.target.value !== 0) {
-                                        setToMarkAvailable(new Date(e.target.value));
+                                        setToMarkAvailable(e.target.value);
 
                                         setInvalidTimeSlot(false);
 
@@ -435,7 +447,7 @@ function type1(parameter){
                                 }}>
                                     <option key={0} value={"0"}>Select Time Slot</option>
                                     {Array.from(Array(unavailableTimeSlots.length)).map((_, i) => (
-                                        <option>{`${unavailableTimeSlots[i].start} - ${unavailableTimeSlots[i].end}`}</option>
+                                        <option key={unavailableTimeSlots[i].ra_id} value={unavailableTimeSlots[i].ra_id}>{`${unavailableTimeSlots[i].start} - ${unavailableTimeSlots[i].end}`}</option>
                                     ))}
                                 </select>
                             }
