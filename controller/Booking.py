@@ -45,6 +45,8 @@ class Booking(object):
     """
 
     def create_new_booking(self, json: dict):
+        print(json)
+
         b_name = json['b_name']
         st_dt = json['st_dt']
         et_dt = json['et_dt']

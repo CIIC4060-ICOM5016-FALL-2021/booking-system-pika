@@ -170,7 +170,7 @@ class AvailablePerson:
             result = []
             # t_dt, et_dt, b_id, b_name
             for row in res:
-                if type(row[2]) >=0:
+                if row[2] >=0:
                     roomname = room_dao.get_name_by_room_id(row[2])[0]
                 else:
                     roomname = "Unavailable"
