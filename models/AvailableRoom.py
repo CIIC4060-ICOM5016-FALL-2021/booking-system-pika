@@ -25,7 +25,7 @@ class AvailableRoomDAO:
     def get_all_day_schedule(self, r_id, date):
         
         cursor = self.conn.cursor()
-        query = "select st_dt, et_dt, \'unavailable\'  " \
+        query = "select st_dt, et_dt, -1  " \
                 "from availableroom " \
                 "where (availableroom.room_id = %s) " \
                 "and (availableroom.st_dt::date <= date %s AND availableroom.et_dt::date >= date %s) " \

@@ -3,6 +3,7 @@ from flask import jsonify
 from controller.Person import Person
 from models.AvailablePerson import AvailablePersonDAO
 from models.Person import PersonDAO
+from models.Room import RoomDAO
 
 
 class AvailablePerson:
@@ -160,6 +161,7 @@ class AvailablePerson:
     def get_schedule(self, p_id: int):
         dao = AvailablePersonDAO()
         person_dao = PersonDAO()
+        room_dao = RoomDAO()
         existing_room = person_dao.get_person_by_id(p_id)
         if not existing_room:
             return jsonify("Person Not Found"), 404
@@ -172,7 +174,8 @@ class AvailablePerson:
                     "name": row[3],
                     "st_dt": row[0],
                     "et_dt": row[1],
-                    "room_id": row[2]
+                    "room_id": row[2],
+                    "room_name": room_dao.get_name_by_room_id(row[2])[0]
                 })
             return jsonify(result), 200
 
