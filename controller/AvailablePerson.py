@@ -169,9 +169,10 @@ class AvailablePerson:
             # t_dt, et_dt, b_id, b_name
             for row in res:
                 result.append({
-                    "name": row[2],
+                    "name": row[3],
                     "st_dt": row[0],
-                    "et_dt": row[1]
+                    "et_dt": row[1],
+                    "room_id": row[2]
                 })
             return jsonify(result), 200
 
