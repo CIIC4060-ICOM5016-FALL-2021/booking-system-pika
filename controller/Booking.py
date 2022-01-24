@@ -125,7 +125,7 @@ class Booking(object):
                         print("No explosions on the checks (int)")
                         b_id = method4.create_new_booking(b_name, st_dt, et_dt, invited_id, host_id, room_id)
                         return jsonify({
-                            'booking_name': b_name,
+                            'b_name': b_name,
                             'b_id': b_id,
                             'st_dt': st_dt,
                             'et_dt': et_dt,
@@ -235,7 +235,7 @@ class Booking(object):
     # updates a booking entry
     def update_booking(self, json):
         b_id = json['b_id']
-        b_name = json['booking_name']
+        b_name = json['b_name']
         st_dt = json['start_time']
         et_dt = json['end_time']
         invited_id = json['invited_id']
