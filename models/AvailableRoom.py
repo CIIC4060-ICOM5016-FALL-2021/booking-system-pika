@@ -25,10 +25,11 @@ class AvailableRoomDAO:
     def get_all_day_schedule(self, r_id, date):
         
         cursor = self.conn.cursor()
-        query = "select st_dt, et_dt from availableroom " \
+        query = "select st_dt, et_dt, -1  " \
+                "from availableroom " \
                 "where (availableroom.room_id = %s) " \
                 "and (availableroom.st_dt::date <= date %s AND availableroom.et_dt::date >= date %s) " \
-                "UNION select st_dt, et_dt " \
+                "UNION select st_dt, et_dt,booking.host_id " \
                 "from booking where (booking.room_id = %s) " \
                 "and (booking.st_dt::date <= date %s AND booking.et_dt::date >= date %s) ;"
         cursor.execute(query, (r_id, date, date, r_id, date, date,))

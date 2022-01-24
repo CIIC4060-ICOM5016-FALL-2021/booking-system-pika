@@ -130,9 +130,9 @@ class AvailablePersonDAO:
 
     def get_all_schedule(self, p_id):
         cursor = self.conn.cursor()
-        query = 'select st_dt, et_dt, \'unavailable\' ' \
+        query = 'select st_dt, et_dt,-1, \'unavailable\' ' \
                 'from availableperson where (availableperson.person_id = %s) ' \
-                'UNION select st_dt, et_dt,  b_name from booking ' \
+                'UNION select st_dt, et_dt,room_id,  b_name from booking ' \
                 'where (booking.invited_id = %s ' \
                 'or booking.host_id = %s);'
         cursor.execute(query, (p_id, p_id, p_id,))

@@ -71,6 +71,13 @@ class RoomDAO:
         result = cursor.fetchone()
         cursor.close()
         return result
+    def get_name_by_room_id(self, r_id: int):
+        cursor = self.conn.cursor()
+        query = 'select r_name from room where r_id = %s'
+        cursor.execute(query, (r_id,))
+        result = cursor.fetchone()
+        cursor.close()
+        return result
 
     # Returns a query of all available rooms
     def find_available_rooms(self, st_dt, et_dt):

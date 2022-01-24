@@ -143,12 +143,15 @@ class AvailableRoom:
             res = dao.get_all_day_schedule(room_id, date)
             result_st_dt = []
             result_et_dt = []
-            for st_dt, et_dt in res:
+            result_host_id = []
+            for st_dt, et_dt,host_id in res:
                 result_et_dt.append(et_dt)
                 result_st_dt.append(st_dt)
+                result_host_id.append(host_id)
             result = {
                 "st_dt": result_st_dt,
-                "et_dt": result_et_dt
+                "et_dt": result_et_dt,
+                "host_id": result_host_id
             }
             return jsonify(result), 200
 
