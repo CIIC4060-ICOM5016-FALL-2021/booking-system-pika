@@ -170,12 +170,17 @@ class AvailablePerson:
             result = []
             # t_dt, et_dt, b_id, b_name
             for row in res:
+                if type(row[2]) >=0:
+                    roomname = room_dao.get_name_by_room_id(row[2])[0]
+                else:
+                    roomname = "Unavailable"
+
                 result.append({
                     "name": row[3],
                     "st_dt": row[0],
                     "et_dt": row[1],
                     "room_id": row[2],
-                    "room_name": room_dao.get_name_by_room_id(row[2])[0]
+                    "room_name": roomname
                 })
             return jsonify(result), 200
 
