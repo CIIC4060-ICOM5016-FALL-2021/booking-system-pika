@@ -236,8 +236,8 @@ class Booking(object):
     def update_booking(self, json):
         b_id = json['b_id']
         b_name = json['b_name']
-        st_dt = json['start_time']
-        et_dt = json['end_time']
+        st_dt = json['st_dt']
+        et_dt = json['et_dt']
         invited_id = json['invited_id']
         host_id = json['host_id']
         room_id = json['room_id']
