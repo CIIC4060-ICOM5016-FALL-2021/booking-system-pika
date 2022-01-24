@@ -9,6 +9,7 @@ import UserStatistics from "./UserStatistics";
 import Settings from "./Settings";
 import RoomManagement from "./RoomManagement";
 import Navbar from "./components/Navbar/Navbar";
+import Person from "./components/Person";
 function UserView(){
     const [isAuth, setIsAuth] = useState(false)
     const panes = [
@@ -27,6 +28,9 @@ function UserView(){
         },
         {
             menuItem: 'Account', render: () => <Settings/>
+        },
+        {
+            menuItem: 'List of Users', render: () => <Person/>
         }
     ]
 

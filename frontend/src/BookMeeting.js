@@ -53,6 +53,7 @@ function BookMeeting(){
     const[sh,setlh]= useState(false);
     const[z,setz]=useState(false);
     const[all,setall]= useState([]);
+    const[ty,setty]= useState([]);
 const [he,sethe]=useState(false)
     function getRooms(){
         if (k===false) {
@@ -121,6 +122,7 @@ const [he,sethe]=useState(false)
         allbidofmeeting()
         setlh(true)
     }
+
     function allbidofmeeting(){
 
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/booking/meet/${ba_id}`).then(res=>{
@@ -140,6 +142,16 @@ const [he,sethe]=useState(false)
             updatebookingcheck()
         }
     }
+    function emailtoid(){
+    let t =[]
+for (let m of invitee.split(",")) {
+    console.log(m)
+    axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/email', {"p_email": m}).then(res => {
+        t.push(res.data)
+    })
+}
+    setty(t)
+    }
     function updatebookingcheck(){
 
         let e = localStorage.getItem("login-data");
@@ -154,14 +166,14 @@ const [he,sethe]=useState(false)
                     "st_dt": st_dt,
                     "et_dt": et_dt,
                     "host_id": dat.p_id,
-                    "invited_id": invitee.split(","),
-                    "room_id": room_id
+                    "invited_id": invitee,
+                    "room_id": parseInt(room_id)
                 }
                 if (New === "") {
                     data.b_name = m.b_name
                 }
                 if (room_id === "") {
-                    data.room_id = m.room_id
+                    data.room_id = parseInt(m.room_id)
                 }
                 if (st_dt === "") {
                     data.st_dt = m.st_dt
@@ -170,7 +182,7 @@ const [he,sethe]=useState(false)
                     data.et_dt = m.et_dt
                 }
                 if (invitee===""){
-                    data.invited_id= m.invited_id
+                    data.invited_id= parseInt(m.invited_id)
                 }
                 console.log(data)
                 axios.put("https://booking-system-pika.herokuapp.com/pika-booking/booking", data)
@@ -244,10 +256,10 @@ setdelebook(true)
         return false
     }
     function first() {
-        if(st_dt === "" || et_dt === "" || room_id === "" || invitee === ""){
+        if(ba_id===""||st_dt === "" || et_dt === "" || room_id === "" || invitee === ""){
             return false
         }
-
+        emailtoid()
         return true
     }
     function check() {
@@ -257,26 +269,28 @@ setdelebook(true)
         } else {
             let e = localStorage.getItem("login-data");
             let dat = JSON.parse(e)
-            console.log(invitee)
+            console.log(ty)
+            let i=0;
+for (let m of ty) {
+    console.log(ty[i]['person_id'])
+    axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', {
+        "b_name": ba_id,
+        "st_dt": st_dt,
+        "et_dt": et_dt,
+        "host_id": dat.p_id,
+        "invited_id": ty[i]['person_id'],
+        "room_id": room_id,
 
-                axios.post('https://booking-system-pika.herokuapp.com/pika-booking/booking', {
-                    "b_name": ba_id,
-                    "st_dt": st_dt,
-                    "et_dt": et_dt,
-                    "host_id": dat.p_id,
-                    "invited_id": invitee.split(','),
-                    "room_id": room_id,
+    }).then((response) => {
 
-                }).then((response) => {
-
-                    }, (error) => {
-                        console.log(error);
-                        setg(false)
-                        setz(true)
-                    }
-                );
-
-
+        }, (error) => {
+            console.log(error);
+            setg(false)
+            setz(true)
+        }
+    );
+i++
+}
             return true
 
         }
@@ -335,7 +349,7 @@ setdelebook(true)
             'startTimeDisplay': Time(selected.start.getFullYear(), selected.start.getMonth(),selected.start.getDate(), selected.start.getHours(),selected.start.getMinutes()),
             'endTimeDisplay': Time(selected.start.getFullYear(), selected.start.getMonth(),selected.start.getDate(),selected.end.getHours(),selected.end.getMinutes())
         }])
-            { console.log(selected.end)}SetSelect(true)} }
+            {console.log(selected.end)}SetSelect(true)} }
 
     >
     </Calendar>
@@ -406,9 +420,11 @@ setdelebook(true)
                         <Form.Field>
                             <Form.Input
                                 fluid
-                                name="Invitee_id"
-                                placeholder=" Insert Invitee_id"
-                                label="Invitee_id"
+                                name="List of Emails
+                                ( seperated by comma no spaces)"
+                                placeholder=" Insert emails"
+                                label="List of Emails
+                                ( seperated by comma no spaces)"
                                 value={invitee}
                                 onChange={e => setinvitee(e.target.value)}
 
@@ -652,17 +668,6 @@ setdelebook(true)
                                         })}
                                     </select>
                                 </Form.Input>
-                            </Form.Field>
-                            <Form.Field>
-                                <Form.Input
-                                    fluid
-                                    name="Invitee_id"
-                                    placeholder=" Insert Invitee_id"
-                                    label="Invitee_id"
-                                    value={invitee}
-                                    onChange={e => setinvitee(e.target.value)}
-
-                                />
                             </Form.Field>
                            <Button onClick={()=> handler1()}>Enter </Button>
                         </Form>

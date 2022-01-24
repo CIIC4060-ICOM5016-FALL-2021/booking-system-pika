@@ -228,7 +228,7 @@ console.log(response.data)
         const url = `https://booking-system-pika.herokuapp.com/pika-booking/rooms/available/all-day-schedule`;
         let day = `${roomSchedule.getFullYear()}-${roomSchedule.getMonth() + 1}-${roomSchedule.getDate()}`;
         const data = {"room_id": roomID, "date": day};
-
+console.log(data)
         axios.post(url, data,
             {headers: {'Content-Type': 'application/json'}}//text/plain //application/json
         ).then((response) => {
@@ -242,7 +242,7 @@ console.log(response.data)
                 console.log(startDate);
                 const endDate = new Date(blockEnd);
                 console.log(endDate);
-                result.push({start: startDate, end: endDate})
+                result.push({start: startDate, end: endDate, p_id: response.data.host_id[i]})
                 i++
             }
        console.log(result)
@@ -490,7 +490,7 @@ console.log(response.data)
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.start.getHours(), item.start.getMinutes())}</td>
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.end.getHours(), item.end.getMinutes())}</td>
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{"No"}</td>
-                                                        <td style={{padding:"5px", border: "1px solid black"}}>{item.user}</td>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{item.p_id===-1?'No host':item.p_id}</td>
                                                     </tr>
                                                 )
                                             }

@@ -26,25 +26,28 @@ function Schedule(){
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/person/all-schedule/${dat.p_id}`
             ).then(res => {
                 let t = []
-                console.log(res.data)
+
                 for  (let meet of res.data) {
 
                     const st =` ${meet.st_dt}-0400 (Atlantic Standard Time)`
                     const et = ` ${meet.et_dt}-0400 (Atlantic Standard Time)`
                     let tile =""
-                   if ( meet.name===null){
+                   if ( meet.name===null||meet.name==='unavailable'){
                        tile = "Unavailable"
+                       const w = {title: `${tile}`, start: new Date(st), end: new Date(et)}
+                       t.push(w)
                    }else{
                        tile = ` ${meet.name}`
-                       console.log(tile)
-                   }
+                       const w = {title: `${tile}___________room: ${meet.room_name}`, start: new Date(st), end: new Date(et)}
+                       t.push(w)
+                                        }
 
-                const w = {title: tile, start:  new Date(st), end :  new Date(et), room: 4}
 
-                t.push(w)
+
 
             }
                 setmeetings(t)
+                console.log(meetings)
         })
 
 
