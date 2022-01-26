@@ -35,7 +35,7 @@ function BookMeeting(){
     const [deleteunavailable,setdeleteupunavailable]= useState(false);
     const [userfree,setuserfree]= useState(false);
     const [listfree,setlistfree]=useState([]);
-
+ const [a,seta] =useState(false)
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
     const[un,setun] =  useState("");
@@ -55,6 +55,7 @@ function BookMeeting(){
     const[all,setall]= useState([]);
     const[ty,setty]= useState([]);
 const [he,sethe]=useState(false)
+    const [pe,setpe] =useState("")
     function getRooms(){
         if (k===false) {
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/person/${dat.p_id}/role-access`).then((res) => {
@@ -101,7 +102,7 @@ const [he,sethe]=useState(false)
         setdeleteupunavailable(false)
         sett(false)
         setuserfree(false)
-
+seta(false)
         setnew("")
         setund(false)
         setdelebook(false)
@@ -122,7 +123,13 @@ const [he,sethe]=useState(false)
         allbidofmeeting()
         setlh(true)
     }
-
+function handler2 (){
+    if(date===""|| invitee===""){
+        return false
+    }
+  emailtoid()
+    return true
+}
     function allbidofmeeting(){
 
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/booking/meet/${ba_id}`).then(res=>{
@@ -191,7 +198,17 @@ for (let m of invitee.split(",")) {
         sethe(true)
     }
     function getfreeinviteetime(){
-        let data ={"invited_id":invitee.split(","), "date": date}
+    console.log(ty)
+        let i =0;
+    let t =[]
+        for (let m of ty){
+           t.push( ty[i]['person_id'][0])
+            i++;
+        }
+        console.log(t)
+      setpe(t)
+console.log(pe)
+        let data ={"invited_id":pe, "date": date}
         axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/shared-time-users`,data).then(res=>{
             setlistfree(res.data)
             console.log(res.data)
@@ -505,9 +522,9 @@ i++
                     <Form.Field>
                         <Form.Input
                             fluid
-                            name="Start time"
-                            placeholder="Insert invitee"
-                            label="invitee"
+                            name="emails"
+                            placeholder="Insert Emails"
+                            label="List of Email  ( seperated by comma no spaces)"
                             value={invitee}
                             onChange={e => setinvitee(e.target.value)}
                         />
@@ -525,7 +542,23 @@ i++
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => getfreeinviteetime()}>OK</Button>
+                <Button onClick={() => (handler2()?seta(true): sett(true))}>OK</Button>
+            </Modal.Actions>
+        </Modal>
+        <Modal
+            centered={false}
+            open={a}
+            onClose={() => seta(false)}
+            onOpen={() => seta(true)}
+        >
+            <Modal.Header>Are you sure?</Modal.Header>
+            <Modal.Content>
+                <Modal.Description>
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => seta(false)}>No</Button>
+                <Button onClick={() => getfreeinviteetime()}>Yes</Button>
             </Modal.Actions>
         </Modal>
         <Modal
@@ -841,7 +874,9 @@ i++
                    onOpen={() => seth(true)}
             >
                 <Modal.Header> time slot</Modal.Header>
-                <Modal.Description> {listfree.map(item =>{
+                <Modal.Description> {
+
+                    listfree.map(item =>{
                     return(<p><header1>{item.free_start}-{item.free_end}</header1></p>)
                 })
                 } </Modal.Description>
