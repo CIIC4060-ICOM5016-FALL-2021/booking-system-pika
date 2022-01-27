@@ -129,6 +129,7 @@ seta(false)
         setost(false)
         seted(false)
         sethstd(false)
+        setpe("")
     }
     const handler= ()=>{
     allbidofmeeting()
@@ -193,8 +194,10 @@ function getusername(){
 for (let m of invitee.split(",")) {
     console.log(m)
     axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/email', {"p_email": m}).then(res => {
+        console.log(res.data)
         t.push(res.data)
     })
+    console.log(t)
 }
     setty(t)
     }
@@ -247,13 +250,15 @@ for (let m of invitee.split(",")) {
         console.log(t)
       setpe(t)
 console.log(pe)
-        let data ={"invited_id":pe, "date": date}
-        axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/shared-time-users`,data).then(res=>{
-            setlistfree(res.data)
-            console.log(res.data)
+        if (pe!="") {
+            let data = {"invited_id": pe, "date": date}
+            axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/shared-time-users`, data).then(res => {
+                setlistfree(res.data)
+                console.log(res.data)
 
-        })
-        handlerfix()
+            })
+            handlerfix()
+        }
     }
     function unavailableofperson(){ if (k===false) {
         axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/person/unavailable/person_id/${dat.p_id}`).then(res => {
