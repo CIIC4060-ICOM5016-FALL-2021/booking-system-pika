@@ -4,9 +4,14 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import {Button, Container, Form, Modal, ModalDescription} from "semantic-ui-react";
 import axios from "axios";
+import * as PropTypes from "prop-types";
+import DatePicker from 'react-date-picker';
 
 
-
+DatePicker.propTypes = {
+    onChange: PropTypes.func,
+    value: PropTypes.string
+};
 
 function BookMeeting(){
     const [r, setr] = useState(false);
@@ -33,7 +38,6 @@ function BookMeeting(){
     const[deletebooking,setdeletebooking] =useState(false)
     const [updateunavailable,setupunavailable]= useState(false);
     const [deleteunavailable,setdeleteupunavailable]= useState(false);
-    const [userfree,setuserfree]= useState(false);
     const [listfree,setlistfree]=useState([]);
  const [a,seta] =useState(false)
     let e = localStorage.getItem("login-data");
@@ -110,7 +114,7 @@ const [he,sethe]=useState(false)
         setdeletebooking(false)
         setdeleteupunavailable(false)
         sett(false)
-        setuserfree(false)
+
 seta(false)
         setnew("")
         setund(false)
@@ -160,6 +164,9 @@ function handlerfix(){
     }else {
       seth(true)
     }
+}
+function handlerdate(j){
+        setdate(j)
 }
 function gettherooms(){
         if (st_dt===""|| et_dt===""){
@@ -580,15 +587,16 @@ i++
                             onChange={e => setinvitee(e.target.value)}
                         />
                     </Form.Field>
+                    <p></p>
                     <Form.Field>
-                        <Form.Input
-                            fluid
-                            name="End time"
-                            placeholder="Insert date"
-                            label="yyyy-mm-dd"
+
+
+                          Insert date:&nbsp;
+                        <DatePicker
+                            onChange={(e) =>handlerdate(e)}
                             value={date}
-                            onChange={e => setdate(e.target.value)}
                         />
+
                     </Form.Field>
                 </Modal.Description>
             </Modal.Content>
@@ -614,16 +622,17 @@ i++
                             value={invitee}
                             onChange={e => setinvitee(e.target.value)}
                         />
+
                     </Form.Field>
+                    <p></p>
                     <Form.Field>
-                        <Form.Input
-                            fluid
-                            name="End time"
-                            placeholder="Insert date"
-                            label="yyyy-mm-dd"
+
+                        Insert date:&nbsp;
+                        <DatePicker
+                            onChange={(e) =>handlerdate(e)}
                             value={date}
-                            onChange={e => setdate(e.target.value)}
                         />
+                        <br/><br/>
                     </Form.Field>
                 </Modal.Description>
             </Modal.Content>
@@ -652,13 +661,42 @@ i++
                onOpen={() => sethstd(true)}
         >
             <Modal.Header> The schedule  </Modal.Header>
-            <Modal.Description> {
 
-                listfree.map(item =>{
-                    return(<p><header1>{item.r_name}</header1></p>)
-                })
-            } </Modal.Description>
+                <Modal.Description>
+                    {
+                        listfree.length > 0 &&
+                        <table style={{marginLeft: "auto", marginRight: "auto"}}>
+                            <thead>
+                            <tr>
+                                <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Start Time</th>
+                                <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>End Time</th>
+                                <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Available?</th>
+                                <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Who Booked?</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {
+                                listfree.map(item => {
+                                        return (
+                                            <tr>
+                                                <td style={{padding:"5px", border: "1px solid black"}}>{`${item.start.getHours()}:${item.start.getMinutes()}`}</td>
+                                                <td style={{padding:"5px", border: "1px solid black"}}>{`${item.end.getHours()}:${item.end.getMinutes()}`}</td>
+                                                <td style={{padding:"5px", border: "1px solid black"}}>{"No"}</td>
+                                                <td style={{padding:"5px", border: "1px solid black"}}>{item.p_id===-1?'No host':item.p_id}</td>
+                                            </tr>
+                                        )
+                                    }
+                                )
+                            }
+                            </tbody>
+                        </table>
+                    }
+
+                </Modal.Description>
+        <Modal.Actions>
             <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
+        </Modal.Actions>
         </Modal>
         <Modal
             centered={false}
@@ -1027,11 +1065,6 @@ i++
             >
                 <Modal.Header> You have deleted a booking time slot</Modal.Header>
                 <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
-            </Modal>
-            <Modal open = {userfree}
-                   onClose={() => setuserfree(false)}
-                   onOpen={() => setuserfree(true)}>
-                <Button onClick={() => returnallfalse()}>ok</Button>
             </Modal>
             <Modal open ={h}
                    onClose={() => seth(false)}
