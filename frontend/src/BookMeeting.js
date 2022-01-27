@@ -56,6 +56,7 @@ function BookMeeting(){
     const[ty,setty]= useState([]);
 const [he,sethe]=useState(false)
     const [pe,setpe] =useState("")
+    const [je,setje]=useState(false)
     function getRooms(){
         if (k===false) {
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/person/${dat.p_id}/role-access`).then((res) => {
@@ -114,6 +115,7 @@ seta(false)
         setlh(false)
         setall([])
         sethe(false)
+        setje(false)
     }
     const handler= ()=>{
     allbidofmeeting()
@@ -129,6 +131,13 @@ function handler2 (){
     }
   emailtoid()
     return true
+}
+function handlerfix(){
+    if (listfree.length===0){
+        setje(true)
+    }else {
+      seth(true)
+    }
 }
     function allbidofmeeting(){
 
@@ -212,8 +221,9 @@ console.log(pe)
         axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/shared-time-users`,data).then(res=>{
             setlistfree(res.data)
             console.log(res.data)
-            seth(true)
+
         })
+        handlerfix()
     }
     function unavailableofperson(){ if (k===false) {
         axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/person/unavailable/person_id/${dat.p_id}`).then(res => {
@@ -880,6 +890,13 @@ i++
                     return(<p><header1>{item.free_start}-{item.free_end}</header1></p>)
                 })
                 } </Modal.Description>
+                <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
+            </Modal>
+            <Modal open ={je}
+                   onClose={() => setje(false)}
+                   onOpen={() => setje(true)}
+            >
+                <Modal.Header> Everyone is free on that day at anytime</Modal.Header>
                 <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
             </Modal>
             <Modal open ={z}
