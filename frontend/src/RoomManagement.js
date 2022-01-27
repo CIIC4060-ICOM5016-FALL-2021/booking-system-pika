@@ -65,7 +65,7 @@ function RoomManagement(){
                                 Department= {`${rooms[i].r_department}`}
                                 Type= {`${type1(rooms[i].r_type)}`}
                                 Room_id = {rooms[i].r_id}
-                                type={"edit"}/>
+                                type={"update"}/>
                         ))}
                         <Grid justify={"center"} container item xs={12} md={6} lg={4}>
                             <Rooms
@@ -87,7 +87,7 @@ function RoomManagement(){
                      to manage rooms, please contact a Staff to make any changes</h3>
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <Link to={"/"}>
-                        <Button content='Go to HomePage' icon='home' size='big' color="violet"/>
+                        <Button content='Go to HomePage' icon='home' size='big' color="green"/>
                     </Link>
                 </div>
             </>
