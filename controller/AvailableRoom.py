@@ -220,3 +220,16 @@ class AvailableRoom:
             return jsonify("DELETED"), 201
         else:
             return jsonify("NOT FOUND"), 404
+
+    def get_all_day_schedule_by_role(self, json):
+        p_role = json['p_role']
+        date = json['date']
+        dao = AvailableRoomDAO()
+        res = dao.get_all_day_schedule_by_role(p_role, date)
+        result = []
+        for row in res:
+            result.append({
+                "r_id": row[0],
+                "r_name": row[1],
+            })
+        return jsonify(result), 200

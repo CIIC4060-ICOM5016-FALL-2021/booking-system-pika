@@ -144,6 +144,18 @@ def handle_get_room_all_day_schedule_getter_post():
         return jsonify("Method Not Allowed"), 405
 
 
+@app.route('/pika-booking/rooms/available/all-day-schedule/person-role', methods=['POST'])
+def handle_get_room_all_day_schedule_by_person_role():
+    args = request.json
+    if request.method == 'POST':
+        if args:
+            return AvailableRoom().get_all_day_schedule_by_role(args)
+        else:
+            return jsonify("Args not found"), 405
+    else:
+        return jsonify("Method Not Allowed"), 405
+
+
 @app.route('/pika-booking/rooms/available/all-schedule/<int:r_id>', methods=['GET'])
 def handle_get_room_all_schedule_getter_post(r_id):
     if request.method == 'GET':
