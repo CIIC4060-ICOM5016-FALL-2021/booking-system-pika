@@ -4,9 +4,14 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import {Button, Container, Form, Modal, ModalDescription} from "semantic-ui-react";
 import axios from "axios";
+import * as PropTypes from "prop-types";
+import DatePicker from 'react-date-picker';
 
 
-
+DatePicker.propTypes = {
+    onChange: PropTypes.func,
+    value: PropTypes.string
+};
 
 function BookMeeting(){
     const [r, setr] = useState(false);
@@ -33,9 +38,8 @@ function BookMeeting(){
     const[deletebooking,setdeletebooking] =useState(false)
     const [updateunavailable,setupunavailable]= useState(false);
     const [deleteunavailable,setdeleteupunavailable]= useState(false);
-    const [userfree,setuserfree]= useState(false);
     const [listfree,setlistfree]=useState([]);
-
+ const [a,seta] =useState(false)
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
     const[un,setun] =  useState("");
@@ -55,6 +59,15 @@ function BookMeeting(){
     const[all,setall]= useState([]);
     const[ty,setty]= useState([]);
 const [he,sethe]=useState(false)
+    const [pe,setpe] =useState("")
+    const [je,setje]=useState(false)
+    const [userday,setuserday] =useState(false)
+    const [room,setroom] =useState(false)
+    const[ho,setho]= useState(false);
+    const[hosted,sethosted]= useState(false);
+    const[ed,seted]= useState(false);
+    const[hstd,sethstd]= useState(false);
+    const[ost,setost]= useState(false);
     function getRooms(){
         if (k===false) {
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/persons/person/${dat.p_id}/role-access`).then((res) => {
@@ -76,7 +89,8 @@ const [he,sethe]=useState(false)
         }
     }
     const returnallfalse=()=>{
-
+          setho(false)
+        sethosted(false)
         setOpen(false)
         setst_dt("")
         setet_dt("")
@@ -100,8 +114,8 @@ const [he,sethe]=useState(false)
         setdeletebooking(false)
         setdeleteupunavailable(false)
         sett(false)
-        setuserfree(false)
 
+seta(false)
         setnew("")
         setund(false)
         setdelebook(false)
@@ -113,6 +127,13 @@ const [he,sethe]=useState(false)
         setlh(false)
         setall([])
         sethe(false)
+        setje(false)
+        setroom(false)
+        setuserday(false)
+        setost(false)
+        seted(false)
+        sethstd(false)
+        setpe("")
     }
     const handler= ()=>{
     allbidofmeeting()
@@ -123,6 +144,39 @@ const [he,sethe]=useState(false)
         setlh(true)
     }
 
+function handler2 (){
+    if(date===""|| invitee===""){
+        return false
+    }
+  emailtoid()
+    return true
+}
+    function handler3 (){
+        if(date===""|| invitee===""){
+            return false
+        }
+        emailtoid()
+        return true
+    }
+function handlerfix(){
+    if (listfree.length===0){
+        setje(true)
+    }else {
+      seth(true)
+    }
+}
+function handlerdate(j){
+        setdate(j)
+}
+function gettherooms(){
+        if (st_dt===""|| et_dt===""){
+            return false
+        }
+        setho(true)
+}
+function getusername(){
+        sethstd(true)
+}
     function allbidofmeeting(){
 
             axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/booking/meet/${ba_id}`).then(res=>{
@@ -147,8 +201,10 @@ const [he,sethe]=useState(false)
 for (let m of invitee.split(",")) {
     console.log(m)
     axios.post('https://booking-system-pika.herokuapp.com/pika-booking/persons/email', {"p_email": m}).then(res => {
+        console.log(res.data)
         t.push(res.data)
     })
+    console.log(t)
 }
     setty(t)
     }
@@ -191,12 +247,25 @@ for (let m of invitee.split(",")) {
         sethe(true)
     }
     function getfreeinviteetime(){
-        let data ={"invited_id":invitee.split(","), "date": date}
-        axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/shared-time-users`,data).then(res=>{
-            setlistfree(res.data)
-            console.log(res.data)
-            seth(true)
-        })
+    console.log(ty)
+        let i =0;
+    let t =[]
+        for (let m of ty){
+           t.push( ty[i]['person_id'][0])
+            i++;
+        }
+        console.log(t)
+      setpe(t)
+console.log(pe)
+        if (pe!=="") {
+            let data = {"invited_id": pe, "date": date}
+            axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/bookings/shared-time-users`, data).then(res => {
+                setlistfree(res.data)
+                console.log(res.data)
+
+            })
+            handlerfix()
+        }
     }
     function unavailableofperson(){ if (k===false) {
         axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/person/unavailable/person_id/${dat.p_id}`).then(res => {
@@ -204,6 +273,12 @@ for (let m of invitee.split(",")) {
             console.log(ts)
         })
     }
+    }
+    function gethost(){
+        if (st_dt===""|| et_dt===""||room_id===""){
+            return false
+        }
+        setost(true)
     }
     function updateunavailablecheck(){
 
@@ -247,7 +322,7 @@ setdelebook(true)
     }
     function run(){
         if (Selected=== true && open=== true||Selected=== true && mark=== true||Selected=== true &&free===true||Selected===true&&unavailable===true
-            || Selected===true && booking===true){
+            || Selected===true && booking===true||Selected===true &&room=== true|| Selected===true && hosted === true){
             setst_dt(dates[0].startTimeDisplay)
             setet_dt(dates[0].endTimeDisplay)
             return true
@@ -369,6 +444,7 @@ i++
                 <Button onClick={() => sett(false)}>OK</Button>
             </Modal.Actions>
         </Modal>
+        <Button fluid onClick={() => {setOpen(true)}}> Book Meeting </Button>
         <Modal
             centered={false}
             open={open}
@@ -439,22 +515,6 @@ i++
         </Modal>
         <Modal
             centered={false}
-            open={sh}
-            onClose={() => setlh(false)}
-            onOpen={() => setlh(true)}
-        >
-            <Modal.Header>Are you sure?</Modal.Header>
-            <Modal.Content>
-                <Modal.Description>
-                </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-                <Button onClick={() => setlh(false)}>No</Button>
-                <Button onClick={() => updatebookingcheck()}>Yes</Button>
-            </Modal.Actions>
-        </Modal>
-        <Modal
-            centered={false}
             open={y}
             onClose={() => sety(false)}
             onOpen={() => sety(true)}
@@ -469,6 +529,40 @@ i++
                 <Button onClick={() => check()? setg(true):setz(true)}>Yes</Button>
             </Modal.Actions>
         </Modal>
+        <Modal open ={z}
+               onClose={() => setz(false)}
+               onOpen={() => setz(true)}
+        >
+            <Modal.Header> There is a conflict in your booking, Please select another time or room.</Modal.Header>
+            <Button fluid onClick={()=>setz(false)}>Ok</Button>
+        </Modal>
+        <Modal centered={false}
+               open={g}
+               onClose={() => setg(false)}
+               onOpen={() => setg(true)}>
+            <Modal.Header>You Have Booked a Room.</Modal.Header>
+            <Modal.Actions>
+                <Button onClick={() => returnallfalse()}>okay</Button>
+            </Modal.Actions>
+        </Modal>
+
+        <Modal
+            centered={false}
+            open={sh}
+            onClose={() => setlh(false)}
+            onOpen={() => setlh(true)}
+        >
+            <Modal.Header>Are you sure?</Modal.Header>
+            <Modal.Content>
+                <Modal.Description>
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => setlh(false)}>No</Button>
+                <Button onClick={() => updatebookingcheck()}>Yes</Button>
+            </Modal.Actions>
+        </Modal>
+
         <Modal
             centered={false}
             open={its}
@@ -484,15 +578,8 @@ i++
                 <Button onClick={() => setits(false)}>OK</Button>
             </Modal.Actions>
         </Modal>
-        <Modal centered={false}
-               open={g}
-               onClose={() => setg(false)}
-               onOpen={() => setg(true)}>
-            <Modal.Header>You Have Booked a Room.</Modal.Header>
-            <Modal.Actions>
-                <Button onClick={() => returnallfalse()}>okay</Button>
-            </Modal.Actions>
-        </Modal>
+
+        <Button fluid onClick={()=>setfree(true)}>Show all free user in time frame</Button>
         <Modal
             centered={false}
             open={free}
@@ -505,29 +592,141 @@ i++
                     <Form.Field>
                         <Form.Input
                             fluid
-                            name="Start time"
-                            placeholder="Insert invitee"
-                            label="invitee"
+                            name="emails"
+                            placeholder="Insert Emails"
+                            label="List of Email  ( seperated by comma no spaces)"
                             value={invitee}
                             onChange={e => setinvitee(e.target.value)}
                         />
                     </Form.Field>
+                    <p></p>
                     <Form.Field>
-                        <Form.Input
-                            fluid
-                            name="End time"
-                            placeholder="Insert date"
-                            label="yyyy-mm-dd"
+
+
+                          Insert date:&nbsp;
+                        <DatePicker
+                            onChange={(e) =>handlerdate(e)}
                             value={date}
-                            onChange={e => setdate(e.target.value)}
                         />
+
                     </Form.Field>
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => getfreeinviteetime()}>OK</Button>
+                <Button onClick={() => (handler2()?seta(true): sett(true))}>OK</Button>
             </Modal.Actions>
         </Modal>
+        <Modal
+            centered={false}
+            open={userday}
+            onClose={() => setuserday(false)}
+            onOpen={() => setuserday(true)}
+        >
+            <Modal.Header> Please select  timeframe.</Modal.Header>
+            <Modal.Content>
+                <Modal.Description>
+                    <Form.Field>
+                        <Form.Input
+                            fluid
+                            name="emails"
+                            placeholder="Insert Email"
+                            label=" Email  "
+                            value={invitee}
+                            onChange={e => setinvitee(e.target.value)}
+                        />
+
+                    </Form.Field>
+                    <p></p>
+                    <Form.Field>
+
+                        Insert date:&nbsp;
+                        <DatePicker
+                            onChange={(e) =>handlerdate(e)}
+                            value={date}
+                        />
+                        <br/><br/>
+                    </Form.Field>
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => (handler3()?seted(true): sett(true))}>OK</Button>
+            </Modal.Actions>
+        </Modal>
+        <Modal
+            centered={false}
+            open={ed}
+            onClose={() => seted(false)}
+            onOpen={() => seted(true)}
+        >
+            <Modal.Header>Are you sure?</Modal.Header>
+            <Modal.Content>
+                <Modal.Description>
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => seted(false)}>No</Button>
+                <Button onClick={() => getusername()}>Yes</Button>
+            </Modal.Actions>
+        </Modal>
+        <Modal open ={hstd}
+               onClose={() => sethstd(false)}
+               onOpen={() => sethstd(true)}
+        >
+            <Modal.Header> The schedule  </Modal.Header>
+
+                <Modal.Description>
+                    {
+                        listfree.length > 0 &&
+                        <table style={{marginLeft: "auto", marginRight: "auto"}}>
+                            <thead>
+                            <tr>
+                                <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Start Time</th>
+                                <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>End Time</th>
+                                <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Available?</th>
+                                <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Who Booked?</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {
+                                listfree.map(item => {
+                                        return (
+                                            <tr>
+                                                <td style={{padding:"5px", border: "1px solid black"}}>{`${item.start.getHours()}:${item.start.getMinutes()}`}</td>
+                                                <td style={{padding:"5px", border: "1px solid black"}}>{`${item.end.getHours()}:${item.end.getMinutes()}`}</td>
+                                                <td style={{padding:"5px", border: "1px solid black"}}>{"No"}</td>
+                                                <td style={{padding:"5px", border: "1px solid black"}}>{item.p_id===-1?'No host':item.p_id}</td>
+                                            </tr>
+                                        )
+                                    }
+                                )
+                            }
+                            </tbody>
+                        </table>
+                    }
+
+                </Modal.Description>
+        <Modal.Actions>
+            <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
+        </Modal.Actions>
+        </Modal>
+        <Modal
+            centered={false}
+            open={a}
+            onClose={() => seta(false)}
+            onOpen={() => seta(true)}
+        >
+            <Modal.Header>Are you sure?</Modal.Header>
+            <Modal.Content>
+                <Modal.Description>
+                </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => seta(false)}>No</Button>
+                <Button onClick={() => getfreeinviteetime()}>Yes</Button>
+            </Modal.Actions>
+        </Modal>
+        <Button fluid onClick={() => {setmark(true)}}> Mark as unavailable</Button>
         <Modal
             centered={false}
             open={mark}
@@ -591,15 +790,9 @@ i++
             </Modal.Actions>
         </Modal>
         <Container fluid>
-            <Button
-                fluid
-                onClick={() => {setOpen(true)}}
-            > Book Meeting </Button>
-            <Button
-                fluid
-                onClick={() => {setmark(true)}}
-            > Mark as unavailable</Button>
-            <Button fluid onClick={()=>setfree(true)}>Show all free user in time frame</Button>
+
+            <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
+
             <Modal open={booking}
                    onClose={() => setbooking(false)}
                    onOpen={() => setbooking(true)}>
@@ -762,6 +955,54 @@ i++
                             onClick={() => {check()? setOpen(true):setr(true)} }/>
                 </Modal.Actions>
             </Modal>
+            <Modal open={room}
+                   onClose={() => setroom(false)}
+                   onOpen={() => setroom(true)}>
+                <Modal.Header>What time frame do you want to check?</Modal.Header>
+                <Modal.Content>
+                    <Modal.Description>
+                        <Form>
+                            <Form.Field>
+                                <Form.Input
+                                    fluid
+                                    name="Start time"
+                                    placeholder="Insert Start time"
+                                    label="Start time"
+                                    value={st_dt}
+                                    onChange={e => setst_dt(e.target.value)}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <Form.Input
+                                    fluid
+                                    name="End time"
+                                    placeholder="Insert End time"
+                                    label="End time"
+                                    value={et_dt}
+                                    onChange={e => setet_dt(e.target.value)}
+                                />
+                            </Form.Field>
+                        </Form>
+                    </Modal.Description>
+                </Modal.Content>
+                <Modal.Actions>
+                    <Button content='Confirm'
+                            onClick={() => {gettherooms()} }/>
+                </Modal.Actions>
+            </Modal>
+            <Modal open ={ho}
+                   onClose={() => setho(false)}
+                   onOpen={() => setho(true)}
+            >
+                <Modal.Header> The rooms </Modal.Header>
+                <Modal.Description> {
+
+                    listfree.map(item =>{
+                        return(<p><header1>{item.r_name}</header1></p>)
+                    })
+                } </Modal.Description>
+                <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
+            </Modal>
             <Modal open={r}
                    onClose={() => setr(false)}
                    onOpen={() => setr(true)}
@@ -831,32 +1072,87 @@ i++
                 <Modal.Header> You have deleted a booking time slot</Modal.Header>
                 <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
             </Modal>
-            <Modal open = {userfree}
-                   onClose={() => setuserfree(false)}
-                   onOpen={() => setuserfree(true)}>
-                <Button onClick={() => returnallfalse()}>ok</Button>
-            </Modal>
             <Modal open ={h}
                    onClose={() => seth(false)}
                    onOpen={() => seth(true)}
             >
                 <Modal.Header> time slot</Modal.Header>
-                <Modal.Description> {listfree.map(item =>{
+                <Modal.Description> {
+
+                    listfree.map(item =>{
                     return(<p><header1>{item.free_start}-{item.free_end}</header1></p>)
                 })
                 } </Modal.Description>
                 <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
             </Modal>
-            <Modal open ={z}
-                   onClose={() => setz(false)}
-                   onOpen={() => setz(true)}
+            <Modal open ={je}
+                   onClose={() => setje(false)}
+                   onOpen={() => setje(true)}
             >
-                <Modal.Header> There is a conflict in your booking, Please select another time or room.</Modal.Header>
-                <Button fluid onClick={()=>setz(false)}>Ok</Button>
+                <Modal.Header> Everyone is free on that day at anytime</Modal.Header>
+                <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
             </Modal>
-            <Button fluid onClick={()=>setbooking(true)}> Update Your Bookings </Button>
-            <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
 
+            <Modal open={hosted}
+                   onClose={() => sethosted(false)}
+                   onOpen={() => sethosted(true)}>
+                <Modal.Header>What do you want to look up?</Modal.Header>
+                <Modal.Content>
+                    <Modal.Description>
+                        <Form>
+                            <Form.Input label='Room'>
+                                <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {setroom_id(e.target.value)}}>
+                                    <option key={0} value={"0"}>Select Room</option>
+                                    {rooms.map(item => {
+                                        return (<option key={item.r_id} value={item.r_id}>{item.r_name}</option>)
+                                    })}
+                                </select>
+                            </Form.Input>
+                            <Form.Field>
+                                <Form.Input
+                                    fluid
+                                    name="Start time"
+                                    placeholder="Insert Start time"
+                                    label="Start time"
+                                    value={st_dt}
+                                    onChange={e => setst_dt(e.target.value)}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <Form.Input
+                                    fluid
+                                    name="End time"
+                                    placeholder="Insert End time"
+                                    label="End time"
+                                    value={et_dt}
+                                    onChange={e => setet_dt(e.target.value)}
+                                />
+                            </Form.Field>
+                        </Form>
+                    </Modal.Description>
+                </Modal.Content>
+                <Modal.Actions>
+                    <Button content='Confirm'
+                            onClick={() => {gethost()} }/>
+                </Modal.Actions>
+            </Modal>
+            <Modal open ={ost}
+                   onClose={() => setost(false)}
+                   onOpen={() => setost(true)}
+            >
+                <Modal.Header> The host in that time  </Modal.Header>
+                <Modal.Description> {
+
+                    listfree.map(item =>{
+                        return(<p><header1>{item.r_name}</header1></p>)
+                    })
+                } </Modal.Description>
+                <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
+            </Modal>
+            <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
+            <Button fluid onClick={()=>setuserday(true)} > Get a user Schedule</Button>
+            <Button fluid onClick={()=>setroom(true)} > Get available room in time frame</Button>
+            <Button fluid onClick={()=>sethosted(true)} > Get host of room in time frame</Button>
         </Container>
     </Container>
 

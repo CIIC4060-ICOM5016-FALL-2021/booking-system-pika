@@ -16,12 +16,11 @@ function Rooms(props) {
     const [type, settype] = useState("");
     const [dept, setdept] = useState("");
     const [createdMessage, setCreatedMessage] = useState("");
-    const [editMessage, setEditMessage] = useState("");
+
     const [deleteMessage, setDeleteMessage] = useState("");
     const [roomData, setRoomData] = useState({});
-    const [unavailabilityModalOpen, setUnavailabilityModalOpen] = useState(false);
-    const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
-    const [unavailableTimeSlot, setUnavailableTimeSlot] = useState(new Date());
+    const [unavailability, setUnavailability] = useState(false);
+    const [schedule, setSchedule] = useState(false);
     const [unavailableTimeSlots, setUnavailableTimeSlots] = useState([]);
     const[]= useState(false);
     const [toMarkAvailable, setToMarkAvailable] = useState("")
@@ -95,7 +94,7 @@ function type1(parameter){
         }
     }, []);
 
-    function editRoom() {
+    function updateRoom() {
 
             let data = {"r_id": roomID,
                 "r_name": y,
@@ -119,13 +118,11 @@ function type1(parameter){
                 data
             ).then((response) => {
                 console.log(response);
-                setEditMessage("Changes were made successfully")
-                console.log(editMessage);
+
                 window.location.reload(false);
             }, (error) => {
                 console.log(error);
-                setEditMessage("Changes were not made")
-                console.log(editMessage);
+
             });
 
     }
@@ -275,7 +272,7 @@ console.log(data)
         <div>
             <Card elevation={3}>
                 {
-                    props.type === "edit" &&
+                    props.type === "update" &&
                     <CardHeader
                         action={
                             <IconButton onClick={() => setOpen(true)}><MoreHorizOutlined/></IconButton>
@@ -305,31 +302,23 @@ console.log(data)
             </Card>
             <Modal centered={false} open={open} onClose={() => setOpen(false)} onOpen={() => setOpen(true)}>
                 {props.type === "create" &&<Modal.Header>Create New Room</Modal.Header>}
-                {/*{*/}
-                {/*    props.type === "edit" && !unavailabilityModalOpen &&*/}
-                {/*    <Modal.Header>*/}
-                {/*        Edit Room <br/>*/}
-                {/*        <Button onClick={() => {fetchUnavailableTimeSlots(); setUnavailabilityModalOpen(true); }} style={{marginTop: "15px"}}>*/}
-                {/*            Change Availability*/}
-                {/*        </Button>*/}
-                {/*    </Modal.Header>*/}
-                {/*}*/}
+
 
                 {
-                    props.type === "edit" && !unavailabilityModalOpen && !scheduleModalOpen &&
+                    props.type === "update" && !unavailability && !schedule &&
                     <Modal.Header>
-                        Edit Room <br/>
-                        <Button onClick={() => {fetchUnavailableTimeSlots(); setUnavailabilityModalOpen(true); }} style={{marginTop: "15px"}}>
+                        Update Room <br/>
+                        <Button onClick={() => {fetchUnavailableTimeSlots(); setUnavailability(true); }} style={{marginTop: "15px"}}>
                             Change Availability
                         </Button>
-                        <Button onClick={() => {setScheduleModalOpen(true);}} style={{marginTop: "15px"}}>
+                        <Button onClick={() => {setSchedule(true);}} style={{marginTop: "15px"}}>
                             Schedule
                         </Button>
                     </Modal.Header>
                 }
 
-                {props.type === "edit" && unavailabilityModalOpen && <Modal.Header>Change availability for {props.roomName}</Modal.Header>}
-                {props.type === "edit" && scheduleModalOpen && <Modal.Header>See Schedule for {props.roomName}</Modal.Header>}
+                {props.type === "update" && unavailability && <Modal.Header>Change availability for {props.roomName}</Modal.Header>}
+                {props.type === "update" && schedule && <Modal.Header>See Schedule for {props.roomName}</Modal.Header>}
 
                 <Modal.Content>
                     {
@@ -373,7 +362,7 @@ console.log(data)
                     }
 
                     {
-                        props.type === "edit" && !unavailabilityModalOpen && !scheduleModalOpen &&
+                        props.type === "update" && !unavailability && !schedule &&
                         <Modal.Description>
                             <Grid.Column>
                                 <Form>
@@ -419,7 +408,7 @@ console.log(data)
                     }
 
                     {
-                        props.type === "edit" && unavailabilityModalOpen && !scheduleModalOpen &&
+                        props.type === "update" && unavailability && !schedule &&
                         <Modal.Description>
                             Select Time Slot to mark unavailable: Start: &nbsp;
                             <DateTimePicker
@@ -462,7 +451,7 @@ console.log(data)
                     }
 
                     {
-                        props.type === "edit" && scheduleModalOpen && !unavailabilityModalOpen &&
+                        props.type === "update" && schedule && !unavailability &&
                         <Modal.Description>
                             Select Day for Room Schedule: &nbsp;
                             <DatePicker
@@ -503,8 +492,8 @@ console.log(data)
                         </Modal.Description>
                     }
 
-                    {props.type === "edit" && !unavailabilityModalOpen && !scheduleModalOpen && <Button onClick={deleteRoom} style={{marginTop: "15px"}}>Delete</Button>}
-                    {props.type === "edit" && unavailabilityModalOpen  && unavailableTimeSlots.length > 0 && <Button onClick={markRoomAvailable}>Mark As Available</Button>}
+                    {props.type === "update" && !unavailability && !schedule && <Button onClick={deleteRoom} style={{marginTop: "15px"}}>Delete</Button>}
+                    {props.type === "update" && unavailability  && unavailableTimeSlots.length > 0 && <Button onClick={markRoomAvailable}>Mark As Available</Button>}
 
 
 
@@ -513,10 +502,10 @@ console.log(data)
 
                 <Modal.Actions>
                     {props.type === "create" && <Button onClick={createRoom}>Save</Button>}
-                    {props.type === "edit" && !unavailabilityModalOpen && !scheduleModalOpen&&  <Button onClick={editRoom}>Save</Button>}
-                    {props.type === "edit" && !unavailabilityModalOpen &&  scheduleModalOpen && <Button onClick={() => setScheduleModalOpen(false)} style={{marginTop: "15px"}}>Cancel</Button>}
-                    {props.type === "edit" && !unavailabilityModalOpen && scheduleModalOpen && <Button onClick={() => {fetchRoomSchedule(); setCanShowSched(true);}}>Show Schedule</Button>}
-                    {props.type === "edit" && unavailabilityModalOpen && <Button onClick={() => setUnavailabilityModalOpen(false)} style={{marginTop: "15px"}}>Cancel</Button>}
+                    {props.type === "update" && !unavailability && !schedule&&  <Button onClick={updateRoom}>Save</Button>}
+                    {props.type === "update" && !unavailability &&  schedule && <Button onClick={() => setSchedule(false)} style={{marginTop: "15px"}}>Cancel</Button>}
+                    {props.type === "update" && !unavailability && schedule && <Button onClick={() => {fetchRoomSchedule(); setCanShowSched(true);}}>Show Schedule</Button>}
+                    {props.type === "update" && unavailability && <Button onClick={() => setUnavailability(false)} style={{marginTop: "15px"}}>Cancel</Button>}
 
                 </Modal.Actions>
             </Modal>
