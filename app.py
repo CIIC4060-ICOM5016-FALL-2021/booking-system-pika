@@ -412,6 +412,10 @@ def handle_booking_by_id(b_id):
         return jsonify("Method Not Allowed"), 405
 
 
+
+
+
+
 @app.route('/pika-booking/booking/meet/<b_id>', methods=['GET'])
 def get_full_booking_by_b_id(b_id):
     if request.method == 'GET':
@@ -482,6 +486,16 @@ def get_free_time_for_meeting_booking():
 def handle_meeting():
     if request.method == 'GET':
         return Booking().get_all_meetings()
+    else:
+        return jsonify("Method Not Allowed"), 405
+@app.route('/pika-booking/meetings/host', methods=['POST'])
+def get_host_at_timeframe():
+    args = request.json
+    if request.method == 'POST':
+        if args:
+            return Booking().get_host_at_dt(request.json)
+        else:
+            return jsonify("Args not found"), 405
     else:
         return jsonify("Method Not Allowed"), 405
 
