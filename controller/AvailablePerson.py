@@ -198,3 +198,21 @@ class AvailablePerson:
             return jsonify("DELETED")
         else:
             return jsonify("NOT FOUND")
+
+    def get_who_appointed_at_given_room_and_time(self, json: dict):
+        r_id = json['r_id']
+        st_dt = json["st_dt"]
+        et_dt = json["et_dt"]
+
+        method = AvailablePersonDAO()
+        method_2 = RoomDAO()
+        if not method_2.check_if_room_exists(r_id):
+            return jsonify("Room does not exist"), 404
+        res = method.find_available_persons_in_room(r_id, st_dt, et_dt)
+        result = []
+        for row in res:
+            result.append({
+                "p_id": row[0],
+            })
+        return jsonify(result), 200
+

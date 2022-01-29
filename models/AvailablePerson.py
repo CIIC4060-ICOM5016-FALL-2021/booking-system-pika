@@ -39,6 +39,7 @@ class AvailablePersonDAO:
         cursor.execute(query, (pa_id,))
         result = cursor.fetchone()
         return result
+
     def get_unavailable_person_by_person_id(self, person_id):
         cursor = self.conn.cursor()
         query = 'select pa_id, st_dt, et_dt ' \
@@ -168,7 +169,19 @@ class AvailablePersonDAO:
                 "UNION select booking.b_name, r_name, st_dt, et_dt " \
                 "from booking natural inner join room b where (host_id = %s or invited_id = %s) " \
                 "and (booking.st_dt::date <= date %s AND booking.et_dt::date >= date %s) ;"
-        cursor.execute(query, (p_id, date, date,p_id,p_id,date,date,))
+        cursor.execute(query, (p_id, date, date, p_id, p_id, date, date,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def find_available_persons_in_room(self, r_id, st_dt, et_dt):
+        cursor = self.conn.cursor()
+        query = 'select distinct host_id as "user" from booking where room_id = %s ' \
+                'and tsrange(st_dt, et_dt) && tsrange(timestamp %s, timestamp %s) ' \
+                'UNION (select distinct invited_id from booking ' \
+                'where room_id = %s and tsrange(st_dt, et_dt) && tsrange(timestamp %s, timestamp %s));'
+        cursor.execute(query, (r_id, st_dt, et_dt, r_id, st_dt, et_dt,))
         result = []
         for row in cursor:
             result.append(row)
