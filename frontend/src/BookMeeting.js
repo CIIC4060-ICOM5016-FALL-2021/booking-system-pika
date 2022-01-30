@@ -39,7 +39,7 @@ function BookMeeting(){
     const [deleteunavailable,setdeleteupunavailable]= useState(false);
     const [listfree,setlistfree]=useState([]);
     const [listfr,setlistfr]=useState([]);
-    const [host,sethost] = useState("");
+    const [host,sethost] = useState([]);
  const [a,seta] =useState(false)
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
