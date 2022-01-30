@@ -1058,13 +1058,32 @@ i++
                    onClose={() => setho(false)}
                    onOpen={() => setho(true)}
             >
-                <Modal.Header> The rooms </Modal.Header>
-                <Modal.Description> {
+                <Modal.Header> The rooms are </Modal.Header>
+                <Modal.Description>
+                    {
+                        listfree.length > 0 &&
+                        <table style={{marginLeft: "auto", marginRight: "auto"}}>
+                            <thead>
+                            <tr>
+                                <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>The Rooms</th>
 
-                    listfree.map(item =>{
-                        return(<p>{item.r_name}</p>)
-                    })
-                } </Modal.Description>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {
+                                listfree.map(item => {
+                                        return (
+                                            <tr>
+                                                <td style={{padding:"5px", border: "1px solid black"}}>{item.r_name}</td>
+                                            </tr>
+                                        )
+                                    }
+                                )
+                            }
+                            </tbody>
+                        </table>
+                    } </Modal.Description>
                 <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
             </Modal>
             <Modal open={r}
