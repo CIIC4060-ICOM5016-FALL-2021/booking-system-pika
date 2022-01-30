@@ -118,7 +118,7 @@ class BookingDAO:
         cursor = self.conn.cursor()
         query = 'select distinct host_id, p.p_fname, p.p_lname' \
                 ' from booking natural inner join person p ' \
-                'where booking.room_id = %s and ' \
+                'where booking.room_id = %s and p.p_id = booking.host_id and ' \
                 '(tsrange(booking.st_dt, booking.et_dt) && tsrange(timestamp %s, timestamp %s));'
         cursor.execute(query, (room_id, st_dt, et_dt,))
         result = cursor.fetchone()

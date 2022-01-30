@@ -156,11 +156,15 @@ class AvailableRoomDAO:
     def get_rooms_by_role_timeframe(self, p_role, st_dt, et_dt):
 
         cursor = self.conn.cursor()
-        query = 'select distinct r_id, r_name, p.p_id from room ' \
-                'inner join booking b on room.r_id = b.room_id ' \
+        query = 'select r_id, r_name from room ' \
+                'where r_id not in ' \
+                '(select distinct r_id ' \
+                'from room inner join ' \
+                'booking b on room.r_id = b.room_id ' \
                 'inner join person p on p.p_id = b.host_id ' \
-                'where p.p_role = %s ' \
-                'and (tsrange(b.st_dt, b.et_dt) && tsrange( %s, %s));'
+                'full outer join  availableroom av ' \
+                'on room.r_id = av.room_id where p.p_role = %s ' \
+                'and (tsrange(b.st_dt, b.et_dt) && tsrange(timestamp %s, timestamp %s)));'
         cursor.execute(query, (p_role, st_dt, et_dt,))
         result = []
         for row in cursor:
