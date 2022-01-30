@@ -37,7 +37,7 @@ function Rooms(props) {
    const [roompermission,setroompermision] =useState("");
     const [permission,setpermission] =useState("");
     const[y,sety]= useState("")
-    console.log("All day",allDayRS)
+
     function createRoom(){
         if(  type==="" || Building==="" || dept===""){
             console.log("Empty Field")
@@ -185,11 +185,11 @@ console.log(json)
 
     function handleChange(date){
         setst_dt(date)
-        // console.log(unavailableTimeSlot)
+
     }
     function handleChange1(date){
         setet_dt(date)
-        // console.log(unavailableTimeSlot)
+
     }
     function handleScheduleChange(date){
         setRoomSchedule(date)
@@ -216,7 +216,6 @@ console.log(response.data)
 
                     }
                     setUnavailableTimeSlots(unavailableTS);
-                    // console.log(unavailableTimeSlots)
                 }
             );
     }
@@ -249,8 +248,8 @@ console.log(data)
         });
     }
 
-    function formatTime(hours, minutes){
-        console.log(hours + " " + minutes)
+    function TypeTime(hours, minutes){
+
         let pastNoonIndicator = "";
         if(hours < 12){
             if(hours === 0) hours = 12;
@@ -476,8 +475,8 @@ console.log(data)
                                         allDayRS.map(item => {
                                                 return (
                                                     <tr>
-                                                        <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.start.getHours(), item.start.getMinutes())}</td>
-                                                        <td style={{padding:"5px", border: "1px solid black"}}>{formatTime(item.end.getHours(), item.end.getMinutes())}</td>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{TypeTime(item.start.getHours(), item.start.getMinutes())}</td>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{TypeTime(item.end.getHours(), item.end.getMinutes())}</td>
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{"No"}</td>
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{item.p_id===-1?'No host':item.p_id}</td>
                                                     </tr>

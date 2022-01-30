@@ -32,13 +32,14 @@ function BookMeeting(){
     const [g,setg]= useState(false);
     const [its,setits] = useState(false)
     const [Selected,SetSelect] = useState(false)
-    const [info, setinfo] = useState(false);
     const [free, setfree] = useState(false);
     const [updatebooking,setupdatebooking] = useState(false);
     const[deletebooking,setdeletebooking] =useState(false)
     const [updateunavailable,setupunavailable]= useState(false);
     const [deleteunavailable,setdeleteupunavailable]= useState(false);
     const [listfree,setlistfree]=useState([]);
+    const [listfr,setlistfr]=useState([]);
+    const [host,sethost] = useState("");
  const [a,seta] =useState(false)
     let e = localStorage.getItem("login-data");
     let   dat = JSON.parse(e)
@@ -104,7 +105,6 @@ const [he,sethe]=useState(false)
         setmark(false)
         SetSelect(false)
         setfree(false)
-        setinfo(false)
         setb(false)
         setba_id("")
         setun("")
@@ -114,7 +114,7 @@ const [he,sethe]=useState(false)
         setdeletebooking(false)
         setdeleteupunavailable(false)
         sett(false)
-
+setlistfr([])
 seta(false)
         setnew("")
         setund(false)
@@ -134,6 +134,7 @@ seta(false)
         seted(false)
         sethstd(false)
         setpe("")
+        sethost([])
     }
     const handler= ()=>{
     allbidofmeeting()
@@ -172,9 +173,41 @@ function gettherooms(){
         if (st_dt===""|| et_dt===""){
             return false
         }
+      let  data = {"p_role":dat.p_role, "st_dt": st_dt,"et_dt": et_dt}
+        axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/rooms/available/timeframe/person-role`,data).then(
+            res=>{
+
+
+                setlistfree(res.data)
+                console.log(res.data)
+                console.log(listfree)
+    }
+        )
         setho(true)
 }
 function getusername(){
+        console.log(ty)
+        let data = {"p_id":ty[0]['person_id'][0], "date": date}
+    console.log(data)
+        axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/persons/available/timeframe`,data).then(
+            res =>{
+                let result = []
+                let i=0;
+                for(let ts of res.data){ // data : [ {timeBlock1}, {timeBlock2}, {...} ]
+                    const blockStart = ` ${ts.st_dt}-0400 (Atlantic Standard Time)`
+                    const blockEnd = `${ts.et_dt}-0400 (Atlantic Standard Time)`;
+                    const startDate = new Date(blockStart);
+                    console.log(startDate);
+                    const endDate = new Date(blockEnd);
+                    console.log(endDate);
+                    result.push({start: startDate, end: endDate, r_name: ts.r_name, b_name: ts.b_name})
+                    i++
+                }
+                 setlistfr(result)
+                console.log(res.data)
+                console.log(listfr)
+            }
+        )
         sethstd(true)
 }
     function allbidofmeeting(){
@@ -207,6 +240,7 @@ for (let m of invitee.split(",")) {
     console.log(t)
 }
     setty(t)
+        console.log(ty)
     }
     function updatebookingcheck(){
 
@@ -277,7 +311,21 @@ console.log(pe)
     function gethost(){
         if (st_dt===""|| et_dt===""||room_id===""){
             return false
-        }
+        }let data ={ "st_dt": st_dt, "et_dt": et_dt, "room_id": room_id}
+        console.log(data)
+        axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/meetings/host`,data).then(res=>{
+          let r = []
+            r.push(res.data.p_fname)
+            r.push(res.data.p_lname)
+            sethost(r)
+            console.log(res.data)
+            console.log(host)
+
+        }, (error) => {
+            console.log(error)
+            sethost([])
+        })
+
         setost(true)
     }
     function updateunavailablecheck(){
@@ -327,7 +375,6 @@ setdelebook(true)
             setet_dt(dates[0].endTimeDisplay)
             return true
         }
-
         return false
     }
     function first() {
@@ -407,7 +454,23 @@ i++
         else
             return `${year}-${month +1}-${date} ${hours}:${minutes}:00-04`;
     }
+    function TypeTime(hours, minutes){
 
+        let pastNoonIndicator = "";
+        if(hours < 12){
+            if(hours === 0) hours = 12;
+            pastNoonIndicator = "AM";
+        }
+        else {
+            if(hours > 12) hours -= 12;
+            pastNoonIndicator = "PM";
+        }
+        if(minutes === 0){
+            return `${hours}:00 ${pastNoonIndicator}`;
+        } else {
+            return`${hours}:${minutes} ${pastNoonIndicator}`;
+        }
+    }
     return <Container style={{ height: 800 }}><Calendar
         selectable
         localizer={localizer}
@@ -661,6 +724,7 @@ i++
             <Modal.Header>Are you sure?</Modal.Header>
             <Modal.Content>
                 <Modal.Description>
+                    Please wait a few seconds
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
@@ -676,26 +740,26 @@ i++
 
                 <Modal.Description>
                     {
-                        listfree.length > 0 &&
+                        listfr.length > 0 &&
                         <table style={{marginLeft: "auto", marginRight: "auto"}}>
                             <thead>
                             <tr>
                                 <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Start Time</th>
                                 <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>End Time</th>
                                 <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Available?</th>
-                                <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Who Booked?</th>
+                                <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>The Room?</th>
                             </tr>
                             </thead>
 
                             <tbody>
                             {
-                                listfree.map(item => {
+                                listfr.map(item => {
                                         return (
                                             <tr>
-                                                <td style={{padding:"5px", border: "1px solid black"}}>{`${item.start.getHours()}:${item.start.getMinutes()}`}</td>
-                                                <td style={{padding:"5px", border: "1px solid black"}}>{`${item.end.getHours()}:${item.end.getMinutes()}`}</td>
-                                                <td style={{padding:"5px", border: "1px solid black"}}>{"No"}</td>
-                                                <td style={{padding:"5px", border: "1px solid black"}}>{item.p_id===-1?'No host':item.p_id}</td>
+                                                <td style={{padding:"5px", border: "1px solid black"}}>{TypeTime(item.start.getHours(), item.start.getMinutes())}</td>
+                                                <td style={{padding:"5px", border: "1px solid black"}}>{TypeTime(item.end.getHours(), item.end.getMinutes())}</td>
+                                                <td style={{padding:"5px", border: "1px solid black"}}>{item.b_name==="unavailable"?"No": "Yes"}</td>
+                                                <td style={{padding:"5px", border: "1px solid black"}}>{item.r_name==="n/a"?'No Room':item.r_name}</td>
                                             </tr>
                                         )
                                     }
@@ -998,7 +1062,7 @@ i++
                 <Modal.Description> {
 
                     listfree.map(item =>{
-                        return(<p><header1>{item.r_name}</header1></p>)
+                        return(<p>{item.r_name}</p>)
                     })
                 } </Modal.Description>
                 <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
@@ -1140,13 +1204,8 @@ i++
                    onClose={() => setost(false)}
                    onOpen={() => setost(true)}
             >
-                <Modal.Header> The host in that time  </Modal.Header>
-                <Modal.Description> {
+                <Modal.Header>  {host.length===0? "The room is free" :`The host in that time is ${host[0]}_${host[1]}`} </Modal.Header>
 
-                    listfree.map(item =>{
-                        return(<p><header1>{item.r_name}</header1></p>)
-                    })
-                } </Modal.Description>
                 <Button fluid onClick={()=>returnallfalse()}>Ok</Button>
             </Modal>
             <Button fluid onClick={()=>setavailable(true)} > Update Your Unavailibility</Button>
