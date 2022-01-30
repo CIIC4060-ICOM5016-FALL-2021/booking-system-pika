@@ -225,14 +225,16 @@ class Booking(object):
         st_dt = json['st_dt']
         et_dt = json['et_dt']
         method = BookingDAO()
-        host_id = method.get_host_at_dt(room_id, st_dt, et_dt)
+        host = method.get_host_at_dt(room_id, st_dt, et_dt)
 
-        if not host_id:
+        if not host:
             return jsonify("Not Found"), 404
         else:
-            result = {}
-            result['host_id'] = host_id
-            return jsonify(result), 200
+            return jsonify({
+                "host_id": host[0],
+                "p_fname": host[1],
+                "p_lname": host[2]
+            }), 200
 
     # updates a booking entry
     def update_booking(self, json):

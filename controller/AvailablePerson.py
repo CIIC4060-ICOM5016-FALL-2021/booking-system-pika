@@ -58,7 +58,7 @@ class AvailablePerson:
                 result_list.append(obj)
         return jsonify(result_list)
 
-########
+    ########
     def get_unavailable_person_by_id(self, pa_id):
         method = AvailablePersonDAO()
         person = method.get_unavailable_person_by_id(pa_id)
@@ -86,7 +86,8 @@ class AvailablePerson:
                     "et_dt": et_dt
                 })
             return jsonify(result), 200
-########
+
+    ########
 
     # def update_unavailable_schedule(self):
     def update_unavailable_schedule(self, json):
@@ -147,15 +148,14 @@ class AvailablePerson:
             return jsonify("Room Not Found"), 404
 
         res = dao.get_all_day_schedule(person_id, date)
-        result_st_dt = []
-        result_et_dt = []
-        for st_dt, et_dt in res:
-            result_et_dt.append(et_dt)
-            result_st_dt.append(st_dt)
-        result = {
-            "st_dt": result_st_dt,
-            "et_dt": result_et_dt
-        }
+        result = []
+        for row in res:
+            result.append({
+                "b_name": row[0],
+                "r_name": row[1],
+                "st_dt": row[2],
+                "et_dt": row[3]
+            })
         return jsonify(result), 200
 
     def get_schedule(self, p_id: int):
@@ -170,7 +170,7 @@ class AvailablePerson:
             result = []
             # t_dt, et_dt, b_id, b_name
             for row in res:
-                if row[2] >=0:
+                if row[2] >= 0:
                     roomname = room_dao.get_name_by_room_id(row[2])[0]
                 else:
                     roomname = "Unavailable"
@@ -198,3 +198,21 @@ class AvailablePerson:
             return jsonify("DELETED")
         else:
             return jsonify("NOT FOUND")
+
+    def get_who_appointed_at_given_room_and_time(self, json: dict):
+        r_id = json['r_id']
+        st_dt = json["st_dt"]
+        et_dt = json["et_dt"]
+
+        method = AvailablePersonDAO()
+        method_2 = RoomDAO()
+        if not method_2.check_if_room_exists(r_id):
+            return jsonify("Room does not exist"), 404
+        res = method.find_available_persons_in_room(r_id, st_dt, et_dt)
+        result = []
+        for row in res:
+            result.append({
+                "p_id": row[0],
+            })
+        return jsonify(result), 200
+
