@@ -159,13 +159,15 @@ class AvailableRoomDAO:
         query = 'select r_id, r_name from room ' \
                 'where r_id not in ' \
                 '(select distinct r_id ' \
-                'from room inner join ' \
-                'booking b on room.r_id = b.room_id ' \
+                'from room ' \
+                'inner join booking b on room.r_id = b.room_id ' \
                 'inner join person p on p.p_id = b.host_id ' \
-                'full outer join  availableroom av ' \
-                'on room.r_id = av.room_id where p.p_role = %s ' \
-                'and (tsrange(b.st_dt, b.et_dt) && tsrange(timestamp %s, timestamp %s)));'
-        cursor.execute(query, (p_role, st_dt, et_dt,))
+                'where p.p_role = %s and (tsrange(b.st_dt, b.et_dt) &&  ' \
+                'tsrange(timestamp %s, timestamp %s)) ' \
+                'UNION select distinct r_id ' \
+                'from room inner join availableroom b on room.r_id = b.room_id ' \
+                'where (tsrange(b.st_dt, b.et_dt) &&  tsrange(timestamp %s, timestamp %s)));'
+        cursor.execute(query, (p_role, st_dt, et_dt,st_dt, et_dt,))
         result = []
         for row in cursor:
             result.append(row)
