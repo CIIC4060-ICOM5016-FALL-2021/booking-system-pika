@@ -156,7 +156,7 @@ def handle_get_room_all_day_schedule_by_person_role():
         return jsonify("Method Not Allowed"), 405
 
 @app.route('/pika-booking/rooms/available/timeframe/person-role', methods=['POST'])
-def handle_get_room_all_day_schedule_by_person_role():
+def handle_get_room_all_day_schedule_by_timeframe_role():
     args = request.json
     if request.method == 'POST':
         if args:
