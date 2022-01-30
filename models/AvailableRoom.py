@@ -138,6 +138,7 @@ class AvailableRoomDAO:
         self.conn.commit()
         return deleted_rows != 0
 
+
     def get_all_day_schedule_by_role(self, p_role, date):
 
         cursor = self.conn.cursor()
@@ -147,6 +148,20 @@ class AvailableRoomDAO:
                 'where p.p_role = %s ' \
                 'and (b.st_dt::date <= date %s AND b.et_dt::date >= date %s);'
         cursor.execute(query, (p_role, date, date,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def get_rooms_by_role_timeframe(self, p_role, st_dt, et_dt):
+
+        cursor = self.conn.cursor()
+        query = 'select distinct r_id, r_name, p.p_id from room ' \
+                'inner join booking b on room.r_id = b.room_id ' \
+                'inner join person p on p.p_id = b.host_id ' \
+                'where p.p_role = %s ' \
+                'and (tsrange(b.st_dt, b.et_dt) && tsrange( %s, %s));'
+        cursor.execute(query, (p_role, st_dt, et_dt,))
         result = []
         for row in cursor:
             result.append(row)

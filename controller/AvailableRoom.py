@@ -233,3 +233,17 @@ class AvailableRoom:
                 "r_name": row[1],
             })
         return jsonify(result), 200
+
+    def get_rooms_by_role_timeframe(self, json):
+        p_role = json['p_role']
+        st_dt = json['st_dt']
+        et_dt = json['et_dt']
+        dao = AvailableRoomDAO()
+        res = dao.get_rooms_by_role_timeframe(p_role, st_dt, et_dt)
+        result = []
+        for row in res:
+            result.append({
+                "r_id": row[0],
+                "r_name": row[1],
+            })
+        return jsonify(result), 200
