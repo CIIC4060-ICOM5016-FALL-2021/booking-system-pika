@@ -141,18 +141,15 @@ class AvailableRoom:
             return jsonify("Room Not Found"), 404
         else:
             res = dao.get_all_day_schedule(room_id, date)
-            result_st_dt = []
-            result_et_dt = []
-            result_host_id = []
-            for st_dt, et_dt,host_id in res:
-                result_et_dt.append(et_dt)
-                result_st_dt.append(st_dt)
-                result_host_id.append(host_id)
-            result = {
-                "st_dt": result_st_dt,
-                "et_dt": result_et_dt,
-                "host_id": result_host_id
-            }
+            result: list = []
+            for row in res:
+                result.append({
+                    "st_dt": row[0],
+                    "et_dt": row[1],
+                    "b_name": row[2],
+                    "p_fname": row[3],
+                    "p_lname": row[4]
+                })
             return jsonify(result), 200
 
     def get_schedule(self, room_id):
