@@ -25,13 +25,14 @@ class AvailableRoomDAO:
     def get_all_day_schedule(self, r_id, date):
         
         cursor = self.conn.cursor()
-        query = "select st_dt, et_dt, -1  " \
-                "from availableroom " \
-                "where (availableroom.room_id = %s) " \
-                "and (availableroom.st_dt::date <= date %s AND availableroom.et_dt::date >= date %s) " \
-                "UNION select st_dt, et_dt,booking.host_id " \
-                "from booking where (booking.room_id = %s) " \
-                "and (booking.st_dt::date <= date %s AND booking.et_dt::date >= date %s) ;"
+        query = 'with schedules as (select st_dt, et_dt, -1 as host_id, \'unavailable\' as b_name ' \
+                'from availableroom ar ' \
+                'where ar.room_id = %s and ar.st_dt::date >= date %s and ar.et_dt::date <= date %s ' \
+                'union select st_dt, et_dt, host_id, b_name ' \
+                'from booking b ' \
+                'where b.room_id = %s and b.st_dt::date >= date %s and b.et_dt::date <= date %s) ' \
+                'select st_dt, et_dt, b_name, p_fname, p_lname from schedules ' \
+                'natural join person where schedules.host_id = p_id;'
         cursor.execute(query, (r_id, date, date, r_id, date, date,))
         result = []
         for row in cursor:
