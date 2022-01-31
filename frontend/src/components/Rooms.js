@@ -224,17 +224,15 @@ console.log(data)
                     ).then((res) => {
             let result = []
             let i=0;
+            console.log(res.data)
             for(let ts of res.data){
                 const Start = ` ${ts.st_dt}-0400 (Atlantic Standard Time)`
                 const End = `${ts.et_dt}-0400 (Atlantic Standard Time)`;
                 const startDate = new Date(Start);
-                console.log(startDate);
                 const endDate = new Date(End);
-                console.log(endDate);
                 result.push({start: startDate, end: endDate,  p_fname: ts.p_fname, b_name:ts.b_name , p_lname: ts.p_lname})
                 i++
             }
-       console.log(result)
             setallDay(result)
         },(error) => {
             console.log(error);
@@ -471,7 +469,7 @@ console.log(data)
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{TypeTime(item.start.getHours(), item.start.getMinutes())}</td>
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{TypeTime(item.end.getHours(), item.end.getMinutes())}</td>
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{item.b_name==="unavailable"? "No": "Yes"}</td>
-                                                        <td style={{padding:"5px", border: "1px solid black"}}>{item.p_fname===""?'No host':`${item.p_fname}_${item.p_lname}`}</td>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{item.p_fname==="n/a"?'No host':`${item.p_fname}_${item.p_lname}`}</td>
                                                     </tr>
                                                 )
                                             }
