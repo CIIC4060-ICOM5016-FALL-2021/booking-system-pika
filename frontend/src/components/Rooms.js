@@ -26,7 +26,7 @@ function Rooms(props) {
     const [toMarkAvailable, setToMarkAvailable] = useState("")
     const [invalidTimeSlot, setInvalidTimeSlot] = useState(false)
     const [roomSchedule, setRoomSchedule] = useState(new Date());
-    const [allDayRS, setallDayRS] = useState([]);
+    const [allDay, setallDay] = useState([]);
     const [ CanShowSched,setCanShowSched] = useState(false);
     const [name,setname] = useState("");
     const[i,seti] = useState("");
@@ -50,8 +50,8 @@ function Rooms(props) {
                 "r_type": type1(type)}
             axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/rooms`, data
             ).then(
-                (response) => {
-                    console.log(response);
+                (res) => {
+                    console.log(res);
                     setCreatedMessage("Room Successfully Created");
                     console.log(createdMessage);
                     window.location.reload(false);
@@ -64,8 +64,8 @@ function Rooms(props) {
     }
 
     function getRoomData(){
-        axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/rooms/${roomID}`).then((response) => {
-                setRoomData(response.data);
+        axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/rooms/${roomID}`).then((res) => {
+                setRoomData(res.data);
             }, (error) => {
                 console.log(error);
             }
@@ -116,8 +116,8 @@ function type1(parameter){
             console.log(data)
             axios.put(`https://booking-system-pika.herokuapp.com/pika-booking/rooms`,
                 data
-            ).then((response) => {
-                console.log(response);
+            ).then((res) => {
+                console.log(res);
 
                 window.location.reload(false);
             }, (error) => {
@@ -129,8 +129,8 @@ function type1(parameter){
 
     function deleteRoom(){
         axios.delete(`https://booking-system-pika.herokuapp.com/pika-booking/rooms/${roomID}`).then(
-            (response) => {
-                console.log(response)
+            (res) => {
+                console.log(res)
                 setDeleteMessage("Room deleted successfully");
                 console.log(deleteMessage);
                 window.location.reload(false);
@@ -156,13 +156,13 @@ function type1(parameter){
         let s =Time(st.getFullYear(),st.getMonth(),st.getDate(),st.getHours(),st.getMinutes())
         console.log(s)
        let e = Time(et.getFullYear(),et.getMonth(),et.getDate(),et.getHours(),et.getMinutes())
-        const json = {"room_id": roomID,  "st_dt": s,
+        const data= {"room_id": roomID,  "st_dt": s,
             "et_dt": e, person_id: JSON.parse(localStorage.getItem('login-data')).p_id};
-console.log(json)
+console.log(data)
         axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/rooms/available`,
-            json
-        ).then((response) => {
-            console.log(response);
+            data
+        ).then((res) => {
+            console.log(res);
             window.location.reload(false);
         },(error) => {
             console.log(error);
@@ -174,8 +174,7 @@ console.log(json)
 
 
         axios.delete(`https://booking-system-pika.herokuapp.com//pika-booking/rooms/unavailable/ra-id/${toMarkAvailable}`
-        ).then((response) => {
-            console.log(response);
+        ).then((res) => {
             window.location.reload(false);
         },(error) => {
             console.log(error);
@@ -193,22 +192,19 @@ console.log(json)
     }
     function handleScheduleChange(date){
         setRoomSchedule(date)
-        setallDayRS([]);
+        setallDay([]);
     }
 
     function fetchUnavailableTimeSlots(){
-        const url = `https://booking-system-pika.herokuapp.com/pika-booking/rooms/unavailable/${roomID}`;
-        axios.get(url, {
-            headers: {'Content-Type': 'application/json' }})
-            .then(
-                (response) => {
+        axios.get(`https://booking-system-pika.herokuapp.com/pika-booking/rooms/unavailable/${roomID}`).then(
+                (res) => {
 
                     let unavailableTS = []
-console.log(response.data)
-                    for(let day of response.data){
+console.log(res.data)
+                    for(let day of res.data){
                         const st = day.st_dt
                         const et =  day.et_dt
-                        console.log(response.data)
+                        console.log(res.data)
 
                             const w = {start: st, end: et, ra_id: day.ra_id}
                             console.log(w)
@@ -221,28 +217,25 @@ console.log(response.data)
     }
 
     function fetchRoomSchedule(){
-        const url = `https://booking-system-pika.herokuapp.com/pika-booking/rooms/available/all-day-schedule`;
         let day = `${roomSchedule.getFullYear()}-${roomSchedule.getMonth() + 1}-${roomSchedule.getDate()}`;
         const data = {"room_id": roomID, "date": day};
 console.log(data)
-        axios.post(url, data,
-            {headers: {'Content-Type': 'application/json'}}//text/plain //application/json
-        ).then((response) => {
-            console.log("Response", response.data);
+        axios.post(`https://booking-system-pika.herokuapp.com/pika-booking/rooms/available/all-day-schedule`, data,
+                    ).then((res) => {
             let result = []
             let i=0;
-            for(let ts of response.data.st_dt){ // data : [ {timeBlock1}, {timeBlock2}, {...} ]
-                const blockStart = ` ${response.data.st_dt[i]}-0400 (Atlantic Standard Time)`
-                const blockEnd = `${response.data.et_dt[i]}-0400 (Atlantic Standard Time)`;
-                const startDate = new Date(blockStart);
+            for(let ts of res.data){
+                const Start = ` ${ts.st_dt}-0400 (Atlantic Standard Time)`
+                const End = `${ts.et_dt}-0400 (Atlantic Standard Time)`;
+                const startDate = new Date(Start);
                 console.log(startDate);
-                const endDate = new Date(blockEnd);
+                const endDate = new Date(End);
                 console.log(endDate);
-                result.push({start: startDate, end: endDate, p_id: response.data.host_id[i]})
+                result.push({start: startDate, end: endDate,  p_fname: ts.p_fname, b_name:ts.b_name , p_lname: ts.p_lname})
                 i++
             }
        console.log(result)
-            setallDayRS(result)
+            setallDay(result)
         },(error) => {
             console.log(error);
         });
@@ -420,13 +413,13 @@ console.log(data)
                                 value={et}
                             />
                             <br/>
-                            Are you sure you want to mark this room as unavailable in the chosen time slot? You will not be able to book any meetings with this room at this time if marked
+                            Are you sure you want to mark this room as unavailable in the chosen time slot? You will not let anyone be able to book any meetings with this room at this time if marked
                             <br/>{<Button onClick={markRoom}>Mark As Unavailable</Button>}
                             <br/><br/>
-                            Or select Time Slot to mark available, keep in mind that these time slots are of <strong>30 minutes</strong> in duration <br/>
+                            Or select Time Slot to mark available, can be unavailable for an entire day if needed.
                             {unavailableTimeSlots.length > 0 &&
                                 <select defaultValue={"0"} style={{textAlign: "center"}} onChange={(e) => {
-                                    if (e.target.value !== 0) {
+                                    if (e.target.value !== "") {
                                         setToMarkAvailable(e.target.value);
 
                                         setInvalidTimeSlot(false);
@@ -459,7 +452,7 @@ console.log(data)
                             />
                             <br/><br/>
                             {
-                                allDayRS.length > 0 &&
+                                allDay.length > 0 &&
                                 <table style={{marginLeft: "auto", marginRight: "auto"}}>
                                     <thead>
                                     <tr>
@@ -472,13 +465,13 @@ console.log(data)
 
                                     <tbody>
                                     {
-                                        allDayRS.map(item => {
+                                        allDay.map(item => {
                                                 return (
                                                     <tr>
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{TypeTime(item.start.getHours(), item.start.getMinutes())}</td>
                                                         <td style={{padding:"5px", border: "1px solid black"}}>{TypeTime(item.end.getHours(), item.end.getMinutes())}</td>
-                                                        <td style={{padding:"5px", border: "1px solid black"}}>{"No"}</td>
-                                                        <td style={{padding:"5px", border: "1px solid black"}}>{item.p_id===-1?'No host':item.p_id}</td>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{item.b_name==="unavailable"? "No": "Yes"}</td>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{item.p_fname===""?'No host':`${item.p_fname}_${item.p_lname}`}</td>
                                                     </tr>
                                                 )
                                             }
