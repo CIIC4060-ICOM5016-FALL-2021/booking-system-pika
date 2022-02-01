@@ -12,6 +12,16 @@ class PersonDAO(object):
     MALE = 1
     FEMALE = 2
     NON_BINARY = 3
+
+    roledict = {
+        1: R_STUDENT,
+        2: R_PROF,
+        3: R_STAFF,
+        4: R_INSTRUCTOR,
+        5: R_VISITOR
+
+    }
+
     genders = {
         MALE: "male",
         FEMALE: "female",
@@ -25,6 +35,8 @@ class PersonDAO(object):
         R_INSTRUCTOR: "instructor",
         R_VISITOR: "visitor"
     }
+
+
 
     access = {
         R_STUDENT: (Room.T_STY_SPACE, Room.T_LAB),

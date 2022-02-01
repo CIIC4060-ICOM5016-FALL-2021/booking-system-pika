@@ -161,7 +161,7 @@ class AvailableRoomDAO:
                 'from room ' \
                 'inner join booking b on room.r_id = b.room_id ' \
                 'inner join person p on p.p_id = b.host_id ' \
-                'where p.p_role = %s and (tsrange(b.st_dt, b.et_dt) &&  ' \
+                'where p.p_role in %s and (tsrange(b.st_dt, b.et_dt) &&  ' \
                 'tsrange(timestamp %s, timestamp %s)) ' \
                 'UNION select distinct r_id ' \
                 'from room inner join availableroom b on room.r_id = b.room_id ' \

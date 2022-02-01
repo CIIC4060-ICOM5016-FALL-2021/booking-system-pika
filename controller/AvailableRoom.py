@@ -235,8 +235,16 @@ class AvailableRoom:
         p_role = json['p_role']
         st_dt = json['st_dt']
         et_dt = json['et_dt']
+
+        list_access = PersonDAO.access[PersonDAO.roledict[p_role]]
+        listresult = []
+        for acc in list_access:
+            print(acc)
+            listresult.append(acc)
+
+
         dao = AvailableRoomDAO()
-        res = dao.get_rooms_by_role_timeframe(p_role, st_dt, et_dt)
+        res = dao.get_rooms_by_role_timeframe(listresult, st_dt, et_dt)
         result = []
         for row in res:
             result.append({
