@@ -227,14 +227,20 @@ class PersonDAO(object):
             result.append(row)
         return result
 
-    def get_most_used_room(self,p_id):
+    def get_most_used_room(self, p_id: int):
         cursor = self.conn.cursor()
-        query = 'select room_id, count(invited_id) ' \
-                'from booking where invited_id = %s ' \
-                'group by room_id order by count(invited_id) ' \
+        query = 'with most_used_room as ' \
+                '(select distinct room_id, invited_id as user_id ' \
+                'from booking ' \
+                'where invited_id = %s ' \
+                'union select distinct room_id, host_id as user_id ' \
+                'from booking where host_id = %s) ' \
+                'select room_id, count(user_id) as times_used ' \
+                'from most_used_room group by room_id order by times_used ' \
                 'desc limit 1;'
-        cursor.execute(query,(p_id,))
+        cursor.execute(query, (p_id, p_id,))
         result = cursor.fetchone()
+        cursor.close()
         return result
 
     def get_info_for_student(self):
