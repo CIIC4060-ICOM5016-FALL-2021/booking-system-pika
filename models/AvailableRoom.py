@@ -152,7 +152,7 @@ class AvailableRoomDAO:
             result.append(row)
         return result
 
-    def get_rooms_by_role_timeframe(self, p_role, st_dt, et_dt):
+    def get_rooms_by_role_timeframe(self, p_role, st_dt, et_dt,list_type):
 
         cursor = self.conn.cursor()
         query = 'select r_id, r_name from room ' \
@@ -161,12 +161,13 @@ class AvailableRoomDAO:
                 'from room ' \
                 'inner join booking b on room.r_id = b.room_id ' \
                 'inner join person p on p.p_id = b.host_id ' \
-                'where p.p_role in %s and (tsrange(b.st_dt, b.et_dt) &&  ' \
-                'tsrange(timestamp %s, timestamp %s)) ' \
+                'where p.p_role = %s and (tsrange(b.st_dt, b.et_dt) &&  ' \
+                'tsrange(timestamp %s, timestamp %s)) and room.r_type in %s ' \
                 'UNION select distinct r_id ' \
                 'from room inner join availableroom b on room.r_id = b.room_id ' \
-                'where  (tsrange(b.st_dt, b.et_dt) &&  tsrange(timestamp %s, timestamp %s)));'
-        cursor.execute(query, (p_role, st_dt, et_dt,st_dt, et_dt,))
+                'where  (tsrange(b.st_dt, b.et_dt) &&  tsrange(timestamp %s, timestamp %s)))' \
+                'and room.r_type in %s;'
+        cursor.execute(query, (p_role, st_dt, et_dt,list_type, et_dt,list_type,))
         result = []
         for row in cursor:
             result.append(row)
