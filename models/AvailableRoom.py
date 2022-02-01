@@ -25,12 +25,13 @@ class AvailableRoomDAO:
     def get_all_day_schedule(self, r_id, date):
         
         cursor = self.conn.cursor()
-        query = 'select st_dt, et_dt, \'unavailable\' as b_name, \'n/a\' as first_name, \'n/a\' as last_name ' \
-                'from availableroom ar ' \
-                'where ar.room_id = %s and ar.st_dt::date >= date %s and ar.et_dt::date <= date %s ' \
-                'union select st_dt, et_dt, b_name, p_fname, p_lname ' \
-                'from booking b natural inner join person p ' \
-                'where host_id = p.p_id and b.room_id = %s and b.st_dt::date >= date %s and b.et_dt::date <= date %s;'
+        query = "select st_dt, et_dt, -1  " \
+                "from availableroom " \
+                "where (availableroom.room_id = %s) " \
+                "and (availableroom.st_dt::date <= date %s AND availableroom.et_dt::date >= date %s) " \
+                "UNION select st_dt, et_dt,booking.host_id " \
+                "from booking where (booking.room_id = %s) " \
+                "and (booking.st_dt::date <= date %s AND booking.et_dt::date >= date %s) ;"
         cursor.execute(query, (r_id, date, date, r_id, date, date,))
         result = []
         for row in cursor:
@@ -152,7 +153,7 @@ class AvailableRoomDAO:
             result.append(row)
         return result
 
-    def get_rooms_by_role_timeframe(self, p_role, st_dt, et_dt,list_type):
+    def get_rooms_by_role_timeframe(self, p_role, st_dt, et_dt):
 
         cursor = self.conn.cursor()
         query = 'select r_id, r_name from room ' \
@@ -162,12 +163,11 @@ class AvailableRoomDAO:
                 'inner join booking b on room.r_id = b.room_id ' \
                 'inner join person p on p.p_id = b.host_id ' \
                 'where p.p_role = %s and (tsrange(b.st_dt, b.et_dt) &&  ' \
-                'tsrange(timestamp %s, timestamp %s)) and room.r_type in %s ' \
+                'tsrange(timestamp %s, timestamp %s)) ' \
                 'UNION select distinct r_id ' \
                 'from room inner join availableroom b on room.r_id = b.room_id ' \
-                'where  (tsrange(b.st_dt, b.et_dt) &&  tsrange(timestamp %s, timestamp %s)))' \
-                'and room.r_type in %s;'
-        cursor.execute(query, (p_role, st_dt, et_dt,list_type,st_dt, et_dt,list_type,))
+                'where (tsrange(b.st_dt, b.et_dt) &&  tsrange(timestamp %s, timestamp %s)));'
+        cursor.execute(query, (p_role, st_dt, et_dt,st_dt, et_dt,))
         result = []
         for row in cursor:
             result.append(row)
