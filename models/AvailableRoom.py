@@ -167,7 +167,7 @@ class AvailableRoomDAO:
                 'from room inner join availableroom b on room.r_id = b.room_id ' \
                 'where  (tsrange(b.st_dt, b.et_dt) &&  tsrange(timestamp %s, timestamp %s)))' \
                 'and room.r_type in %s;'
-        cursor.execute(query, (p_role, st_dt, et_dt,list_type, et_dt,list_type,))
+        cursor.execute(query, (p_role, st_dt, et_dt,list_type,st_dt, et_dt,list_type,))
         result = []
         for row in cursor:
             result.append(row)
