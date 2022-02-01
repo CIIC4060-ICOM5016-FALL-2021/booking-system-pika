@@ -27,11 +27,11 @@ if (t===false) {
     axios.get('https://booking-system-pika.herokuapp.com/pika-booking/rooms/most-booked').then(res => {
         let BookedRoom = res.data
         setBookedRooms(BookedRoom);
-
+console.log(BookedRoom)
     })
     axios.get('https://booking-system-pika.herokuapp.com/pika-booking/booking/busiesthour').then(res => {
         setBusiestHours(res.data)
-
+        console.log(res.data)
     })
     sett(true)
 }
@@ -47,25 +47,92 @@ useEffect(()=> {
                     <Grid columns={3} stackable textAlign='center'>
                         <Grid.Row verticalAlign='middle'>
                             <Grid.Column>
-                                <h5> Most Booked Person:    {Array.from(Array(BookedPersons.length)).map((_, i) => (
+                                <h5> Most Booked Person:
                                     <li>
+                                        <table style={{marginLeft: "auto", marginRight: "auto"}}>
+                                            <thead>
+                                            <tr>
+                                                <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Number of bookings</th>
+                                                <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Person name</th>
 
-                                        Bookings:{BookedPersons[i].count},
-                                       {BookedPersons[i].p_fname }  _
-                                         {BookedPersons[i].p_lname }</li>))}  </h5>
+
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            {
+                                                BookedPersons.map(item => {
+                                                        return (
+                                                            <tr>
+                                                                <td style={{padding:"5px", border: "1px solid black"}}>{item.count}</td>
+                                                                <td style={{padding:"5px", border: "1px solid black"}}>{item.p_fname}_{item.p_lname}</td>
+                                                            </tr>
+                                                        )
+                                                    }
+                                                )
+                                            }
+                                            </tbody>
+                                        </table>
+                                            </li>
+                                    </h5>
+
                             </Grid.Column>
-                            <h5> Busiest Hours: <ul>{Array.from(Array(BusiestHours.length)).map((_, i) =>(
-                                <li>
-                                    activebooking: {BusiestHours[i].activebooking},
-                                    start_time: {BusiestHours[i].start_time},
-                                    end_time: {BusiestHours[i].finish_time}
-                                </li>))} </ul>  </h5>
+                            <h5> Busiest Hours: <ul> <li>
+                                <table style={{marginLeft: "auto", marginRight: "auto"}}>
+                                    <thead>
+                                    <tr>
+                                        <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Number of bookings</th>
+                                        <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Start Time</th>
+                                        <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>End Time</th>
+
+
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    {
+                                        BusiestHours.map(item => {
+                                                return (
+                                                    <tr>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{item.activebooking}</td>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{item.start_time}</td>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{item.finish_time}</td>
+                                                    </tr>
+                                                )
+                                            }
+                                        )
+                                    }
+                                    </tbody>
+                                </table>
+                            </li>
+
+
+                     </ul>  </h5>
                             <Grid.Column>
-                                <h5>Most Booked Room: <ul>{Array.from(Array(BookedRooms.length)).map((_, i) =>(
-                                    <li>
-                                        Room Name:{BookedRooms[i].r_id},
-                                        number of bookings: {BookedRooms[i].timed_booked}
-                                    </li>))} </ul> </h5>
+                                <h5>Most Booked Room: <ul><table style={{marginLeft: "auto", marginRight: "auto"}}>
+                                    <thead>
+                                    <tr>
+                                        <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Times Booked</th>
+                                        <th style={{padding:"5px", border: "1px solid black"}} scope={"col"}>Room Name</th>
+
+
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    {
+                                        BookedRooms.map(item => {
+                                                return (
+                                                    <tr>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{item.timed_booked}</td>
+                                                        <td style={{padding:"5px", border: "1px solid black"}}>{item.r_name}</td>
+                                                    </tr>
+                                                )
+                                            }
+                                        )
+                                    }
+                                    </tbody>
+                                </table> </ul> </h5>
                                 <Link to = "/UserView" > <button>
                                     Go to Userview
                                 </button>

@@ -114,8 +114,9 @@ function Settings() {
             }
             axios.put('https://booking-system-pika.herokuapp.com/pika-booking/persons', data).then(res => {
                 setdata(res.data);
+                window.location.reload(false);
             })
-            window.location.reload(false);
+
             console.log(data);
             return true
         }

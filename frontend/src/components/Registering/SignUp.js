@@ -205,7 +205,7 @@ const y = ()=>{
                     onChange={e => setphone(e.target.value)}
                     name="phone"
                     icon='phone'
-                    placeholder="Insert Last Name"
+                    placeholder="Insert Phone"
                     label="Phone Number"
 
                   />
