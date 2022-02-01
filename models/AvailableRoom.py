@@ -165,7 +165,7 @@ class AvailableRoomDAO:
                 'tsrange(timestamp %s, timestamp %s)) ' \
                 'UNION select distinct r_id ' \
                 'from room inner join availableroom b on room.r_id = b.room_id ' \
-                'where (tsrange(b.st_dt, b.et_dt) &&  tsrange(timestamp %s, timestamp %s)));'
+                'where  (tsrange(b.st_dt, b.et_dt) &&  tsrange(timestamp %s, timestamp %s)));'
         cursor.execute(query, (p_role, st_dt, et_dt,st_dt, et_dt,))
         result = []
         for row in cursor:
