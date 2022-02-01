@@ -244,7 +244,7 @@ class AvailableRoom:
 
 
         dao = AvailableRoomDAO()
-        res = dao.get_rooms_by_role_timeframe(p_role, st_dt, et_dt,listresult)
+        res = dao.get_rooms_by_role_timeframe(p_role, st_dt, et_dt,list(listresult))
         result = []
         for row in res:
             result.append({
